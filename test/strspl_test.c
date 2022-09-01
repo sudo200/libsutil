@@ -1,25 +1,27 @@
-#include <stdio.h>
+#include <assert.h>
+#include <string.h>
+
+#define EQUALS(x, y)  (strcmp(x, y) == 0)
 
 #include "strspl.h"
 
-#define die(msg) do { \
-  perror(msg); \
-  exit(EXIT_FAILURE); \
-  } while(0);
+#define DEBUG
 
 int main()
 {
   string_array_t tokens;
-  if(strspl(&tokens, "Hello there my friends!", ' ') < 0)
-    die("Error in strspl()");
+  assert(strspl(&tokens, "Hello there my friends!", ' ') == 0);
 
-  puts("Tokens:");
-  for(size_t i = 0; i < tokens.len; i++)
-    printf("\t%s\n", tokens.arr[i]);
+  assert(tokens.len == 4);
+
+  assert(EQUALS(tokens.arr[0], "Hello"));
+  assert(EQUALS(tokens.arr[1], "there"));
+  assert(EQUALS(tokens.arr[2], "my"));
+  assert(EQUALS(tokens.arr[3], "friends!"));
 
   free(*tokens.arr);
   free(tokens.arr);
   
-  return EXIT_SUCCESS;
+  return 0;
 }
 

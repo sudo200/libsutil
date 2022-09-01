@@ -1,0 +1,13 @@
+#!/bin/sh
+
+main() {
+  if $@;
+  then
+    echo "($@) [V] Test passed"
+  else
+    echo "($@) [X] Test failed"
+  fi
+}
+
+main $@
+
