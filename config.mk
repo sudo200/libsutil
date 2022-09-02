@@ -20,6 +20,7 @@ UNITTEST=$(SCRIPTS)/unittest
 
 TEST_DIR=test
 TEST_STRSPL=$(TEST_DIR)/strspl_test.c
+TEST_FILE=$(TEST_DIR)/file_test.c
 
 OBJCPY=objcopy
 
