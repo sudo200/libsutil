@@ -3,12 +3,7 @@
 
 #include <stdlib.h>
 
-typedef struct
-{
-  char ** arr;
-  size_t len;
-}
-string_array_t;
+#include "types.h"
 
 int strspl(string_array_t *out, const char * string, const char delim);
 

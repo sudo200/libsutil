@@ -5,9 +5,7 @@
 
 #include "strspl.h"
 
-#define DEBUG
-
-int main()
+int main(void)
 {
   string_array_t tokens;
   assert(strspl(&tokens, "Hello there my friends!", ' ') == 0);
