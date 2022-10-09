@@ -1,3 +1,7 @@
-out
-obj
+out/
+obj/
+core.dump*
+
+.cache/
+compile_commands.json
 

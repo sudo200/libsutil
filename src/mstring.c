@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "dmem.h"
 #include "mstring.h"
 
 int msprintf(char **out, const char *format, ...)
@@ -25,7 +26,7 @@ int vmsprintf(char **out, const char *format, va_list args)
   if(size <= 0)
     return -1;
 
-  if((*out = (char *) malloc(size)) == NULL)
+  if((*out = (char *) ualloc(size)) == NULL)
     return -1;
 
   const int r = vsnprintf(*out, size, format, args_cpy);
@@ -36,7 +37,7 @@ int vmsprintf(char **out, const char *format, va_list args)
 char * mstrcat(char **dest, const char *src)
 {
   const size_t len = strlen(*dest) + strlen(src) + 1;
-  if((*dest = (char *) realloc(*dest, len)) == NULL)
+  if((*dest = (char *) urealloc(*dest, len)) == NULL)
     return NULL;
   return strcat(*dest, src);
 }

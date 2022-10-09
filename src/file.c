@@ -1,7 +1,7 @@
 #include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 
+#include "dmem.h"
 #include "file.h"
 
 int fpeek(FILE *stream)
@@ -23,7 +23,7 @@ char * fpeeks(FILE *stream, size_t n)
     return NULL;
   }
 
-  char *buffer = (char *) malloc((n + 1) * sizeof(char));
+  char *buffer = (char *) ualloc((n + 1) * sizeof(char));
   if(buffer == NULL)
     return NULL;
 

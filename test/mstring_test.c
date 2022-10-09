@@ -4,6 +4,7 @@
 
 #define EQUALS(x, y)  (strcmp(x, y) == 0)
 
+#include "dmem.h"
 #include "mstring.h"
 
 int main(void)
@@ -15,7 +16,7 @@ int main(void)
   assert(mstrcat(&mystr, "foo bar boom\n") != NULL);
   assert(EQUALS(mystr, "This is a test: 653.770, 0x2A \nfoo bar boom\n"));
   
-  free(mystr);
+  ufree(mystr);
   return 0;
 }
 

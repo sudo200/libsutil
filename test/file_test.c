@@ -4,6 +4,7 @@
 
 #define EQUALS(x, y)  (strcmp(x, y) == 0)
 
+#include "dmem.h"
 #include "file.h"
 
 extern int chdir(const char *);
@@ -32,7 +33,7 @@ int main(int argc, char **argv)
   char * buffer = fpeeks(testfile, 12);
   assert(buffer != NULL);
   assert(EQUALS(buffer, "Hello there!"));
-  free(buffer);
+  ufree(buffer);
 
   fclose(testfile);
   return EXIT_SUCCESS;

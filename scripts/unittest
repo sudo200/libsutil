@@ -1,8 +1,18 @@
 #!/bin/sh
 
+envexists() {
+  printenv $@ > /dev/null
+  return $?
+}
+
 main() {
-  if $@;
-  then
+  cmdline="$@"
+
+  if envexists MEMCHECK; then
+    cmdline="$MEMCHECK $cmdline"
+  fi
+
+  if $cmdline; then
     echo "($@) [V] Test passed"
   else
     echo "($@) [X] Test failed"

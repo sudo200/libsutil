@@ -3,6 +3,8 @@
 
 #define EQUALS(x, y)  (strcmp(x, y) == 0)
 
+#include "dmem.h"
+
 #include "strspl.h"
 
 int main(void)
@@ -17,8 +19,8 @@ int main(void)
   assert(EQUALS(tokens.arr[2], "my"));
   assert(EQUALS(tokens.arr[3], "friends!"));
 
-  free(*tokens.arr);
-  free(tokens.arr);
+  ufree(*tokens.arr);
+  ufree(tokens.arr);
   
   return 0;
 }
