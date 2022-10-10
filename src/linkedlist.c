@@ -41,9 +41,9 @@ linkedlist * linkedlist_add(linkedlist * list, void * element)
 
   linkednode * node = list->first;
 
-  if(node == NULL)
+  if(node == NULL) // Empty
   {
-    node = list->first = (linkednode *)ualloc(sizeof(linkednode));
+    node = list->first = list->last = (linkednode *)ualloc(sizeof(linkednode));
     node->value = element;
     node->next = NULL;
 
@@ -54,7 +54,7 @@ linkedlist * linkedlist_add(linkedlist * list, void * element)
   for(size_t i = 0; i < list->len; i++)
     node = node->next;
 
-  node = node->next = (linkednode *)ualloc(sizeof(linkednode));
+  node = list->last = node->next = (linkednode *)ualloc(sizeof(linkednode));
   node->value = element;
   node->next = NULL;
 
@@ -66,6 +66,9 @@ linkedlist * linkedlist_add(linkedlist * list, void * element)
 void * linkedlist_get(linkedlist * list, size_t index)
 {
   if(list == NULL)
+    return NULL;
+
+  if(list->len >= index)
     return NULL;
 
   linkednode * node = list->first;
@@ -84,8 +87,13 @@ void * linkedlist_remove(linkedlist * list, size_t index)
     return NULL;
 
   linkednode * node = list->first;
+
+  if(node == NULL)
+    return NULL;
+
   linkednode * lastnode = node;
   node = node->next;
+
   if(node == NULL)
     return NULL;
 
@@ -98,11 +106,13 @@ void * linkedlist_remove(linkedlist * list, size_t index)
       return value;
   }
 
+  if(list->len <= index)
+    return NULL;
+
   for(size_t i = 0; i < (index - 1); ++i)
   {
       lastnode = node;
-      if(!(node = node->next))
-          return NULL;
+      node = node->next;
   }
 
   void * value = node->value;
