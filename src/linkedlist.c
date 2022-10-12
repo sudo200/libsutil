@@ -17,12 +17,100 @@ struct linkedlist
   size_t len;
 };
 
+// Private functions
+
+
+int __linkedlist_add(linkedlist * list, void * element)
+{
+  linkednode * node = list->last;
+  linkednode * newnode = (linkednode *) ualloc(sizeof(*newnode));
+  if(newnode == NULL)
+    return -1;
+
+  if(node == NULL) // Empty
+  {
+    list->first = list->last = newnode;
+    newnode->next = NULL;
+    newnode->prev = NULL;
+    newnode->value = element;
+  }
+  else
+  {
+    node->next = list->last = newnode;
+    newnode->prev = node;
+    newnode->next = NULL;
+    newnode->value = element;
+  }
+  list->len++;
+  return 0;
+}
+
+linkednode * __linkedlist_get(linkedlist * list, size_t index)
+{
+  const size_t half_len = list->len >> 1;
+  linkednode * node = NULL;
+  if(index > half_len) // Start from end
+  {
+    const size_t delta = list->len - index - 1;
+    node = list->last;
+    for(size_t i = 0; i < delta; i++)
+      node = node->prev;
+  }
+  else // Start from beginning
+  {
+    node = list->first;
+    for(size_t i = 0; i < index; i++)
+      node = node->next;
+  }
+  return node;
+}
+
+int __linkedlist_insert(linkedlist * list, void * element, size_t index)
+{
+  linkednode * newnode = (linkednode *) ualloc(sizeof(*newnode));
+  if(newnode == NULL)
+    return -1;
+
+  newnode->value = element;
+  linkednode * nodeatindex = __linkedlist_get(list, index);
+
+  if(index == 0)
+  {
+    newnode->prev = NULL;
+    newnode->next = nodeatindex;
+
+    nodeatindex->prev = newnode;
+    list->first = newnode;
+  }
+  else
+  {
+    linkednode * prevnode = nodeatindex->prev;
+
+    newnode->prev = prevnode;
+    newnode->next = nodeatindex;
+
+    nodeatindex->prev = newnode;
+    prevnode->next = newnode;
+  }
+
+  list->len++;
+  return 0;
+}
+
+// Public functions
+
 
 linkedlist * linkedlist_new(void)
 {
-  linkedlist * list = (linkedlist *)ualloc(sizeof(linkedlist));
-  list->first = list->last = NULL;
-  list->len = 0;
+  linkedlist * list = (linkedlist *) ualloc(sizeof(*list));
+
+  if(list == NULL)
+    return NULL;
+
+  list->first = NULL;
+  list->last = NULL;
+  list->len = 0UL;
+
   return list;
 }
 
@@ -30,55 +118,63 @@ size_t linkedlist_length(linkedlist * list)
 {
   if(list == NULL)
     return 0;
-
   return list->len;
 }
 
-linkedlist * linkedlist_add(linkedlist * list, void * element)
+int linkedlist_add(linkedlist * list, void * element)
 {
   if(list == NULL)
-    return NULL;
+    return -1;
+  return __linkedlist_add(list, element);
+}
 
-  linkednode * node = list->first;
+int linkedlist_addall(linkedlist * list, void ** elements, size_t nitems)
+{
+  if(nitems == 0)
+    return 0;
+  if(list == NULL || elements == NULL)
+    return -1;
 
-  if(node == NULL) // Empty
-  {
-    node = list->first = list->last = (linkednode *)ualloc(sizeof(linkednode));
-    node->value = element;
-    node->next = NULL;
+  for(size_t i = 0; i < nitems; i++)
+    if(__linkedlist_add(list, elements[i]) < 0)
+      return -1;
+  return 0;
+}
 
-    list->len = list->len + 1;
-    return list;
-  }
+int linkedlist_insert(linkedlist * list, void * element, size_t index)
+{
+  if(list == NULL)
+    return -1;
 
-  for(size_t i = 0; i < list->len; i++)
-    node = node->next;
+  if(list->len <= index)
+    return -1;
 
-  node = list->last = node->next = (linkednode *)ualloc(sizeof(linkednode));
-  node->value = element;
-  node->next = NULL;
+  return __linkedlist_insert(list, element, index);
+}
 
+int linkedlist_insertall(linkedlist * list, void ** elements, size_t nitems, size_t index)
+{
+  if(list == NULL || elements == NULL)
+    return -1;
 
-  list->len = list->len + 1;
-  return list;
+  if(list->len <= index)
+    return -1;
+
+  for(size_t i = 0; i < nitems; i++)
+    if(__linkedlist_insert(list, elements[i], index + i) < 0)
+      return -1;
+  return 0;
 }
 
 void * linkedlist_get(linkedlist * list, size_t index)
 {
   if(list == NULL)
     return NULL;
-
-  if(list->len >= index)
+  if(list->len <= index)
     return NULL;
 
-  linkednode * node = list->first;
-  if(node == NULL)
-    return NULL;
-
-  for(size_t i = 0; i < index; ++i)
-    node = node->next;
-
-  return node->value;
+  
+  return __linkedlist_get(list, index)->value;
 }
 
 void * linkedlist_remove(linkedlist * list, size_t index)
@@ -86,75 +182,72 @@ void * linkedlist_remove(linkedlist * list, size_t index)
   if(list == NULL)
     return NULL;
 
-  linkednode * node = list->first;
-
-  if(node == NULL)
-    return NULL;
-
-  linkednode * lastnode = node;
-  node = node->next;
-
-  if(node == NULL)
-    return NULL;
-
-  if(index == 0)
-  {
-      linkednode * node1 = list->first;
-      list->first = node1->next;
-      void * value = node1->value;
-      ufree(node1);
-      return value;
-  }
-
   if(list->len <= index)
     return NULL;
 
-  for(size_t i = 0; i < (index - 1); ++i)
-  {
-      lastnode = node;
-      node = node->next;
-  }
-
+  linkednode * node = __linkedlist_get(list, index);
   void * value = node->value;
-  lastnode->next = node->next;
-
+  linkednode *prev = node->prev,
+             *next = node->next;
+  
   ufree(node);
+  
+  if(prev != NULL)
+    prev->next = next;
+  else
+    list->first = next;
+
+  if(next != NULL)
+    next->prev = prev;
+  else
+    list->last = prev;
+  
   return value;
 }
 
-linkedlist * linkedlist_foreach(linkedlist * list, void (*func)(void *))
+int linkedlist_foreach(linkedlist * list, void (*func)(void *))
 {
-    if(list == NULL)
-        return NULL;
+  if(list == NULL || *(void **)&func == NULL)
+    return -1;
 
-    if(func == NULL)
-        return list;
+  linkednode * node = list->first;
+  if(node == NULL)
+    return 0;
 
-    if(list->first == NULL)
-        return list;
+  do
+  {
+    func(node->value);
+  }
+  while((node = node->next) != NULL);
 
-    for(linkednode * node = list->first; node; node = node->next)
-        func(node->value);
-    return list;
+  return 0;
+}
+
+int linkedlist_clear(linkedlist * list)
+{
+  if(list == NULL)
+    return -1;
+
+  linkednode * node = list->first;
+  linkednode *next;
+  while(node != NULL)
+  {
+    next = node->next;
+    ufree(node);
+    node = next;
+  }
+  list->first = NULL;
+  list->last = NULL;
+  return 0;
 }
 
 void linkedlist_destroy(linkedlist * list)
 {
-    if(list == NULL)
-        return;
+  if(list == NULL)
+    return;
 
-    do {
-      if(list->first == NULL)
-        break;
+  linkedlist_clear(list);
 
-      linkednode *nextnode = list->first, *node = nextnode;
-      while((node = nextnode))
-      {
-        nextnode = node->next;
-        ufree(node);
-      }
-    }
-    while(0);
-
-    ufree(list);
+  ufree(list);
 }
+

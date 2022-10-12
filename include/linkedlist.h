@@ -16,9 +16,24 @@ linkedlist * linkedlist_new(void);
 size_t linkedlist_length(linkedlist * list);
 
 /**
- * Add an element to the linked list.
+ * Adds an element to the linked list.
  */
-linkedlist * linkedlist_add(linkedlist * list, void * element);
+int linkedlist_add(linkedlist * list, void * element);
+
+/**
+ * Adds an array of elements to the linked list. 
+ */
+int linkedlist_addall(linkedlist * list, void ** elements, size_t nitems);
+
+/**
+ * Inserts an element at index to the linked list.
+ */
+int linkedlist_insert(linkedlist * list, void * element, size_t index);
+
+/**
+ * Inserts an array of elements at index to the linked list.
+ */
+int linkedlist_insertall(linkedlist * list, void ** elements, size_t nitems, size_t index);
 
 /**
  * Get the element at specified index.
@@ -35,7 +50,12 @@ void * linkedlist_remove(linkedlist * list, size_t index);
 /**
  * Executes a function for each element in the list.
  */
-linkedlist * linkedlist_foreach(linkedlist * list, void (*func)(void *));
+int linkedlist_foreach(linkedlist * list, void (*func)(void *));
+
+/**
+ * Clears the linked list.
+ */
+int linkedlist_clear(linkedlist * list);
 
 /**
  *  Destroys the linked list.
