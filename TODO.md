@@ -1,7 +1,6 @@
 # TODO
 
 * [ ] Add UUID
-* [ ] Add network stuff
 * [ ] Add argument parser
 * [ ] Add queue
 * [x] Add linked-list
