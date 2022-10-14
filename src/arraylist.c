@@ -24,12 +24,7 @@ int arraylist_realloc(arraylist_t *list, int diff)
   return 0;
 }
 
-arraylist_t * arraylist_new()
-{
-  return arraylist_new_prealloc(0UL);
-}
-
-arraylist_t * arraylist_new_prealloc(size_t init_size)
+arraylist_t * arraylist_new(void)
 {
   arraylist_t * list = (arraylist_t *) ualloc(sizeof(arraylist_t));
   if(list == NULL)
@@ -38,12 +33,6 @@ arraylist_t * arraylist_new_prealloc(size_t init_size)
   list->arr = NULL;
   list->arr_len = 0UL;
 
-  if(init_size != 0UL &&
-      (list->arr = (void **) ualloc(
-        (list->arr_len = init_size) * sizeof(*list->arr)
-      )) == NULL
-    )
-    return NULL;
   return list;
 }
 

@@ -7,8 +7,6 @@ typedef struct arraylist_t arraylist_t;
 
 arraylist_t * arraylist_new();
 
-arraylist_t * arraylist_new_prealloc(size_t init_size);
-
 int arraylist_add(arraylist_t *list, void *item);
 
 int arraylist_addall(arraylist_t *list, void **items, size_t nitems);
