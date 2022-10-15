@@ -1,5 +1,6 @@
-#include "dmem.h"
+#include <errno.h>
 
+#include "dmem.h"
 #include "linkedlist.h"
 
 typedef struct linkednode linkednode;
@@ -25,7 +26,10 @@ int __linkedlist_add(linkedlist * list, void * element)
   linkednode * node = list->last;
   linkednode * newnode = (linkednode *) ualloc(sizeof(*newnode));
   if(newnode == NULL)
+  {
+    errno = ENOMEM;
     return -1;
+  }
 
   if(node == NULL) // Empty
   {
@@ -69,7 +73,10 @@ int __linkedlist_insert(linkedlist * list, void * element, size_t index)
 {
   linkednode * newnode = (linkednode *) ualloc(sizeof(*newnode));
   if(newnode == NULL)
+  {
+    errno = ENOMEM;
     return -1;
+  }
 
   newnode->value = element;
   linkednode * nodeatindex = __linkedlist_get(list, index);
@@ -105,7 +112,10 @@ linkedlist * linkedlist_new(void)
   linkedlist * list = (linkedlist *) ualloc(sizeof(*list));
 
   if(list == NULL)
+  {
+    errno = ENOMEM;
     return NULL;
+  }
 
   list->first = NULL;
   list->last = NULL;
@@ -117,14 +127,21 @@ linkedlist * linkedlist_new(void)
 size_t linkedlist_length(linkedlist * list)
 {
   if(list == NULL)
+  {
+    errno = EINVAL;
     return 0;
+  }
+
   return list->len;
 }
 
 int linkedlist_add(linkedlist * list, void * element)
 {
   if(list == NULL)
+  {
+    errno = EINVAL;
     return -1;
+  }
   return __linkedlist_add(list, element);
 }
 
@@ -132,8 +149,12 @@ int linkedlist_addall(linkedlist * list, void ** elements, size_t nitems)
 {
   if(nitems == 0)
     return 0;
+
   if(list == NULL || elements == NULL)
+  {
+    errno = EINVAL;
     return -1;
+  }
 
   for(size_t i = 0; i < nitems; i++)
     if(__linkedlist_add(list, elements[i]) < 0)
@@ -144,10 +165,16 @@ int linkedlist_addall(linkedlist * list, void ** elements, size_t nitems)
 int linkedlist_insert(linkedlist * list, void * element, size_t index)
 {
   if(list == NULL)
+  {
+    errno = EINVAL;
     return -1;
+  }
 
   if(list->len <= index)
+  {
+    errno = ELNRNG;
     return -1;
+  }
 
   return __linkedlist_insert(list, element, index);
 }
@@ -155,10 +182,16 @@ int linkedlist_insert(linkedlist * list, void * element, size_t index)
 int linkedlist_insertall(linkedlist * list, void ** elements, size_t nitems, size_t index)
 {
   if(list == NULL || elements == NULL)
+  {
+    errno = EINVAL;
     return -1;
+  }
 
   if(list->len <= index)
+  {
+    errno = ELNRNG;
     return -1;
+  }
 
   for(size_t i = 0; i < nitems; i++)
     if(__linkedlist_insert(list, elements[i], index + i) < 0)
@@ -169,21 +202,33 @@ int linkedlist_insertall(linkedlist * list, void ** elements, size_t nitems, siz
 void * linkedlist_get(linkedlist * list, size_t index)
 {
   if(list == NULL)
+  {
+    errno = EINVAL;
     return NULL;
-  if(list->len <= index)
-    return NULL;
+  }
 
-  
+  if(list->len <= index)
+  {
+    errno = ELNRNG;
+    return NULL;
+  }
+
   return __linkedlist_get(list, index)->value;
 }
 
 void * linkedlist_remove(linkedlist * list, size_t index)
 {
   if(list == NULL)
+  {
+    errno = EINVAL;
     return NULL;
+  }
 
   if(list->len <= index)
+  {
+    errno = ELNRNG;
     return NULL;
+  }
 
   linkednode * node = __linkedlist_get(list, index);
   void * value = node->value;
@@ -208,7 +253,10 @@ void * linkedlist_remove(linkedlist * list, size_t index)
 int linkedlist_foreach(linkedlist * list, void (*func)(void *))
 {
   if(list == NULL || *(void **)&func == NULL)
+  {
+    errno = EINVAL;
     return -1;
+  }
 
   linkednode * node = list->first;
   if(node == NULL)
@@ -226,7 +274,10 @@ int linkedlist_foreach(linkedlist * list, void (*func)(void *))
 int linkedlist_clear(linkedlist * list)
 {
   if(list == NULL)
+  {
+    errno = EINVAL;
     return -1;
+  }
 
   linkednode * node = list->first;
   linkednode *next;
