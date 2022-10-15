@@ -15,6 +15,7 @@ TEST_ARRAYLIST=$(TEST_DIR)/arraylist_test.c
 TEST_LINKEDLIST=$(TEST_DIR)/linkedlist_test.c
 TEST_QUEUE=$(TEST_DIR)/queue_test.c
 TEST_UTIL=$(TEST_DIR)/util_test.c
+TEST_DSTRING=$(TEST_DIR)/dstring_test.c
 
 test_strspl: all
 	$(CC) -o$(OUT)/test_strspl -I$(INCLUDE) $(TEST_STRSPL) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
@@ -44,7 +45,12 @@ test_util: all
 	$(CC) -o$(OUT)/test_util -I$(INCLUDE) $(TEST_UTIL) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
 	LD_LIBRARY_PATH=$(OUT) $(UNITTEST) ./$(OUT)/test_util
 
-test: test_strspl test_file test_mstring test_arraylist test_queue test_util
+test_dstring: all
+	$(CC) -o$(OUT)/test_dstring -I$(INCLUDE) $(TEST_DSTRING) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
+	LD_LIBRARY_PATH=$(OUT) $(UNITTEST) ./$(OUT)/test_dstring
 
-.PHONY: test test_strspl test_file test_mstring test_arraylist test_linkedlist test_queue test_util
+
+test: test_strspl test_file test_mstring test_arraylist test_queue test_util test_dstring
+
+.PHONY: test test_strspl test_file test_mstring test_arraylist test_linkedlist test_queue test_util test_dstring
 

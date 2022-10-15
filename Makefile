@@ -11,7 +11,7 @@
 include config.mk
 
 
-$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/strspl.o $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o
+$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/strspl.o $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/dstring.o
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(OBJ)/*.o
 	chmod -x $(OUT)/lib$(LIBNAME).so	
 	$(OBJCPY) --only-keep-debug $(OUT)/lib$(LIBNAME).so $(OUT)/lib$(LIBNAME).so.dbg
@@ -42,6 +42,9 @@ $(OBJ)/queue.o: $(OBJ) $(SRC)/queue.c $(INCLUDE)/queue.h $(INCLUDE)/dmem.h $(INC
 
 $(OBJ)/util.o: $(OBJ) $(SRC)/util.c $(INCLUDE)/util.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/util.o $(SRC)/util.c $(CFLAGS)
+
+$(OBJ)/dstring.o: $(OBJ) $(SRC)/dstring.c $(INCLUDE)/dstring.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
+	$(CC) -c -I$(INCLUDE) -o$(OBJ)/dstring.o $(SRC)/dstring.c $(CFLAGS)
 
 $(OUT):
 	mkdir -p $(OUT)
