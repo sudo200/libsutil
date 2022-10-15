@@ -37,7 +37,7 @@ $(OBJ)/arraylist.o: $(OBJ) $(SRC)/arraylist.c $(INCLUDE)/arraylist.h $(INCLUDE)/
 $(OBJ)/linkedlist.o: $(OBJ) $(SRC)/linkedlist.c $(INCLUDE)/linkedlist.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/linkedlist.o $(SRC)/linkedlist.c $(CFLAGS)
 
-$(OBJ)/linkedlist.o: $(OBJ) $(SRC)/queue.c $(INCLUDE)/queue.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
+$(OBJ)/queue.o: $(OBJ) $(SRC)/queue.c $(INCLUDE)/queue.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/queue.o $(SRC)/queue.c $(CFLAGS)
 
 $(OUT):
