@@ -1,8 +1,8 @@
 ###################
 #    libsutils    #
 #                 #
-#		sudo200 and   #
-#	 contributors   #
+#   sudo200 and   #
+#  contributors   #
 #                 #
 #	 Main makefile  #
 #                 #
@@ -11,7 +11,7 @@
 include config.mk
 
 
-$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/strspl.o $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o
+$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/strspl.o $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(OBJ)/*.o
 	chmod -x $(OUT)/lib$(LIBNAME).so	
 	$(OBJCPY) --only-keep-debug $(OUT)/lib$(LIBNAME).so $(OUT)/lib$(LIBNAME).so.dbg
@@ -39,6 +39,9 @@ $(OBJ)/linkedlist.o: $(OBJ) $(SRC)/linkedlist.c $(INCLUDE)/linkedlist.h $(INCLUD
 
 $(OBJ)/queue.o: $(OBJ) $(SRC)/queue.c $(INCLUDE)/queue.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/queue.o $(SRC)/queue.c $(CFLAGS)
+
+$(OBJ)/util.o: $(OBJ) $(SRC)/util.c $(INCLUDE)/util.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
+	$(CC) -c -I$(INCLUDE) -o$(OBJ)/util.o $(SRC)/util.c $(CFLAGS)
 
 $(OUT):
 	mkdir -p $(OUT)
