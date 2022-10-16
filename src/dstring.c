@@ -3,32 +3,13 @@
 #include "dmem.h"
 #include "dstring.h"
 
-// Private functions
+#define LEN(dstr) (*((size_t *) dstr - 1))
 
-struct __dstring_read_ret_val_struct
-{
-  size_t *len;
-  void *str;
-} __dstring_deconstruct(dstring dstr)
-{
-  if(dstr == NULL)
-    return (struct __dstring_read_ret_val_struct) {
-    .len = NULL,
-    .str = NULL,
-  };
-
-  size_t *len = ((size_t *) dstr) - 1;
-  return (struct __dstring_read_ret_val_struct) {
-    .len = len,
-    .str = (void *) dstr,
-  };
-}
-
-// Public functions
 
 dstring dstring_new(const char *str)
 {
   const size_t len = (str == NULL) ? 0UL : strlen(str) + 1;
+  str = (str == NULL) ? "" : str;
   return dstring_new_binsave(str, len); 
 }
 
@@ -48,7 +29,7 @@ size_t dstring_length(dstring dstr)
   if(dstr == NULL)
     return 0UL;
 
-  return *__dstring_deconstruct(dstr).len;
+  return LEN(dstr) - 1;
 }
 
 int dstring_cat(dstring *dstr, const char *str)
@@ -64,19 +45,21 @@ int dstring_cat_binsave(dstring *dstr, const void *str, size_t len)
   if(dstr == NULL || *dstr == NULL || str == NULL)
     return -1;
 
-  struct __dstring_read_ret_val_struct dcomp = __dstring_deconstruct(*dstr);
-  dcomp.len = (size_t *) urealloc(dcomp.len, sizeof(char) * (*dcomp.len + len) + sizeof(*dcomp.len));
+  const size_t initial_len = LEN(*dstr);
+  size_t * initial_ptr = ((size_t *) *dstr - 1);
 
-  if(dcomp.len == NULL)
+  initial_ptr = (size_t *) urealloc(initial_ptr, sizeof(size_t) + initial_len + len);
+
+  if(initial_ptr == NULL)
     return -1;
 
-  memcpy(((char *) dcomp.str) + *dcomp.len, str, len);
-  return 0;
-}
+  *initial_ptr++ = initial_len + len - 1;
 
-int dstring_cmp_dstring(dstring dstr1, dstring dstr2)
-{
-  return dstring_cmp_binsave(dstr1, dstr2, dstring_length(dstr2));
+  memcpy(((char *) initial_ptr) + initial_len - 1, str, len);
+
+  *dstr = (dstring) initial_ptr;
+
+  return 0;
 }
 
 int dstring_cmp(dstring dstr, const char *str)
@@ -94,6 +77,6 @@ void dstring_destroy(dstring *dstr)
   if(dstr == NULL || *dstr == NULL)
     return;
 
-  ufree(__dstring_deconstruct(*dstr).len);
+  ufree(((size_t *) *dstr) - 1);
 }
 
