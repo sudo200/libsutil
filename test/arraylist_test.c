@@ -55,7 +55,7 @@ int main()
   i = 0;
   assert(arraylist_foreach(list, cb_function) >= 0);
 
-  assert(arraylist_clear(list) == 1);
+  assert(arraylist_clear(list) == 0);
 
   assert(arraylist_length(list) == 0);
   assert(arraylist_get(list, 0) == NULL);
