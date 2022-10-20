@@ -10,7 +10,7 @@ typedef struct arraylist_t arraylist_t;
  *
  * @return The new arraylist, or NULL if an error occured.
  */
-arraylist_t * arraylist_new();
+arraylist_t *arraylist_new();
 
 /**
  * Adds the given element at the end of the arraylist.
@@ -50,7 +50,8 @@ int arraylist_insert(arraylist_t *list, void *item, size_t index);
  * @param index The index to insert at.
  * @return 0 if successful, else a negative value.
  */
-int arraylist_insertall(arraylist_t *list, void **items, size_t nitems, size_t index);
+int arraylist_insertall(arraylist_t *list, void **items, size_t nitems,
+                        size_t index);
 
 /**
  * Gets the element at the given index.
@@ -59,7 +60,7 @@ int arraylist_insertall(arraylist_t *list, void **items, size_t nitems, size_t i
  * @param index The index from which to get the value.
  * @return The element at index, or NULL if an error occured.
  */
-void * arraylist_get(arraylist_t *list, size_t index);
+void *arraylist_get(arraylist_t *list, size_t index);
 
 /**
  * Gets the length (element count) of the arraylist.
@@ -76,7 +77,7 @@ size_t arraylist_length(arraylist_t *list);
  * @param index The index at which to remove the element.
  * @return The element at index, or NULL if an error occured.
  */
-void * arraylist_remove(arraylist_t *list, size_t index);
+void *arraylist_remove(arraylist_t *list, size_t index);
 
 /**
  * Calls cb with every element in the given arraylist.
@@ -104,5 +105,4 @@ int arraylist_clear(arraylist_t *list);
  */
 void arraylist_destroy(arraylist_t *list);
 
-#endif//___ARRAYLIST_H__
-
+#endif //___ARRAYLIST_H__

@@ -1,38 +1,30 @@
 #include <errno.h>
 #include <string.h>
 
-#include "dmem.h"
 #include "arraylist.h"
+#include "dmem.h"
 
-struct arraylist_t
-{
+struct arraylist_t {
   void **arr;
   size_t arr_len;
 };
 
-int arraylist_realloc(arraylist_t *list, int diff)
-{
-  if(diff == 0)
+int arraylist_realloc(arraylist_t *list, int diff) {
+  if (diff == 0)
     return 0;
 
-  if(
-      (list->arr = (void **) urealloc(
-        list->arr,
-        sizeof(*list->arr) * (size_t)(list->arr_len + diff)
-        )
-       ) == NULL)
-  {
+  if ((list->arr = (void **)urealloc(
+           list->arr, sizeof(*list->arr) * (size_t)(list->arr_len + diff))) ==
+      NULL) {
     errno = ENOMEM;
     return -1;
   }
   return 0;
 }
 
-arraylist_t * arraylist_new(void)
-{
-  arraylist_t * list = (arraylist_t *) ualloc(sizeof(arraylist_t));
-  if(list == NULL)
-  {
+arraylist_t *arraylist_new(void) {
+  arraylist_t *list = (arraylist_t *)ualloc(sizeof(arraylist_t));
+  if (list == NULL) {
     errno = ENOMEM;
     return NULL;
   }
@@ -43,23 +35,20 @@ arraylist_t * arraylist_new(void)
   return list;
 }
 
-int arraylist_add(arraylist_t *list, void *item)
-{
+int arraylist_add(arraylist_t *list, void *item) {
   return arraylist_addall(list, &item, 1);
 }
 
-int arraylist_addall(arraylist_t *list, void **items, size_t nitems)
-{
-  if(nitems == 0)
+int arraylist_addall(arraylist_t *list, void **items, size_t nitems) {
+  if (nitems == 0)
     return 0;
 
-  if(list == NULL || items == NULL)
-  {
+  if (list == NULL || items == NULL) {
     errno = EINVAL;
     return -1;
   }
 
-  if(arraylist_realloc(list, nitems) < 0)
+  if (arraylist_realloc(list, nitems) < 0)
     return -1;
 
   memmove(list->arr + list->arr_len, items, sizeof(*list->arr) * nitems);
@@ -67,47 +56,42 @@ int arraylist_addall(arraylist_t *list, void **items, size_t nitems)
   return 0;
 }
 
-int arraylist_insert(arraylist_t *list, void *item, size_t index)
-{
+int arraylist_insert(arraylist_t *list, void *item, size_t index) {
   return arraylist_insertall(list, &item, 1, index);
 }
 
-int arraylist_insertall(arraylist_t *list, void **items, size_t nitems, size_t index)
-{
-  if(nitems == 0)
+int arraylist_insertall(arraylist_t *list, void **items, size_t nitems,
+                        size_t index) {
+  if (nitems == 0)
     return 0;
 
-  if(list == NULL || items == NULL)
-  {
+  if (list == NULL || items == NULL) {
     errno = EINVAL;
     return -1;
   }
 
-  if(index >= list->arr_len)
-  {
+  if (index >= list->arr_len) {
     errno = ELNRNG;
     return -1;
   }
 
-  if(arraylist_realloc(list, nitems) < 0)
+  if (arraylist_realloc(list, nitems) < 0)
     return -1;
 
-  memmove(list->arr + nitems, list->arr + index, sizeof(*list->arr) * (list->arr_len - index - 1));
+  memmove(list->arr + nitems, list->arr + index,
+          sizeof(*list->arr) * (list->arr_len - index - 1));
   memmove(list->arr + index, items, sizeof(*list->arr) * nitems);
   list->arr_len += nitems;
   return 0;
 }
 
-void * arraylist_get(arraylist_t *list, size_t index)
-{
-  if(list == NULL)
-  {
+void *arraylist_get(arraylist_t *list, size_t index) {
+  if (list == NULL) {
     errno = EINVAL;
     return NULL;
   }
 
-  if(index >= list->arr_len)
-  {
+  if (index >= list->arr_len) {
     errno = ELNRNG;
     return NULL;
   }
@@ -115,10 +99,8 @@ void * arraylist_get(arraylist_t *list, size_t index)
   return list->arr[index];
 }
 
-size_t arraylist_length(arraylist_t *list)
-{
-  if(list == NULL)
-  {
+size_t arraylist_length(arraylist_t *list) {
+  if (list == NULL) {
     errno = EINVAL;
     return 0UL;
   }
@@ -126,71 +108,59 @@ size_t arraylist_length(arraylist_t *list)
   return list->arr_len;
 }
 
-void * arraylist_remove(arraylist_t *list, size_t index)
-{
-  if(list == NULL)
-  {
+void *arraylist_remove(arraylist_t *list, size_t index) {
+  if (list == NULL) {
     errno = EINVAL;
     return NULL;
   }
-  
-  if(index >= list->arr_len)
-  {
+
+  if (index >= list->arr_len) {
     errno = ELNRNG;
     return NULL;
   }
 
   void *tmp = list->arr[index];
-  memmove(
-      list->arr + index,
-      list->arr + index + 1,
-      sizeof(*list->arr) * (list->arr_len - index - 1)
-      );
+  memmove(list->arr + index, list->arr + index + 1,
+          sizeof(*list->arr) * (list->arr_len - index - 1));
 
-  if(arraylist_realloc(list, -1) < 0)
+  if (arraylist_realloc(list, -1) < 0)
     return NULL;
 
   list->arr_len -= 1;
   return tmp;
 }
 
-int arraylist_foreach(arraylist_t *list, void (*cb)(void *))
-{
-  if(list == NULL || *(void **)&cb == NULL)
-  {
+int arraylist_foreach(arraylist_t *list, void (*cb)(void *)) {
+  if (list == NULL || *(void **)&cb == NULL) {
     errno = EINVAL;
     return -1;
   }
 
-  for(size_t i = 0; i < list->arr_len; i++)
+  for (size_t i = 0; i < list->arr_len; i++)
     cb(list->arr[i]);
   return 0;
 }
 
-int arraylist_clear(arraylist_t *list)
-{
-  if(list == NULL)
-  {
+int arraylist_clear(arraylist_t *list) {
+  if (list == NULL) {
     errno = EINVAL;
     return -1;
   }
 
-  if(list->arr == NULL)
+  if (list->arr == NULL)
     return 0;
-  
+
   ufree(list->arr);
   list->arr = NULL;
   list->arr_len = 0UL;
   return 0;
 }
 
-void arraylist_destroy(arraylist_t *list)
-{
-  if(list == NULL)
+void arraylist_destroy(arraylist_t *list) {
+  if (list == NULL)
     return;
 
-  if(list->arr != NULL)
+  if (list->arr != NULL)
     ufree(list->arr);
   ufree(list);
 }
-

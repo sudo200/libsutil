@@ -22,3 +22,6 @@ TEST_DIR=test
 
 OBJCPY=objcopy
 
+FORMATTER=clang-format
+FORMATTER_OPTIONS=-i
+

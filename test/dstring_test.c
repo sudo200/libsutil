@@ -3,12 +3,11 @@
 
 #include "dstring.h"
 
-#define equals(x, y)  (strcmp(x, y) == 0)
+#define equals(x, y) (strcmp(x, y) == 0)
 
 #include <stdio.h>
 
-int main(void)
-{
+int main(void) {
   dstring str = dstring_new(NULL);
   assert(str != NULL);
 
@@ -35,4 +34,3 @@ int main(void)
   dstring_destroy(&copy);
   return 0;
 }
-

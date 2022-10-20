@@ -5,25 +5,14 @@
 
 #include "linkedlist.h"
 
-#define EQUALS(x, y)  (strcmp(x, y) == 0)
+#define EQUALS(x, y) (strcmp(x, y) == 0)
 
 static int i = 0;
-static char *strs[] = {
-  "foo",
-  "bar",
-  "boom",
-  "saas",
-  "sees",
-  "soos"
-};
+static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
-void cb_function(void *item)
-{
-  assert(EQUALS((const char *) item, strs[i++]));
-}
+void cb_function(void *item) { assert(EQUALS((const char *)item, strs[i++])); }
 
-int main(void)
-{
+int main(void) {
   linkedlist *list = linkedlist_new();
   assert(list != NULL);
 
@@ -55,7 +44,7 @@ int main(void)
   assert(linkedlist_insert(list, strs[0], 0) >= 0);
 
   assert(linkedlist_insert(list, strs[0], 0) >= 0);
-  assert(EQUALS((const char *) linkedlist_remove(list, 0), strs[0]));
+  assert(EQUALS((const char *)linkedlist_remove(list, 0), strs[0]));
 
   i = 0;
   assert(linkedlist_foreach(list, cb_function) >= 0);
@@ -63,4 +52,3 @@ int main(void)
   linkedlist_destroy(list);
   return 0;
 }
-

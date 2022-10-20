@@ -11,7 +11,6 @@
  * @param size The size in bytes of an item.
  * @return a pointer to arr, or NULL if an error occured.
  */
-void * memrev(void *arr, size_t nitems, size_t size);
+void *memrev(void *arr, size_t nitems, size_t size);
 
-#endif//___ARRAYLIST_H__
-
+#endif //___ARRAYLIST_H__

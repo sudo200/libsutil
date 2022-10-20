@@ -2,19 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define EQUALS(x, y)  (strcmp(x, y) == 0)
+#define EQUALS(x, y) (strcmp(x, y) == 0)
 
 #include "dmem.h"
 #include "file.h"
 
 extern int chdir(const char *);
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   *strrchr(argv[0], '/') = '\0';
   chdir(argv[0]);
 
-  FILE * testfile = fopen("test_file.txt", "w+");
+  FILE *testfile = fopen("test_file.txt", "w+");
   assert(testfile != NULL);
 
   size_t written = fwrite("Hello there!\n", 1, 13, testfile);
@@ -30,7 +29,7 @@ int main(int argc, char **argv)
 
   fseek(testfile, 0L, SEEK_SET);
 
-  char * buffer = fpeeks(testfile, 12);
+  char *buffer = fpeeks(testfile, 12);
   assert(buffer != NULL);
   assert(EQUALS(buffer, "Hello there!"));
   ufree(buffer);
@@ -38,4 +37,3 @@ int main(int argc, char **argv)
   fclose(testfile);
   return EXIT_SUCCESS;
 }
-

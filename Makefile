@@ -64,7 +64,11 @@ compile-config: clean
 	$(RM) compile_commands.json
 	bear -- $(MAKE) build
 
+format:
+	$(FORMATTER) $(FORMATTER_OPTIONS) */*.h
+	$(FORMATTER) $(FORMATTER_OPTIONS) */*.c
+
 include $(TEST_DIR)/tests.mk
 
-.PHONY: clean build all compile-config
+.PHONY: clean build all compile-config format
 

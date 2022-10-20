@@ -11,14 +11,14 @@ typedef struct queue queue;
  *
  * @return A new queue with max_len capacity.
  */
-queue * queue_new_capped(size_t max_len);
+queue *queue_new_capped(size_t max_len);
 
 /**
  * Creates a new queue, which can theoretically grow to infinity.
  *
  * @return A new uncapped queue.
  */
-queue * queue_new_uncapped(void);
+queue *queue_new_uncapped(void);
 
 /**
  * Adds an element to the queue.
@@ -44,7 +44,7 @@ int queue_addall(queue *queue, void **items, size_t nitems, bool reverse);
  * @param queue The queue to operate on.
  * @return The next element, or NULL if empty.
  */
-void * queue_peek(queue *queue);
+void *queue_peek(queue *queue);
 
 /**
  * Get the next element from the queue and removes it.
@@ -52,7 +52,7 @@ void * queue_peek(queue *queue);
  * @param queue The queue to operate on.
  * @return The next element, or NULL if empty.
  */
-void * queue_poll(queue *queue);
+void *queue_poll(queue *queue);
 
 /**
  * Get the length of the queue.
@@ -70,5 +70,4 @@ size_t queue_length(queue *queue);
  */
 void queue_destroy(queue *queue);
 
-#endif//___QUEUE_H__
-
+#endif //___QUEUE_H__

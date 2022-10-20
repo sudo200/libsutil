@@ -5,7 +5,6 @@
 
 #include "types.h"
 
-int strspl(string_array_t *out, const char * string, const char delim);
+int strspl(string_array_t *out, const char *string, const char delim);
 
-#endif//___STRSPL_H__
-
+#endif //___STRSPL_H__

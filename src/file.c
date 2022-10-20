@@ -4,10 +4,8 @@
 #include "dmem.h"
 #include "file.h"
 
-int fpeek(FILE *stream)
-{
-  if(stream == NULL)
-  {
+int fpeek(FILE *stream) {
+  if (stream == NULL) {
     errno = EBADF;
     return EOF;
   }
@@ -15,33 +13,29 @@ int fpeek(FILE *stream)
   return ungetc(fgetc(stream), stream);
 }
 
-char * fpeeks(FILE *stream, size_t n)
-{
-  if(stream == NULL)
-  {
+char *fpeeks(FILE *stream, size_t n) {
+  if (stream == NULL) {
     errno = EBADF;
     return NULL;
   }
 
-  char *buffer = (char *) ualloc((n + 1) * sizeof(char));
-  if(buffer == NULL)
+  char *buffer = (char *)ualloc((n + 1) * sizeof(char));
+  if (buffer == NULL)
     return NULL;
 
-  for(size_t i = 0; i < n; i++)
-    if((buffer[i] = fgetc(stream)) == EOF)
+  for (size_t i = 0; i < n; i++)
+    if ((buffer[i] = fgetc(stream)) == EOF)
       return NULL;
   buffer[n] = '\0';
 
-  for(size_t i = n; i > 0; i--)
+  for (size_t i = n; i > 0; i--)
     ungetc(buffer[i - 1], stream);
 
   return buffer;
 }
 
-size_t fsize(FILE *stream)
-{
-  if(stream == NULL)
-  {
+size_t fsize(FILE *stream) {
+  if (stream == NULL) {
     errno = EBADF;
     return 0;
   }
@@ -55,4 +49,3 @@ size_t fsize(FILE *stream)
   fsetpos(stream, &pos);
   return end - start;
 }
-

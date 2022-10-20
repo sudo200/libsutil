@@ -1,5 +1,5 @@
-#ifndef  ___DSTRING_H__
-#define  ___DSTRING_H__
+#ifndef ___DSTRING_H__
+#define ___DSTRING_H__
 
 #include "types.h"
 
@@ -12,7 +12,7 @@
  * This string is also binary save, and can therefore
  * be used to store abitrary data.
  */
-typedef const char * dstring;
+typedef const char *dstring;
 
 /**
  * Creates a new dynamic string.
@@ -81,5 +81,4 @@ int dstring_cmp_binsave(dstring dstr, const void *str, size_t len);
  */
 void dstring_destroy(dstring *dstr);
 
-#endif// ___DSTRING_H__
-
+#endif // ___DSTRING_H__

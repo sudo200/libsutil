@@ -1,29 +1,18 @@
 #include <assert.h>
 #include <string.h>
 
-#define EQUALS(x, y)  (strcmp(x, y) == 0)
+#define EQUALS(x, y) (strcmp(x, y) == 0)
 
-#include "dmem.h"
 #include "arraylist.h"
+#include "dmem.h"
 
-static char *strs[] = {
-  "foo",
-  "bar",
-  "boom",
-  "saas",
-  "sees",
-  "soos"
-};
+static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
 static int i = 0;
 
-void cb_function(void *ptr)
-{
-  assert(EQUALS((const char *)ptr, strs[i++]));
-}
+void cb_function(void *ptr) { assert(EQUALS((const char *)ptr, strs[i++])); }
 
-int main()
-{
+int main() {
   assert(arraylist_add(NULL, "") < 0);
   assert(arraylist_addall(NULL, NULL, 3) < 0);
 
@@ -63,4 +52,3 @@ int main()
   arraylist_destroy(list);
   return 0;
 }
-

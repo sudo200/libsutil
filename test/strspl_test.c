@@ -1,14 +1,13 @@
 #include <assert.h>
 #include <string.h>
 
-#define EQUALS(x, y)  (strcmp(x, y) == 0)
+#define EQUALS(x, y) (strcmp(x, y) == 0)
 
 #include "dmem.h"
 
 #include "strspl.h"
 
-int main(void)
-{
+int main(void) {
   string_array_t tokens;
   assert(strspl(&tokens, "Hello there my friends!", ' ') == 0);
 
@@ -21,7 +20,6 @@ int main(void)
 
   ufree(*tokens.arr);
   ufree(tokens.arr);
-  
+
   return 0;
 }
-
