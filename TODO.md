@@ -2,6 +2,7 @@
 
 ## Features
 
+* [ ] Add better scanf with variants
 * [ ] Add UUID
 * [ ] Add argument parser
 * [ ] Add hashmap
