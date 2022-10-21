@@ -16,7 +16,7 @@ int main() {
   assert(arraylist_add(NULL, "") < 0);
   assert(arraylist_addall(NULL, NULL, 3) < 0);
 
-  arraylist_t *list = arraylist_new();
+  arraylist *list = arraylist_new();
   assert(list != NULL);
 
   assert(arraylist_get(list, 0) == NULL); // Should be empty at first
