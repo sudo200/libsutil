@@ -4,7 +4,7 @@
 #   sudo200 and   #
 #  contributors   #
 #                 #
-#	 Main makefile  #
+#  Main makefile  #
 #                 #
 ###################
 
