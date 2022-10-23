@@ -11,4 +11,8 @@ int vmsprintf(char **out, const char *format, va_list args);
 
 char *mstrcat(char **dest, const char *src);
 
+bool startswith(const char *str, const char *start);
+
+bool endswith(const char *str, const char *end);
+
 #endif //___MSTRING_H__

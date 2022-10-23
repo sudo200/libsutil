@@ -16,6 +16,9 @@ int main(void) {
   assert(mstrcat(&mystr, "foo bar boom\n") != NULL);
   assert(EQUALS(mystr, "This is a test: 653.770, 0x2A \nfoo bar boom\n"));
 
+  assert(startswith("Hello there!", "Hel"));
+  assert(endswith("Foo!", "!"));
+
   ufree(mystr);
   return 0;
 }

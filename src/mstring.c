@@ -38,3 +38,25 @@ char *mstrcat(char **dest, const char *src) {
     return NULL;
   return strcat(*dest, src);
 }
+
+bool startswith(const char *str, const char *start)
+{
+  size_t start_len = strlen(start);
+
+  if(start_len > strlen(str))
+    return false;
+
+  return memcmp(str, start, start_len) == 0;
+}
+
+bool endswith(const char *str, const char *end)
+{
+  size_t str_len = strlen(str),
+         end_len = strlen(end);
+
+  if(end_len > str_len)
+    return false;
+
+  return memcmp(str + str_len - end_len, end, end_len) == 0;
+}
+
