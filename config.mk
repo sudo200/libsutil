@@ -13,7 +13,7 @@ SRC=src
 OUT=out
 OBJ=obj
 LIBNAME=sutil
-CFLAGS=-pedantic -pipe -Wall -g -fPIC
+CFLAGS=-pedantic -pipe -Wall -Werror -g -fPIC
 
 SCRIPTS=scripts
 UNITTEST=$(SCRIPTS)/unittest
