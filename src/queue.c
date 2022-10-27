@@ -156,4 +156,5 @@ void queue_destroy(queue *q) {
     if (q->arr != NULL)
       ufree(q->arr);
   }
+  ufree(q);
 }
