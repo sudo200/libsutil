@@ -78,7 +78,7 @@ int arraylist_insertall(arraylist *list, void **items, size_t nitems,
   if (arraylist_realloc(list, nitems) < 0)
     return -1;
 
-  memmove(list->arr + nitems, list->arr + index,
+  memmove(list->arr + nitems + index, list->arr + index,
           sizeof(*list->arr) * (list->arr_len - index - 1));
   memmove(list->arr + index, items, sizeof(*list->arr) * nitems);
   list->arr_len += nitems;

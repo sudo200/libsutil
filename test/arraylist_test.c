@@ -8,9 +8,11 @@
 
 static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
-static int i = 0;
+static size_t i = 0;
 
-void cb_function(void *ptr) { assert(EQUALS((const char *)ptr, strs[i++])); }
+static void cb_function(void *ptr) { assert(EQUALS((const char *)ptr, strs[i++])); }
+
+#include <stdio.h>
 
 int main() {
   assert(arraylist_add(NULL, "") < 0);
@@ -35,8 +37,8 @@ int main() {
   assert(arraylist_length(list) == 6);
   assert(arraylist_foreach(list, cb_function) >= 0);
 
-  assert(arraylist_remove(list, 5) == strs[5]);
-  assert(arraylist_remove(list, 0) == strs[0]);
+  assert(EQUALS(arraylist_remove(list, 5), strs[5]));
+  assert(EQUALS(arraylist_remove(list, 0), strs[0]));
   i = 1;
   assert(arraylist_foreach(list, cb_function) >= 0);
 
