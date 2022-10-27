@@ -10,7 +10,9 @@ static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
 static size_t i = 0;
 
-static void cb_function(void *ptr) { assert(EQUALS((const char *)ptr, strs[i++])); }
+static void cb_function(void *ptr) {
+  assert(EQUALS((const char *)ptr, strs[i++]));
+}
 
 #include <stdio.h>
 

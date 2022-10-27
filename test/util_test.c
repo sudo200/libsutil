@@ -24,7 +24,7 @@ int main(void) {
   dprintf(proc.stdin, "echo \"%s\"\n", text);
 
   assert((nbytes = read(proc.stdout, buffer, sizeof(buffer))) >= 0);
-  
+
   assert(equals(buffer, text, strlen(text)));
 
   return 0;

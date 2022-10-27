@@ -100,7 +100,7 @@ typedef struct {
  */
 argparser_status argparse(int argc, char **argv, argparser_opt *opts,
                           int *optint, const char *longopt_start,
-                          char shortopt_start,
-                          char longopt_seperator, const char *parse_stop);
+                          char shortopt_start, char longopt_seperator,
+                          const char *parse_stop);
 
 #endif //___ARGPARSER_H__

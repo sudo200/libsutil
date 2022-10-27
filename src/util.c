@@ -7,29 +7,28 @@
 
 extern char **environ;
 
-pid_t spawn(process *proc, const char *file, char *const *argv, char *const *envp)
-{
+pid_t spawn(process *proc, const char *file, char *const *argv,
+            char *const *envp) {
   fd_t _stdin[2], _stdout[2], _stderr[2];
-  if(argv == NULL)
-  {
+  if (argv == NULL) {
     char *const _argv[] = {(char *)file, NULL};
     argv = _argv;
   }
-  if(envp == NULL)
+  if (envp == NULL)
     envp = environ;
 
-  if(pipe(_stdin) == -1)
+  if (pipe(_stdin) == -1)
     return -1;
-  if(pipe(_stdout) == -1)
+  if (pipe(_stdout) == -1)
     return -1;
-  if(pipe(_stderr) == -1)
+  if (pipe(_stderr) == -1)
     return -1;
 
   pid_t pid = fork();
-  if(pid == -1)
+  if (pid == -1)
     return -1;
 
-  if(pid == 0) // Child
+  if (pid == 0) // Child
   {
     dup2(_stdin[0], STDIN_FILENO);
     dup2(_stdout[1], STDOUT_FILENO);
@@ -42,14 +41,12 @@ pid_t spawn(process *proc, const char *file, char *const *argv, char *const *env
     close(_stderr[0]);
     close(_stderr[1]);
 
-    if(execve(file, argv, envp) == -1)
-    {
+    if (execve(file, argv, envp) == -1) {
       _exit(1);
       return -1;
-    }// Should never be reached
+    } // Should never be reached
     return 0;
- }
-  else // Parent
+  } else // Parent
   {
     close(_stdin[0]);
     close(_stdout[1]);

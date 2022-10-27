@@ -9,8 +9,7 @@
  * A struct resembling a
  * child process.
  */
-typedef struct
-{
+typedef struct {
   /**
    * The PID of the child process.
    */
@@ -36,8 +35,7 @@ typedef struct
    * standard error.
    */
   fd_t stderr;
-}
-process;
+} process;
 
 /**
  * Spawns a new child process with the given arguments and environment,
@@ -51,7 +49,8 @@ process;
  *
  * @see execve
  */
-pid_t spawn(process *proc, const char *file, char *const *argv, char *const *envp);
+pid_t spawn(process *proc, const char *file, char *const *argv,
+            char *const *envp);
 
 /**
  * Reverses the order of elements in memory.
