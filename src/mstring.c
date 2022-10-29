@@ -57,19 +57,20 @@ bool endswith(const char *str, const char *end) {
   return memcmp(str + str_len - end_len, end, end_len) == 0;
 }
 
-int strspl(string_array_t *out, const char *str, const char *delim) {
+int strspl(string_array_t *out, const char *str, const char *delim)
+{
   const size_t delim_len = strlen(delim);
   char *substr;
 
-  out->arr = (char **)ualloc(sizeof(char *));
+  out->arr = (char **) ualloc(sizeof(char *));
   msprintf(out->arr, "%s", str);
   out->len = 1;
 
-  while ((substr = strstr(out->arr[out->len - 1], delim)) != NULL) {
+  while((substr = strstr(out->arr[out->len - 1], delim)) != NULL)
+  {
     *substr = '\0';
     substr += delim_len;
-    if ((out->arr = (char **)urealloc(out->arr,
-                                      sizeof(char *) * (++out->len))) == NULL)
+    if((out->arr = (char **) urealloc(out->arr, sizeof(char *) * (++out->len))) == NULL)
       return -1;
     out->arr[out->len - 1] = substr;
   }
