@@ -16,9 +16,25 @@ int main(void) {
   assert(mstrcat(&mystr, "foo bar boom\n") != NULL);
   assert(EQUALS(mystr, "This is a test: 653.770, 0x2A \nfoo bar boom\n"));
 
+  ufree(mystr);
+
   assert(startswith("Hello there!", "Hel"));
   assert(endswith("Foo!", "!"));
 
-  ufree(mystr);
+  string_array_t arr;
+
+  assert(strspl(&arr, "Hello there!", " ") >= 0);
+  assert(arr.len == 2);
+  assert(EQUALS(arr.arr[0], "Hello"));
+  assert(EQUALS(arr.arr[1], "there!"));
+
+  char *str;
+  assert(strjoin(&str, arr, "(", " ", ")") >= 0);
+  assert(EQUALS(str, "(Hello there!)"));
+
+  ufree(str);
+  ufree(*arr.arr);
+  ufree(arr.arr);
+
   return 0;
 }
