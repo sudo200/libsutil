@@ -99,7 +99,8 @@ int arraylist_clear(arraylist *list);
 
 /**
  * Destroyes the given arraylist.
- * Stored elements are not deallocated.
+ * 
+ * IMPORTANT: Stored elements are not deallocated.
  *
  * @param list The arraylist to operate on.
  */

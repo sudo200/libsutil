@@ -61,7 +61,7 @@ int linkedlist_clear(linkedlist *list);
 /**
  *  Destroys the linked list.
  *
- *  Stored elements are not deallocated!
+ *  IMPORTANT: Stored elements are not deallocated!
  */
 void linkedlist_destroy(linkedlist *list);
 

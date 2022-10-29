@@ -64,7 +64,7 @@ size_t queue_length(queue *queue);
 
 /**
  * Destroys the queue.
- * Stored elements are not deallocated.
+ * IMPORTANT: Stored elements are not deallocated.
  *
  * @param queue The queue to destroy.
  */

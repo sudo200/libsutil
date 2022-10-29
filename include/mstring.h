@@ -5,18 +5,77 @@
 
 #include "types.h"
 
+/**
+ * Like sprintf, but allocates a buffer big enough
+ * to hold the finished string.
+ *
+ * @param out The pointer to the output string.
+ * @param format The format string.
+ * @param ... Arguments, as specified by format.
+ * @return The amount of bytes written, or a negative value on error.
+ */
 int msprintf(char **out, const char *format, ...);
 
+/**
+ * Like msprintf, but gets the varargs from a va_list.
+ *
+ * @param out The pointer to the output string.
+ * @param format The format string.
+ * @param args The Arguments, as specified by format.
+ * @return The amount of bytes written, or a negative value on error.
+ */
 int vmsprintf(char **out, const char *format, va_list args);
 
+/**
+ * Like strcat, but automatically reallocates the dest-buffer
+ * to hold the concatenated string.
+ *
+ * IMPORTANT: dest has to be dynamically allocates using
+ * another library function or ualloc/urealloc.
+ *
+ * @param dest The pointer to the string onto which src should be concatenated.
+ * @param src The string to be concatenated onto dest.
+ * @return dest, or NULL on error.
+ */
 char *mstrcat(char **dest, const char *src);
 
+/**
+ * Returns true if str starts with start, false otherwise.
+ *
+ * @param str The string the check the start of.
+ * @param start The string with which str should start.
+ * @return true if str starts with start, false otherwise.
+ */
 bool startswith(const char *str, const char *start);
 
+/**
+ * Returns true if str ends with end, false otherwise.
+ *
+ * @param str The string to check the end of.
+ * @param end The string with which str should end.
+ * @return true if str ends with end, false otherwise.
+ */
 bool endswith(const char *str, const char *end);
 
+/**
+ * Splits the string str on every occurance of delim.
+ *
+ * @param out The pointer to a string_array_t struct.
+ * @param str The string to split.
+ * @param delim The delimiter string where a split should occure.
+ * @return 0 on success, a negative value otherwise.
+ */
 int strspl(string_array_t *out, const char *str, const char *delim);
 
+/**
+ * Joins a string array to a string.
+ *
+ * @param out The pointer to the output string.
+ * @param arr The string array to join.
+ * @param first A string to place at the start of out; can be omitted by passing NULL.
+ * @param delim A string to place between joined elements; can be omitted by passing NULL.
+ * @param last A string to place at the end of out; can be omitted by passing NULL.
+ */
 int strjoin(char **out, string_array_t arr, const char *first,
             const char *delim, const char *last);
 

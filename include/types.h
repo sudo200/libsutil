@@ -22,7 +22,7 @@ typedef int errno_t;
 typedef void (*callback_t)(void);
 
 /**
- * A function executed in a posix thread.
+ * A function executed in a POSIX thread.
  */
 typedef void *(*thread_worker_t)(void *);
 
@@ -47,7 +47,7 @@ typedef void (*dealloc_t)(void *);
 typedef void *(*realloc_t)(void *, size_t);
 
 /**
- * A struct containing an array of strings and its length.
+ * A struct describing an array of strings.
  */
 typedef struct {
   char **arr;
