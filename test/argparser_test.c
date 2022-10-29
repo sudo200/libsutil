@@ -1,12 +1,11 @@
-#include <assert.h>
 #include <string.h>
 
 #include "argparser.h"
 #include "dmem.h"
 
-#define EQUALS(x, y) (strcmp(x, y) == 0)
+#include "test.h"
 
-#include <stdio.h>
+#define EQUALS(x, y) (strcmp(x, y) == 0)
 
 int main(void) {
   int argc1 = 5;
@@ -23,19 +22,19 @@ int main(void) {
 
       {NULL, 0, NO_ARG, NULL, NULL}};
 
-  assert(argparse(argc1, argv1, opts, &optint, NULL, '\0', '\0', NULL) ==
+  test("argparse exec", argparse(argc1, argv1, opts, &optint, NULL, '\0', '\0', NULL) ==
          ARGPARSE_OK);
 
-  assert(a);
-  assert(!b);
-  assert(c);
-  assert(d);
-  assert(e);
+  test("a == true", a);
+  test("b == false", !b);
+  test("c == true", c);
+  test("d == true", d);
+  test("e == true", e);
 
-  assert(EQUALS(c_val, "Foo"));
-  assert(EQUALS(e_val, "Bar"));
+  test("c_val == \"Foo\"", EQUALS(c_val, "Foo"));
+  test("e_val == \"Bar\"", EQUALS(e_val, "Bar"));
 
-  assert(optint == 4);
+  test("optint == 4", optint == 4);
 
   ufree(c_val);
   ufree(e_val);
@@ -48,19 +47,19 @@ int main(void) {
                    "/",
                    "ngfdjfr"};
 
-  assert(argparse(argc2, argv2, opts, &optint, NULL, '\0', '\0', NULL) ==
+  test("argparse exec", argparse(argc2, argv2, opts, &optint, NULL, '\0', '\0', NULL) ==
          ARGPARSE_OK);
 
-  assert(a);
-  assert(!b);
-  assert(c);
-  assert(d);
-  assert(!e);
+  test("a == true", a);
+  test("b == false", !b);
+  test("c == true", c);
+  test("d == true", d);
+  test("e == true", !e);
 
-  assert(EQUALS(c_val, "12345"));
-  assert(e_val == NULL);
+  test("c_val == \"12345\"", EQUALS(c_val, "12345"));
+  test("e_val == NULL", e_val == NULL);
 
-  assert(optint == 4);
+  test("optint == 4", optint == 4);
 
   ufree(c_val);
 

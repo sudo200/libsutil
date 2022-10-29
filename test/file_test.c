@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -7,31 +6,27 @@
 #include "dmem.h"
 #include "file.h"
 
-extern int chdir(const char *);
+#include "test.h"
 
-int main(int argc, char **argv) {
-  *strrchr(argv[0], '/') = '\0';
-  chdir(argv[0]);
+int main(void) {
+  char b[] = "Hello there!\nGENERAL KENOBI!";
+  FILE *testfile = fmemopen(b, sizeof(b), "r");
 
-  FILE *testfile = fopen("test_file.txt", "w+");
-  assert(testfile != NULL);
-
-  size_t written = fwrite("Hello there!\n", 1, 13, testfile);
-  assert(written == fsize(testfile));
+  test("fsize", fsize(testfile) == sizeof(b));
 
   fseek(testfile, 0L, SEEK_SET);
 
-  assert(fpeek(testfile) == 'H');
-  assert(fpeek(testfile) == 'H');
+  test("fpeek 0.0", fpeek(testfile) == 'H');
+  test("fpeek 0.1", fpeek(testfile) == 'H');
   fgetc(testfile);
-  assert(fpeek(testfile) == 'e');
-  assert(fpeek(testfile) == 'e');
+  test("fpeek 1.0", fpeek(testfile) == 'e');
+  test("fpeek 1.1", fpeek(testfile) == 'e');
 
   fseek(testfile, 0L, SEEK_SET);
 
   char *buffer = fpeeks(testfile, 12);
-  assert(buffer != NULL);
-  assert(EQUALS(buffer, "Hello there!"));
+  test("fpeeks NULL", buffer != NULL);
+  test("fpeeks equals", EQUALS(buffer, "Hello there!"));
   ufree(buffer);
 
   fclose(testfile);
