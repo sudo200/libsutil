@@ -6,6 +6,11 @@
 #include <stdint.h>
 
 /**
+ * Datatype of a single byte.
+ */
+typedef uint8_t byte;
+
+/**
  * Datatype of file descriptors.
  */
 typedef int fd_t;

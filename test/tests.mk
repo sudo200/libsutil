@@ -15,6 +15,7 @@ TEST_LINKEDLIST=$(TEST_DIR)/linkedlist_test.c
 TEST_QUEUE=$(TEST_DIR)/queue_test.c
 TEST_UTIL=$(TEST_DIR)/util_test.c
 TEST_ARGPARSER=$(TEST_DIR)/argparser_test.c
+TEST_LOGGER=$(TEST_DIR)/logger_test.c
 
 test_file: all
 	$(CC) -o$(OUT)/test_file -I$(INCLUDE) $(TEST_FILE) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
@@ -44,7 +45,11 @@ test_argparser: all
 	$(CC) -o$(OUT)/test_argparser -I$(INCLUDE) $(TEST_ARGPARSER) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
 	LD_LIBRARY_PATH=$(OUT) $(UNITTEST) ./$(OUT)/test_argparser
 
-test: test_file test_mstring test_arraylist test_queue test_util test_argparser
+test_logger: all
+	$(CC) -o$(OUT)/test_logger -I$(INCLUDE) $(TEST_ARGPARSER) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
+	LD_LIBRARY_PATH=$(OUT) $(UNITTEST) ./$(OUT)/test_logger
 
-.PHONY: test test_file test_mstring test_arraylist test_linkedlist test_queue test_util test_argparser
+test: test_file test_mstring test_arraylist test_queue test_util test_argparser test_logger
+
+.PHONY: test test_file test_mstring test_arraylist test_linkedlist test_queue test_util test_argparser test_logger
 
