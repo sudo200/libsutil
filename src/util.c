@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <signal.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -83,4 +84,11 @@ void *memrev(void *arr, size_t nitems, size_t size) {
   ufree(buffer);
 
   return arr;
+}
+
+int setsignal(int signum, sighandler_t handler) {
+  const struct sigaction action = {
+    .sa_handler = handler,
+  };
+  return sigaction(signum, &action, NULL);
 }

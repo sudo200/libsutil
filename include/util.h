@@ -62,4 +62,14 @@ pid_t spawn(process *proc, const char *file, char *const *argv,
  */
 void *memrev(void *arr, size_t nitems, size_t size);
 
+/**
+ * Changes the signal handler for the specified
+ * signal to the given handler.
+ *
+ * @param signum The signal for which the handler should be changed.
+ * @param handler The function pointer of the function used as the new handler.
+ * @return 0 on success, a negative value on error.
+ */
+int setsignal(int signum, sighandler_t handler);
+
 #endif //___ARRAYLIST_H__
