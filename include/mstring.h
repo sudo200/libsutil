@@ -76,8 +76,6 @@ int strspl(string_array_t *out, const char *str, const char *delim);
  * @param delim A string to place between joined elements; can be omitted by passing NULL.
  * @param last A string to place at the end of out; can be omitted by passing NULL.
  */
-int strspl(string_array_t *out, const char *str, const char *delim);
-
 int strjoin(char **out, string_array_t arr, const char *first,
             const char *delim, const char *last);
 
