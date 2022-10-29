@@ -56,3 +56,48 @@ bool endswith(const char *str, const char *end) {
 
   return memcmp(str + str_len - end_len, end, end_len) == 0;
 }
+
+int strspl(string_array_t *out, const char *str, const char *delim) {
+  const size_t delim_len = strlen(delim);
+  char *substr;
+
+  out->arr = (char **)ualloc(sizeof(char *));
+  msprintf(out->arr, "%s", str);
+  out->len = 1;
+
+  while ((substr = strstr(out->arr[out->len - 1], delim)) != NULL) {
+    *substr = '\0';
+    substr += delim_len;
+    if ((out->arr = (char **)urealloc(out->arr,
+                                      sizeof(char *) * (++out->len))) == NULL)
+      return -1;
+    out->arr[out->len - 1] = substr;
+  }
+
+  return 0;
+}
+
+int strjoin(char **out, string_array_t arr, const char *first,
+            const char *delim, const char *last) {
+  if ((*out = ualloc(sizeof(char))) == NULL)
+    return -1;
+
+  if (first != NULL && mstrcat(out, first) == NULL)
+    return -1;
+
+  size_t i;
+  for (i = 0; i < (arr.len - 1); i++) {
+    if (mstrcat(out, arr.arr[i]) == NULL)
+      return -1;
+
+    if (delim != NULL && mstrcat(out, delim) == NULL)
+      return -1;
+  }
+  if (mstrcat(out, arr.arr[i]) == NULL)
+    return -1;
+
+  if (last != NULL && mstrcat(out, last) == NULL)
+    return -1;
+
+  return 0;
+}

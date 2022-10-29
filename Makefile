@@ -11,7 +11,7 @@
 include config.mk
 
 
-$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/strspl.o $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/dstring.o $(OBJ)/argparser.o
+$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/dstring.o $(OBJ)/argparser.o
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(OBJ)/*.o
 	chmod -x $(OUT)/lib$(LIBNAME).so	
 	$(OBJCPY) --only-keep-debug $(OUT)/lib$(LIBNAME).so $(OUT)/lib$(LIBNAME).so.dbg
@@ -21,9 +21,6 @@ $(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/strspl.o $(OBJ)/file.o $(OBJ)/mstring.o $
 
 $(OBJ)/dmem.o: $(OBJ) $(SRC)/dmem.c $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/dmem.o $(SRC)/dmem.c $(FLAGS)
-
-$(OBJ)/strspl.o: $(OBJ) $(SRC)/strspl.c $(INCLUDE)/strspl.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/strspl.o $(SRC)/strspl.c $(CFLAGS)
 
 $(OBJ)/file.o: $(OBJ) $(SRC)/file.c $(INCLUDE)/file.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/file.o $(SRC)/file.c $(CFLAGS)

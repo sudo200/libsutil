@@ -15,4 +15,9 @@ bool startswith(const char *str, const char *start);
 
 bool endswith(const char *str, const char *end);
 
+int strspl(string_array_t *out, const char *str, const char *delim);
+
+int strjoin(char **out, string_array_t arr, const char *first,
+            const char *delim, const char *last);
+
 #endif //___MSTRING_H__
