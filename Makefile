@@ -11,7 +11,7 @@
 include config.mk
 
 
-$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/argparser.o $(OBJ)/logger.o
+$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/argparser.o $(OBJ)/logger.o $(OBJ)/stack.o
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(OBJ)/*.o
 	chmod -x $(OUT)/lib$(LIBNAME).so	
 	$(OBJCPY) --only-keep-debug $(OUT)/lib$(LIBNAME).so $(OUT)/lib$(LIBNAME).so.dbg
@@ -43,8 +43,11 @@ $(OBJ)/util.o: $(OBJ) $(SRC)/util.c $(INCLUDE)/util.h $(INCLUDE)/dmem.h $(INCLUD
 $(OBJ)/argparser.o: $(OBJ) $(SRC)/argparser.c $(INCLUDE)/argparser.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/argparser.o $(SRC)/argparser.c $(CFLAGS)
 
-$(OBJ)/logger.o: $(OBJ) $(SRC)/logger.c $(INCLUDE)/logger.h $(INCLUDE)/types.h
+$(OBJ)/logger.o: $(OBJ) $(SRC)/logger.c $(INCLUDE)/logger.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/logger.o $(SRC)/logger.c $(CFLAGS)
+
+$(OBJ)/stack.o: $(OBJ) $(SRC)/stack.c $(INCLUDE)/stack.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
+	$(CC) -c -I$(INCLUDE) -o$(OBJ)/stack.o $(SRC)/stack.c $(CFLAGS)
 
 $(OUT):
 	mkdir -p $(OUT)
