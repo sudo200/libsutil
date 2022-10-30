@@ -18,7 +18,7 @@ struct linkedlist {
 
 // Private functions
 
-int __linkedlist_add(linkedlist *list, void *element) {
+static int __linkedlist_add(linkedlist *list, void *element) {
   linkednode *node = list->last;
   linkednode *newnode = (linkednode *)ualloc(sizeof(*newnode));
   if (newnode == NULL) {
@@ -42,7 +42,7 @@ int __linkedlist_add(linkedlist *list, void *element) {
   return 0;
 }
 
-linkednode *__linkedlist_get(linkedlist *list, size_t index) {
+static linkednode *__linkedlist_get(linkedlist *list, size_t index) {
   const size_t half_len = list->len >> 1;
   linkednode *node = NULL;
   if (index > half_len) // Start from end
@@ -60,7 +60,7 @@ linkednode *__linkedlist_get(linkedlist *list, size_t index) {
   return node;
 }
 
-int __linkedlist_insert(linkedlist *list, void *element, size_t index) {
+static int __linkedlist_insert(linkedlist *list, void *element, size_t index) {
   linkednode *newnode = (linkednode *)ualloc(sizeof(*newnode));
   if (newnode == NULL) {
     errno = ENOMEM;

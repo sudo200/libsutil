@@ -6,7 +6,8 @@
 
 #define EQUALS(x, y) (strcmp(x, y) == 0)
 
-bool not_terminate(const argparser_opt *opt) {
+// Private functions
+static bool not_terminate(const argparser_opt *opt) {
   if (opt == NULL)
     return false;
 
@@ -24,7 +25,7 @@ bool not_terminate(const argparser_opt *opt) {
   return false;
 }
 
-argparser_opt *getlongopt(const argparser_opt *opts, const char *long_name) {
+static argparser_opt *getlongopt(const argparser_opt *opts, const char *long_name) {
   for (; not_terminate(opts); opts++) {
     if (opts->long_name == NULL)
       continue;
@@ -36,7 +37,7 @@ argparser_opt *getlongopt(const argparser_opt *opts, const char *long_name) {
   return NULL;
 }
 
-argparser_opt *getshortopt(const argparser_opt *opts, char short_name) {
+static argparser_opt *getshortopt(const argparser_opt *opts, char short_name) {
   for (; not_terminate(opts); opts++) {
     if (opts->short_name == '\0')
       continue;
@@ -48,6 +49,7 @@ argparser_opt *getshortopt(const argparser_opt *opts, char short_name) {
   return NULL;
 }
 
+// Public functions
 argparser_status argparse(int argc, char **argv, argparser_opt *opts,
                           int *optint, const char *longopt_start,
                           char _shortopt_start, char longopt_seperator,

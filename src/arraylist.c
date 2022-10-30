@@ -9,7 +9,8 @@ struct arraylist {
   size_t arr_len;
 };
 
-int arraylist_realloc(arraylist *list, int diff) {
+// Private functions
+static int arraylist_realloc(arraylist *list, int diff) {
   if (diff == 0)
     return 0;
 
@@ -22,6 +23,7 @@ int arraylist_realloc(arraylist *list, int diff) {
   return 0;
 }
 
+// Public functions
 arraylist *arraylist_new(void) {
   arraylist *list = (arraylist *)ualloc(sizeof(arraylist));
   if (list == NULL) {
