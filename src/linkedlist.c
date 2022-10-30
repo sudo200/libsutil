@@ -245,6 +245,7 @@ int linkedlist_clear(linkedlist *list) {
     ufree(node);
     node = next;
   }
+  list->len = 0UL;
   list->first = NULL;
   list->last = NULL;
   return 0;
