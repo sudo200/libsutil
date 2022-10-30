@@ -5,7 +5,8 @@
 #include <stdio.h>
 
 /**
- * Get an character from the specified stream without removing it from the stream.
+ * Get an character from the specified stream without removing it from the
+ * stream.
  *
  * @param stream The file stream to peek the character from.
  * @return The peeked character, or a negative value if an error occured.
@@ -13,7 +14,8 @@
 int fpeek(FILE *stream);
 
 /**
- * Get a string with n characters from the specified stream without removing them from the stream.
+ * Get a string with n characters from the specified stream without removing
+ * them from the stream.
  *
  * @param stream The file stream to peek the string from.
  * @param n The length of the string to peek.

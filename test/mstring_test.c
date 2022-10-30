@@ -10,12 +10,13 @@
 
 int main(void) {
   char *mystr;
-  test("msprintf exec", msprintf(&mystr, "%s a test: %.3f, 0x%X %c", "This is", 653.76965364,
-                  42, '\n') > 0);
+  test("msprintf exec", msprintf(&mystr, "%s a test: %.3f, 0x%X %c", "This is",
+                                 653.76965364, 42, '\n') > 0);
   test("msprintf string", EQUALS(mystr, "This is a test: 653.770, 0x2A \n"));
 
   test("mstrcat exec", mstrcat(&mystr, "foo bar boom\n") != NULL);
-  test("mstrcat string", EQUALS(mystr, "This is a test: 653.770, 0x2A \nfoo bar boom\n"));
+  test("mstrcat string",
+       EQUALS(mystr, "This is a test: 653.770, 0x2A \nfoo bar boom\n"));
 
   ufree(mystr);
 

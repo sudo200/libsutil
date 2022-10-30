@@ -24,7 +24,8 @@ int main(void) {
 
   dprintf(proc.stdin, "echo \"%s\"\n", text);
 
-  test("read successful", (nbytes = read(proc.stdout, buffer, sizeof(buffer))) >= 0);
+  test("read successful",
+       (nbytes = read(proc.stdout, buffer, sizeof(buffer))) >= 0);
 
   test("output as expected", equals(buffer, text, strlen(text)));
 

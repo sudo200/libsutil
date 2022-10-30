@@ -24,7 +24,8 @@ int main() {
   arraylist *list = arraylist_new();
   assert(list != NULL);
 
-  test("empty element", arraylist_get(list, 0) == NULL); // Should be empty at first
+  test("empty element",
+       arraylist_get(list, 0) == NULL); // Should be empty at first
   test("empty len", arraylist_length(list) == 0);
 
   test("add 0", arraylist_add(list, strs[0]) >= 0);

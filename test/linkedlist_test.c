@@ -8,7 +8,9 @@
 static int i = 0;
 static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
-void cb_function(void *item) { test("foreach cb_function equals", EQUALS((const char *)item, strs[i++])); }
+void cb_function(void *item) {
+  test("foreach cb_function equals", EQUALS((const char *)item, strs[i++]));
+}
 
 int main(void) {
   linkedlist *list = linkedlist_new();
@@ -38,7 +40,8 @@ int main(void) {
   test("clear exec", linkedlist_clear(list) >= 0);
 
   test("add 5", linkedlist_add(list, strs[5]) >= 0);
-  test("insert (1-4) @ 0", linkedlist_insertall(list, (void **)strs + 1, 4, 0) >= 0);
+  test("insert (1-4) @ 0",
+       linkedlist_insertall(list, (void **)strs + 1, 4, 0) >= 0);
   test("insert 0 @ 0", linkedlist_insert(list, strs[0], 0) >= 0);
 
   test("insert 0 @ 0", linkedlist_insert(list, strs[0], 0) >= 0);

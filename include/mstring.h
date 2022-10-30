@@ -72,9 +72,12 @@ int strspl(string_array_t *out, const char *str, const char *delim);
  *
  * @param out The pointer to the output string.
  * @param arr The string array to join.
- * @param first A string to place at the start of out; can be omitted by passing NULL.
- * @param delim A string to place between joined elements; can be omitted by passing NULL.
- * @param last A string to place at the end of out; can be omitted by passing NULL.
+ * @param first A string to place at the start of out; can be omitted by passing
+ * NULL.
+ * @param delim A string to place between joined elements; can be omitted by
+ * passing NULL.
+ * @param last A string to place at the end of out; can be omitted by passing
+ * NULL.
  */
 int strjoin(char **out, string_array_t arr, const char *first,
             const char *delim, const char *last);

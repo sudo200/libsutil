@@ -4,9 +4,9 @@
 
 #include "test.h"
 
-#define BUFFER_SIZE   0xFF
+#define BUFFER_SIZE 0xFF
 
-#define EQUALS(x, y)  (strcmp(x, y) == 0)
+#define EQUALS(x, y) (strcmp(x, y) == 0)
 
 char info_buffer[BUFFER_SIZE], error_buffer[BUFFER_SIZE];
 FILE *info_stream, *error_stream;
@@ -19,13 +19,15 @@ void clear(void) {
   fseek(error_stream, 0L, SEEK_SET);
 }
 
-__attribute__((constructor)) void X19hdHRyaWJ1dGVfXygoY29uc3RydWN0b3IpKSB2b2lkICh2b2lkKQo(void) {
+__attribute__((constructor)) void
+X19hdHRyaWJ1dGVfXygoY29uc3RydWN0b3IpKSB2b2lkICh2b2lkKQo(void) {
   info_stream = fmemopen(info_buffer, BUFFER_SIZE, "w");
   error_stream = fmemopen(error_stream, BUFFER_SIZE, "w");
   clear();
 }
 
-__attribute__((destructor)) void X19hdHRyaWJ1dGVfXygoZGVzdHJ1Y3RvcikpIHZvaWQgKHZvaWQpCg(void) {
+__attribute__((destructor)) void
+X19hdHRyaWJ1dGVfXygoZGVzdHJ1Y3RvcikpIHZvaWQgKHZvaWQpCg(void) {
   fclose(info_stream);
   fclose(error_stream);
 }
@@ -53,8 +55,12 @@ int main(void) {
   logger_error(log, "error");
   logger_fatal(log, "fatal");
 
-  test("logger write info", EQUALS(info_buffer, "[TRACE] trace\n[DEBUG] debug\n[INFO] info\n[NOTICE] notice\n"));
-  test("logger write error", EQUALS(error_buffer, "[WARNING] warning\n[ERROR] error\n[FATAL] fatal\n"));
+  test("logger write info",
+       EQUALS(info_buffer,
+              "[TRACE] trace\n[DEBUG] debug\n[INFO] info\n[NOTICE] notice\n"));
+  test("logger write error",
+       EQUALS(error_buffer,
+              "[WARNING] warning\n[ERROR] error\n[FATAL] fatal\n"));
 
   logger_destroy(log);
   return 0;

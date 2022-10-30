@@ -3,6 +3,8 @@
 
 #include <assert.h>
 
-#define test(name, exp) if(!(exp))  __assert(name, __FILE__, __LINE__);
+#define test(name, exp)                                                        \
+  if (!(exp))                                                                  \
+    __assert(name, __FILE__, __LINE__);
 
 #endif //___TEST_H__

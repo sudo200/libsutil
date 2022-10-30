@@ -9,14 +9,13 @@
 static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
 static const char *const msgs[][2] = {
-  {"new_uncapped NULL", "new_capped NULL"},
-  {"uncapped add 0", "capped add 0"},
-  {"uncapped add 1", "capped add 1"},
-  {"uncapped add 2", "capped add 2"},
-  {"uncapped addall rest", "capped addall rest"},
-  {"uncapped peek equals", "capped peek equals"},
-  {"uncapped poll equals", "capped poll equals"}
-};
+    {"new_uncapped NULL", "new_capped NULL"},
+    {"uncapped add 0", "capped add 0"},
+    {"uncapped add 1", "capped add 1"},
+    {"uncapped add 2", "capped add 2"},
+    {"uncapped addall rest", "capped addall rest"},
+    {"uncapped peek equals", "capped peek equals"},
+    {"uncapped poll equals", "capped poll equals"}};
 
 int main(void) {
   test("add NULL pointer", queue_add(NULL, NULL) == -1);

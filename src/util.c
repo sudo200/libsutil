@@ -88,7 +88,7 @@ void *memrev(void *arr, size_t nitems, size_t size) {
 
 int setsignal(int signum, sighandler_t handler) {
   const struct sigaction action = {
-    .sa_handler = handler,
+      .sa_handler = handler,
   };
   return sigaction(signum, &action, NULL);
 }

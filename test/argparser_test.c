@@ -22,8 +22,8 @@ int main(void) {
 
       {NULL, 0, NO_ARG, NULL, NULL}};
 
-  test("argparse exec", argparse(argc1, argv1, opts, &optint, NULL, '\0', '\0', NULL) ==
-         ARGPARSE_OK);
+  test("argparse exec", argparse(argc1, argv1, opts, &optint, NULL, '\0', '\0',
+                                 NULL) == ARGPARSE_OK);
 
   test("a == true", a);
   test("b == false", !b);
@@ -47,8 +47,8 @@ int main(void) {
                    "/",
                    "ngfdjfr"};
 
-  test("argparse exec", argparse(argc2, argv2, opts, &optint, NULL, '\0', '\0', NULL) ==
-         ARGPARSE_OK);
+  test("argparse exec", argparse(argc2, argv2, opts, &optint, NULL, '\0', '\0',
+                                 NULL) == ARGPARSE_OK);
 
   test("a == true", a);
   test("b == false", !b);
