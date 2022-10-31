@@ -132,14 +132,14 @@ void *arraylist_remove(arraylist *list, size_t index) {
   return tmp;
 }
 
-int arraylist_foreach(arraylist *list, void (*cb)(void *)) {
+int arraylist_foreach(arraylist *list, void (*cb)(void *, void *), void *pipe) {
   if (list == NULL || *(void **)&cb == NULL) {
     errno = EINVAL;
     return -1;
   }
 
   for (size_t i = 0; i < list->arr_len; i++)
-    cb(list->arr[i]);
+    cb(list->arr[i], pipe);
   return 0;
 }
 
