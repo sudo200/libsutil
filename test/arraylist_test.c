@@ -1,6 +1,7 @@
 #include <string.h>
 
 #define EQUALS(x, y) (strcmp(x, y) == 0)
+#define MEMEQUALS(x, y, len)   (memcmp(x, y, len) == 0)
 
 #include "arraylist.h"
 #include "dmem.h"
@@ -39,6 +40,10 @@ int main(void) {
   test("add rest", arraylist_addall(list, (void **)(strs + 4), 2) >= 0);
 
   test("length == 6", arraylist_length(list) == 6);
+  void **arr = arraylist_to_array(list);
+  test("to_array not NULL", arr != NULL);
+  test("to_array equal", MEMEQUALS(arr, strs, sizeof(*arr) * arraylist_length(list)));
+  ufree(arr);
   test("foreach exec", arraylist_foreach(list, cb_function, strs) >= 0);
 
   test("remove 5", EQUALS(arraylist_remove(list, 5), strs[5]));

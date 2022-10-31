@@ -221,15 +221,29 @@ int linkedlist_foreach(linkedlist *list, void (*func)(void *, void *), void *pip
     return -1;
   }
 
-  linkednode *node = list->first;
-  if (node == NULL)
-    return 0;
-
-  do {
+  for(linkednode *node = list->first; node != NULL; node = node->next)
     func(node->value, pipe);
-  } while ((node = node->next) != NULL);
 
   return 0;
+}
+
+void **linkedlist_to_array(linkedlist *list) {
+  if (list == NULL) {
+    errno = EINVAL;
+    return NULL;
+  }
+
+  void **arr = (void **) ualloc(sizeof(*arr) * list->len);
+  if (arr == NULL) {
+    errno = ENOMEM;
+    return NULL;
+  }
+
+  size_t i = 0;
+  for(linkednode *node = list->first; node != NULL; node = node->next)
+    arr[i++] = node->value;
+
+  return arr;
 }
 
 int linkedlist_clear(linkedlist *list) {

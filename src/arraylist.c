@@ -143,6 +143,21 @@ int arraylist_foreach(arraylist *list, void (*cb)(void *, void *), void *pipe) {
   return 0;
 }
 
+void **arraylist_to_array(arraylist *list) {
+  if (list == NULL) {
+    errno = EINVAL;
+    return NULL;
+  }
+
+  void **arr = (void **) ualloc(sizeof(*arr) * list->arr_len);
+  if (arr == NULL) {
+    errno = ENOMEM;
+    return NULL;
+  }
+
+  return memcpy(arr, list->arr, sizeof(*arr) * list->arr_len);
+}
+
 int arraylist_clear(arraylist *list) {
   if (list == NULL) {
     errno = EINVAL;

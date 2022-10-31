@@ -90,6 +90,14 @@ void *arraylist_remove(arraylist *list, size_t index);
 int arraylist_foreach(arraylist *list, void (*cb)(void *item, void *pipe), void *pipe);
 
 /**
+ * Returns an array with a copy of to lists elements.
+ *
+ * @param list The list to convert to an array.
+ * @return The generated array, or NULL on error.
+ */
+void **arraylist_to_array(arraylist *list);
+
+/**
  * Empties the given arraylist.
  * Stored elements are not deallocated.
  *
