@@ -1,7 +1,7 @@
 #include <string.h>
 
 #define EQUALS(x, y) (strcmp(x, y) == 0)
-#define MEMEQUALS(x, y, len)   (memcmp(x, y, len) == 0)
+#define MEMEQUALS(x, y, len) (memcmp(x, y, len) == 0)
 
 #include "arraylist.h"
 #include "dmem.h"
@@ -11,13 +11,14 @@
 static size_t i = 0;
 
 static void cb_function(void *ptr, void *pipe) {
-  test("foreach cb_function equals", EQUALS((const char *)ptr, ((char **)pipe)[i++]));
+  test("foreach cb_function equals",
+       EQUALS((const char *)ptr, ((char **)pipe)[i++]));
 }
 
 #include <stdio.h>
 
 int main(void) {
-  char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"}; 
+  char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
   test("add NULL pointer", arraylist_add(NULL, "") < 0);
   test("addall NULL pointer", arraylist_addall(NULL, NULL, 3) < 0);
@@ -42,7 +43,8 @@ int main(void) {
   test("length == 6", arraylist_length(list) == 6);
   void **arr = arraylist_to_array(list);
   test("to_array not NULL", arr != NULL);
-  test("to_array equal", MEMEQUALS(arr, strs, sizeof(*arr) * arraylist_length(list)));
+  test("to_array equal",
+       MEMEQUALS(arr, strs, sizeof(*arr) * arraylist_length(list)));
   ufree(arr);
   test("foreach exec", arraylist_foreach(list, cb_function, strs) >= 0);
 

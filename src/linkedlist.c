@@ -215,13 +215,14 @@ void *linkedlist_remove(linkedlist *list, size_t index) {
   return value;
 }
 
-int linkedlist_foreach(linkedlist *list, void (*func)(void *, void *), void *pipe) {
+int linkedlist_foreach(linkedlist *list, void (*func)(void *, void *),
+                       void *pipe) {
   if (list == NULL || *(void **)&func == NULL) {
     errno = EINVAL;
     return -1;
   }
 
-  for(linkednode *node = list->first; node != NULL; node = node->next)
+  for (linkednode *node = list->first; node != NULL; node = node->next)
     func(node->value, pipe);
 
   return 0;
@@ -233,14 +234,14 @@ void **linkedlist_to_array(linkedlist *list) {
     return NULL;
   }
 
-  void **arr = (void **) ualloc(sizeof(*arr) * list->len);
+  void **arr = (void **)ualloc(sizeof(*arr) * list->len);
   if (arr == NULL) {
     errno = ENOMEM;
     return NULL;
   }
 
   size_t i = 0;
-  for(linkednode *node = list->first; node != NULL; node = node->next)
+  for (linkednode *node = list->first; node != NULL; node = node->next)
     arr[i++] = node->value;
 
   return arr;

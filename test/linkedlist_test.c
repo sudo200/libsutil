@@ -6,12 +6,13 @@
 #include "test.h"
 
 #define EQUALS(x, y) (strcmp(x, y) == 0)
-#define MEMEQUALS(x, y, len)  (memcmp(x, y, len) == 0)
+#define MEMEQUALS(x, y, len) (memcmp(x, y, len) == 0)
 
 static int i = 0;
 
 void cb_function(void *item, void *pipe) {
-  test("foreach cb_function equals", EQUALS((const char *)item, ((char **)pipe)[i++]));
+  test("foreach cb_function equals",
+       EQUALS((const char *)item, ((char **)pipe)[i++]));
 }
 
 int main(void) {
@@ -38,10 +39,11 @@ int main(void) {
   test("list[1] == strs[1]", EQUALS(linkedlist_get(list, 1), strs[1]));
   test("list[5] == strs[5]", EQUALS(linkedlist_get(list, 5), strs[5]));
   test("foreach exec", linkedlist_foreach(list, cb_function, strs) >= 0);
-  
+
   void **arr = linkedlist_to_array(list);
   test("to_array not NULL", arr != NULL);
-  test("to_array equal", MEMEQUALS(arr, strs, sizeof(*arr) * linkedlist_length(list)));
+  test("to_array equal",
+       MEMEQUALS(arr, strs, sizeof(*arr) * linkedlist_length(list)));
   ufree(arr);
 
   test("length == 6", linkedlist_length(list) == 6);

@@ -149,7 +149,7 @@ void **arraylist_to_array(arraylist *list) {
     return NULL;
   }
 
-  void **arr = (void **) ualloc(sizeof(*arr) * list->arr_len);
+  void **arr = (void **)ualloc(sizeof(*arr) * list->arr_len);
   if (arr == NULL) {
     errno = ENOMEM;
     return NULL;

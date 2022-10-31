@@ -25,7 +25,8 @@ static bool not_terminate(const argparser_opt *opt) {
   return false;
 }
 
-static argparser_opt *getlongopt(const argparser_opt *opts, const char *long_name) {
+static argparser_opt *getlongopt(const argparser_opt *opts,
+                                 const char *long_name) {
   for (; not_terminate(opts); opts++) {
     if (opts->long_name == NULL)
       continue;

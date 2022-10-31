@@ -87,7 +87,8 @@ void *arraylist_remove(arraylist *list, size_t index);
  * @param pipe A pointer to a variable to be mutated by the callback.
  * @return 0 if successful, else a negative value.
  */
-int arraylist_foreach(arraylist *list, void (*cb)(void *item, void *pipe), void *pipe);
+int arraylist_foreach(arraylist *list, void (*cb)(void *item, void *pipe),
+                      void *pipe);
 
 /**
  * Returns an array with a copy of to lists elements.

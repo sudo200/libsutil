@@ -51,7 +51,8 @@ void *linkedlist_remove(linkedlist *list, size_t index);
 /**
  * Executes a function for each element in the list.
  */
-int linkedlist_foreach(linkedlist *list, void (*func)(void *item, void *pipe), void *pipe);
+int linkedlist_foreach(linkedlist *list, void (*func)(void *item, void *pipe),
+                       void *pipe);
 
 /**
  * Returns an array with a copy of the list's elements.
