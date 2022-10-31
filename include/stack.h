@@ -70,6 +70,6 @@ int stack_clear(stack *s);
  *
  * @param s The stack to destroy.
  */
-void stack_destroy(stack *st);
+void stack_destroy(stack *s);
 
 #endif //___STACK_H__

@@ -6,13 +6,14 @@
 #define EQUALS(x, y) (strcmp(x, y) == 0)
 
 static int i = 0;
-static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
-void cb_function(void *item) {
-  test("foreach cb_function equals", EQUALS((const char *)item, strs[i++]));
+void cb_function(void *item, void *pipe) {
+  test("foreach cb_function equals", EQUALS((const char *)item, ((char **)pipe)[i++]));
 }
 
 int main(void) {
+  char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
+
   linkedlist *list = linkedlist_new();
   test("new != NULL", list != NULL);
 
@@ -21,7 +22,7 @@ int main(void) {
 
   test("add 0", linkedlist_add(list, strs[0]) >= 0);
 
-  test("foreach exec", linkedlist_foreach(list, cb_function) >= 0);
+  test("foreach exec", linkedlist_foreach(list, cb_function, strs) >= 0);
   i = 0;
 
   test("add 1", linkedlist_add(list, strs[1]) >= 0);
@@ -33,7 +34,7 @@ int main(void) {
 
   test("list[1] == strs[1]", EQUALS(linkedlist_get(list, 1), strs[1]));
   test("list[5] == strs[5]", EQUALS(linkedlist_get(list, 5), strs[5]));
-  test("foreach exec", linkedlist_foreach(list, cb_function) >= 0);
+  test("foreach exec", linkedlist_foreach(list, cb_function, strs) >= 0);
 
   test("length == 6", linkedlist_length(list) == 6);
 
@@ -48,7 +49,7 @@ int main(void) {
   test("remove 0", EQUALS((const char *)linkedlist_remove(list, 0), strs[0]));
 
   i = 0;
-  test("foreach exec", linkedlist_foreach(list, cb_function) >= 0);
+  test("foreach exec", linkedlist_foreach(list, cb_function, strs) >= 0);
 
   linkedlist_destroy(list);
   return 0;

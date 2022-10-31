@@ -215,7 +215,7 @@ void *linkedlist_remove(linkedlist *list, size_t index) {
   return value;
 }
 
-int linkedlist_foreach(linkedlist *list, void (*func)(void *)) {
+int linkedlist_foreach(linkedlist *list, void (*func)(void *, void *), void *pipe) {
   if (list == NULL || *(void **)&func == NULL) {
     errno = EINVAL;
     return -1;
@@ -226,7 +226,7 @@ int linkedlist_foreach(linkedlist *list, void (*func)(void *)) {
     return 0;
 
   do {
-    func(node->value);
+    func(node->value, pipe);
   } while ((node = node->next) != NULL);
 
   return 0;

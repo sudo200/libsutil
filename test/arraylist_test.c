@@ -7,17 +7,17 @@
 
 #include "test.h"
 
-static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
-
 static size_t i = 0;
 
-static void cb_function(void *ptr) {
-  test("foreach cb_function equals", EQUALS((const char *)ptr, strs[i++]));
+static void cb_function(void *ptr, void *pipe) {
+  test("foreach cb_function equals", EQUALS((const char *)ptr, ((char **)pipe)[i++]));
 }
 
 #include <stdio.h>
 
-int main() {
+int main(void) {
+  char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"}; 
+
   test("add NULL pointer", arraylist_add(NULL, "") < 0);
   test("addall NULL pointer", arraylist_addall(NULL, NULL, 3) < 0);
 
@@ -39,16 +39,16 @@ int main() {
   test("add rest", arraylist_addall(list, (void **)(strs + 4), 2) >= 0);
 
   test("length == 6", arraylist_length(list) == 6);
-  test("foreach exec", arraylist_foreach(list, cb_function) >= 0);
+  test("foreach exec", arraylist_foreach(list, cb_function, strs) >= 0);
 
   test("remove 5", EQUALS(arraylist_remove(list, 5), strs[5]));
   test("remove 0", EQUALS(arraylist_remove(list, 0), strs[0]));
   i = 1;
-  test("foreach exec", arraylist_foreach(list, cb_function) >= 0);
+  test("foreach exec", arraylist_foreach(list, cb_function, strs) >= 0);
 
   test("insert 0", arraylist_insert(list, strs[0], 0) >= 0);
   i = 0;
-  test("foreach exec", arraylist_foreach(list, cb_function) >= 0);
+  test("foreach exec", arraylist_foreach(list, cb_function, strs) >= 0);
 
   test("clear", arraylist_clear(list) == 0);
 
