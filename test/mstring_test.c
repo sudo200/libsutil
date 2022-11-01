@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define EQUALS(x, y)  (strcmp(x, y) == 0)
-#define LENGTH(arr)   (sizeof(arr)/sizeof(*arr))
+#define EQUALS(x, y) (strcmp(x, y) == 0)
+#define LENGTH(arr) (sizeof(arr) / sizeof(*arr))
 
 #include "dmem.h"
 #include "mstring.h"

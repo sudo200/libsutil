@@ -104,23 +104,23 @@ int strjoin(char **out, string_array_t arr, const char *first,
 }
 
 char *strreplace(char **str, const char *search, const char *replace) {
-  if(str == NULL || search == NULL || replace == NULL)
+  if (str == NULL || search == NULL || replace == NULL)
     return NULL;
-  
-  if(strlen(*str) == 0UL)
+
+  if (strlen(*str) == 0UL)
     return *str;
 
   string_array_t split;
-  if(strspl(&split, *str, search) < 0)
+  if (strspl(&split, *str, search) < 0)
     return NULL;
 
-  char *new_str = (char *) ualloc(sizeof(*new_str));
+  char *new_str = (char *)ualloc(sizeof(*new_str));
   *new_str = '\0';
 
-  for(size_t i = 0UL; i < split.len; i++) {
-    if(mstrcat(&new_str, split.arr[i]) == NULL)
+  for (size_t i = 0UL; i < split.len; i++) {
+    if (mstrcat(&new_str, split.arr[i]) == NULL)
       return NULL;
-    if(mstrcat(&new_str, replace) == NULL)
+    if (mstrcat(&new_str, replace) == NULL)
       return NULL;
   }
   new_str[strlen(new_str) - 1] = '\0';
