@@ -81,6 +81,7 @@ int strjoin(char **out, string_array_t arr, const char *first,
             const char *delim, const char *last) {
   if ((*out = ualloc(sizeof(char))) == NULL)
     return -1;
+  **out = '\0';
 
   if (first != NULL && mstrcat(out, first) == NULL)
     return -1;
@@ -100,4 +101,32 @@ int strjoin(char **out, string_array_t arr, const char *first,
     return -1;
 
   return 0;
+}
+
+char *strreplace(char **str, const char *search, const char *replace) {
+  if(str == NULL || search == NULL || replace == NULL)
+    return NULL;
+  
+  if(strlen(*str) == 0UL)
+    return *str;
+
+  string_array_t split;
+  if(strspl(&split, *str, search) < 0)
+    return NULL;
+
+  char *new_str = (char *) ualloc(sizeof(*new_str));
+  *new_str = '\0';
+
+  for(size_t i = 0UL; i < split.len; i++) {
+    if(mstrcat(&new_str, split.arr[i]) == NULL)
+      return NULL;
+    if(mstrcat(&new_str, replace) == NULL)
+      return NULL;
+  }
+  new_str[strlen(new_str) - 1] = '\0';
+  ufree(*split.arr);
+  ufree(split.arr);
+  ufree(*str);
+
+  return *str = new_str;
 }

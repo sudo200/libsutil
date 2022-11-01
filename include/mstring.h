@@ -82,4 +82,14 @@ int strspl(string_array_t *out, const char *str, const char *delim);
 int strjoin(char **out, string_array_t arr, const char *first,
             const char *delim, const char *last);
 
+/**
+ * Replaces search by replace for every occurance in str.
+ *
+ * @param str The string to search and replace in.
+ * @param search The string to search for in str.
+ * @param replace The string to replace every occurance of search in str with.
+ * @return str or NULL on error.
+ */
+char *strreplace(char **str, const char *search, const char *replace);
+
 #endif //___MSTRING_H__

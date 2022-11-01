@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define EQUALS(x, y) (strcmp(x, y) == 0)
+#define EQUALS(x, y)  (strcmp(x, y) == 0)
+#define LENGTH(arr)   (sizeof(arr)/sizeof(*arr))
 
 #include "dmem.h"
 #include "mstring.h"
@@ -37,6 +38,15 @@ int main(void) {
   ufree(str);
   ufree(*arr.arr);
   ufree(arr.arr);
+
+  char *s;
+  msprintf(&s, "%s", "a b  c dhgdf e ");
+  char s_cpy[] = "a,b,,c,dhgdf,e,";
+
+  test("strreplace exec", strreplace(&s, " ", ",") != NULL);
+
+  test("strreplace equal", EQUALS(s, s_cpy));
+  ufree(s);
 
   return 0;
 }
