@@ -11,6 +11,9 @@
 include config.mk
 
 
+all: $(OUT)/lib$(LIBNAME).so
+	$(CPY) -r $(INCLUDE) $(OUT)/$(LIBNAME)
+
 $(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/argparser.o $(OBJ)/logger.o $(OBJ)/stack.o
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(OBJ)/*.o
 	chmod -x $(OUT)/lib$(LIBNAME).so	
@@ -55,9 +58,16 @@ $(OUT):
 $(OBJ):
 	mkdir -p $(OBJ)
 
-all: $(OUT)/lib$(LIBNAME).so
 
 build: all
+
+install: build
+	$(CPY) $(OUT)/lib$(LIBNAME).so $(LIBINSTALLDIR)
+	$(CPY) -r $(OUT)/$(LIBNAME) $(LIBINCLUDEINSTALLDIR)
+
+uninstall:
+	$(RM) -r $(LIBINCLUDEINSTALLDIR)/$(LIBNAME)
+	$(RM) $(LIBINSTALLDIR)/lib$(LIBNAME).so
 
 clean:
 	$(RM) -r $(OBJ)
@@ -73,5 +83,5 @@ format:
 
 include $(TEST_DIR)/tests.mk
 
-.PHONY: clean build all compile-config format
+.PHONY: clean build all compile-config format install uninstall
 

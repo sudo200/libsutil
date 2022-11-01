@@ -20,7 +20,11 @@ UNITTEST=$(SCRIPTS)/unittest
 
 TEST_DIR=test
 
+LIBINSTALLDIR=/usr/local/lib
+LIBINCLUDEINSTALLDIR=/usr/local/include
+
 OBJCPY=objcopy
+CPY=cp
 
 FORMATTER=clang-format
 FORMATTER_OPTIONS=-i
