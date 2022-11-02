@@ -1,6 +1,7 @@
 #include <errno.h>
 
 #include "dmem.h"
+#include "list.h"
 #include "linkedlist.h"
 
 typedef struct linkednode linkednode;
@@ -11,6 +12,8 @@ struct linkednode {
 };
 
 struct linkedlist {
+  list_type type;
+
   linkednode *first;
   linkednode *last;
   size_t len;
@@ -100,9 +103,12 @@ linkedlist *linkedlist_new(void) {
     return NULL;
   }
 
+  
   list->first = NULL;
   list->last = NULL;
   list->len = 0UL;
+
+  list->type = TYPE_LINKEDLIST;
 
   return list;
 }

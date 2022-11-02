@@ -2,9 +2,12 @@
 #include <string.h>
 
 #include "arraylist.h"
+#include "list.h"
 #include "dmem.h"
 
 struct arraylist {
+  list_type type; // This has t be the 1st member.
+
   void **arr;
   size_t arr_len;
 };
@@ -30,6 +33,8 @@ arraylist *arraylist_new(void) {
     errno = ENOMEM;
     return NULL;
   }
+
+  list->type = TYPE_ARRAYLIST;
 
   list->arr = NULL;
   list->arr_len = 0UL;
