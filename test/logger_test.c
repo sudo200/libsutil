@@ -33,8 +33,8 @@ X19hdHRyaWJ1dGVfXygoZGVzdHJ1Y3RvcikpIHZvaWQgKHZvaWQpCg(void) {
 }
 
 int main(void) {
-  test("logger_printf NULL pointer", logger_printf(NULL, TRACE, "") < 0);
-  test("logger_print NULL pointer", logger_print(NULL, TRACE, "") < 0);
+  test("logger_printf NULL pointer", logger_printf(NULL, FATAL, NULL, "") < 0);
+  test("logger_print NULL pointer", logger_print(NULL, FATAL, NULL, "") < 0);
 
   logger *log = logger_new(info_stream, error_stream);
 
@@ -43,7 +43,8 @@ int main(void) {
   logger_info(log, "Hello there!");
   test("std logger level", EQUALS(info_buffer, "[INFO] Hello there!\n"));
   clear();
-  test("std logger level", logger_do_debug(log));
+  test("std logger level", !logger_do_trace(log));
+  test("std logger level", !logger_do_debug(log));
   test("std logger level", logger_do_info(log));
 
   loggerlevel = TRACE;
@@ -61,7 +62,27 @@ int main(void) {
   test("logger write error",
        EQUALS(error_buffer,
               "[WARNING] warning\n[ERROR] error\n[FATAL] fatal\n"));
+  clear();
 
+  marker *m = marker_new("Hello");
+
+  logger_trace_m(log, m, "trace");
+  logger_debug_m(log, m, "debug");
+  logger_info_m(log, m, "info");
+  logger_notice_m(log, m, "notice");
+  logger_warning_m(log, m, "warning");
+  logger_error_m(log, m, "error");
+  logger_fatal_m(log, m, "fatal");
+
+  test("logger write info marker",
+       EQUALS(info_buffer,
+              "[TRACE] <Hello> trace\n[DEBUG] <Hello> debug\n[INFO] <Hello> "
+              "info\n[NOTICE] <Hello> notice\n"));
+  test("logger write error marker",
+       EQUALS(error_buffer, "[WARNING] <Hello> warning\n[ERROR] <Hello> "
+                            "error\n[FATAL] <Hello> fatal\n"));
+
+  marker_destroy(m);
   logger_destroy(log);
   return 0;
 }

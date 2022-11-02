@@ -12,6 +12,10 @@ struct logger {
   FILE *error;
 };
 
+struct marker {
+  char *name;
+};
+
 loglevel loggerlevel = INFO;
 
 logger *logger_new(FILE *info, FILE *error) {
@@ -49,7 +53,8 @@ bool logger_do_error(logger *log) { return loggerlevel <= ERROR; }
 
 bool logger_do_fatal(logger *log) { return loggerlevel <= FATAL; }
 
-int logger_printf(logger *log, loglevel lvl, const char *format, ...) {
+int logger_printf(logger *log, loglevel lvl, marker *m, const char *format,
+                  ...) {
   if (log == NULL || lvl < loggerlevel)
     return -1;
 
@@ -62,8 +67,9 @@ int logger_printf(logger *log, loglevel lvl, const char *format, ...) {
   if (r < 0)
     return -1;
 
-  if (fprintf((lvl < WARNING) ? log->info : log->error, "[%s] %s",
-              loglevel_str[lvl], buffer) <= 0) {
+  if (fprintf((lvl < WARNING) ? log->info : log->error,
+              m == NULL ? "[%1$s] %2$s" : "[%1$s] <%3$s> %2$s",
+              loglevel_str[lvl], buffer, m->name) <= 0) {
     ufree(buffer);
     return -1;
   }
@@ -72,8 +78,8 @@ int logger_printf(logger *log, loglevel lvl, const char *format, ...) {
   return 0;
 }
 
-int logger_print(logger *log, loglevel lvl, const char *msg) {
-  if (logger_printf(log, lvl, "%s\n", msg) < 0)
+int logger_print(logger *log, loglevel lvl, marker *m, const char *msg) {
+  if (logger_printf(log, lvl, m, "%s\n", msg) < 0)
     return -1;
   return 0;
 }
@@ -86,4 +92,22 @@ void logger_destroy(logger *log) {
   fflush(log->error);
 
   ufree(log);
+}
+
+marker *marker_new(const char *name) {
+  marker *m = (marker *)ualloc(sizeof(*m));
+  if (m == NULL)
+    return NULL;
+
+  msprintf(&m->name, "%s", name);
+
+  return m;
+}
+
+void marker_destroy(marker *m) {
+  if (m == NULL)
+    return;
+
+  ufree(m->name);
+  ufree(m);
 }
