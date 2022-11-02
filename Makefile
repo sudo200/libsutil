@@ -14,7 +14,7 @@ include config.mk
 all: $(OUT)/lib$(LIBNAME).so
 	$(CPY) -r $(INCLUDE) $(OUT)/$(LIBNAME)
 
-$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/argparser.o $(OBJ)/logger.o $(OBJ)/stack.o
+$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/argparser.o $(OBJ)/logger.o $(OBJ)/stack.o $(OBJ)/globals.o
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(OBJ)/*.o
 	chmod -x $(OUT)/lib$(LIBNAME).so	
 	$(OBJCPY) --only-keep-debug $(OUT)/lib$(LIBNAME).so $(OUT)/lib$(LIBNAME).so.dbg
@@ -51,6 +51,9 @@ $(OBJ)/logger.o: $(OBJ) $(SRC)/logger.c $(INCLUDE)/logger.h $(INCLUDE)/dmem.h $(
 
 $(OBJ)/stack.o: $(OBJ) $(SRC)/stack.c $(INCLUDE)/stack.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
 	$(CC) -c -I$(INCLUDE) -o$(OBJ)/stack.o $(SRC)/stack.c $(CFLAGS)
+
+$(OBJ)/globals.o: $(OBJ) $(SRC)/globals.c $(INCLUDE)/globals.h
+	$(CC) -c -I$(INCLUDE) -o$(OBJ)/globals.o $(SRC)/globals.c $(CFLAGS)
 
 $(OUT):
 	mkdir -p $(OUT)
