@@ -6,7 +6,7 @@ to entire data structures.
 
 # Current features
 
-* Unopionionated dynamic memory managment.
+* Unopinionated dynamic memory managment.
 * Short- and long option argument parsing, with \
   support for optional or required arguments.
 * Arraylist (fast random access to stored elements).
