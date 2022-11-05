@@ -113,7 +113,7 @@ linkedlist *linkedlist_new(void) {
   return list;
 }
 
-size_t linkedlist_length(linkedlist *list) {
+size_t linkedlist_length(linkedlist *restrict list) {
   if (list == NULL) {
     errno = EINVAL;
     return 0;
@@ -177,7 +177,7 @@ int linkedlist_insertall(linkedlist *list, void **elements, size_t nitems,
   return 0;
 }
 
-void *linkedlist_get(linkedlist *list, size_t index) {
+void *linkedlist_get(linkedlist *restrict list, size_t index) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;
@@ -221,7 +221,7 @@ void *linkedlist_remove(linkedlist *list, size_t index) {
   return value;
 }
 
-int linkedlist_foreach(linkedlist *list, void (*func)(void *, void *),
+int linkedlist_foreach(linkedlist *restrict list, void (*func)(void *, void *),
                        void *pipe) {
   if (list == NULL || *(void **)&func == NULL) {
     errno = EINVAL;
@@ -234,7 +234,7 @@ int linkedlist_foreach(linkedlist *list, void (*func)(void *, void *),
   return 0;
 }
 
-void **linkedlist_to_array(linkedlist *list) {
+void **linkedlist_to_array(linkedlist *restrict list) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;

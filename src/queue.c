@@ -64,7 +64,7 @@ queue *queue_new_uncapped(void) {
   return q;
 }
 
-size_t queue_length(queue *q) {
+size_t queue_length(queue *restrict q) {
   if (q == NULL) {
     errno = EINVAL;
     return 0;
@@ -109,7 +109,7 @@ int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
 
 int queue_add(queue *q, void *item) { return queue_addall(q, &item, 1, false); }
 
-void *queue_peek(queue *q) {
+void *queue_peek(queue *restrict q) {
   if (q == NULL) {
     errno = EINVAL;
     return NULL;

@@ -73,7 +73,7 @@ int stack_push(stack *s, void *item) {
   return 0;
 }
 
-void *stack_peek(stack *s) {
+void *stack_peek(stack *restrict s) {
   if (s == NULL) {
     errno = EINVAL;
     return NULL;
@@ -100,7 +100,7 @@ void *stack_pop(stack *s) {
   return s->arr[--s->top];
 }
 
-size_t stack_size(stack *s) {
+size_t stack_size(stack *restrict s) {
   if (s == NULL) {
     errno = EINVAL;
     return 0UL;

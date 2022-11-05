@@ -1,7 +1,7 @@
 #ifndef ___LIST_H__
 #define ___LIST_H__
 
-typedef void list;
+typedef struct list list;
 
 typedef enum {
   TYPE_ARRAYLIST,
