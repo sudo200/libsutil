@@ -15,7 +15,11 @@ struct queue {
   void **arr;
   size_t front; // Start
   size_t rear;  // End
+  bool lock;
 };
+
+#define lock(q)   (q->lock = true)
+#define unlock(q)   (q->lock = false)
 
 queue *queue_new_capped(size_t max_len) {
   if (max_len == 0) {
@@ -39,6 +43,7 @@ queue *queue_new_capped(size_t max_len) {
 
   q->front = 0UL;
   q->rear = 0UL;
+  q->lock = false;
 
   return q;
 }
@@ -60,6 +65,7 @@ queue *queue_new_uncapped(void) {
 
   q->front = 0UL;
   q->rear = 0UL;
+  q->lock = false;
 
   return q;
 }
@@ -70,11 +76,22 @@ size_t queue_length(queue *restrict q) {
     return 0;
   }
 
-  if (q->max_len == 0UL) // Uncapped
-    return linkedlist_length((linkedlist *)q->arr);
+  if(q->lock) {
+    errno = ENOLCK;
+    return 0;
+  }
 
-  // Capped
-  return q->len;
+  lock(q);
+  size_t len = 0UL;
+
+  if (q->max_len == 0UL) // Uncapped
+    len = linkedlist_length((linkedlist *)q->arr);
+  else // Capped
+    len = q->len;
+
+  unlock(q);
+
+  return len;
 }
 
 int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
@@ -83,28 +100,42 @@ int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
     return -1;
   }
 
-  if (q->max_len == 0) // Uncapped
-  {
-    if (reverse)
-      memrev(items, nitems, sizeof(*items));
-
-    if (linkedlist_addall((linkedlist *)q->arr, items, nitems) < 0)
-      return -1;
-  } else // Capped
-  {
-    if (q->len + nitems > q->max_len)
-      return -2;
-
-    if (reverse)
-      for (size_t i = nitems - 1; i >= 0; i--, q->rear %= q->max_len)
-        q->arr[q->rear++] = items[i];
-    else
-      for (size_t i = 0; i < nitems; i++, q->rear %= q->max_len)
-        q->arr[q->rear++] = items[i];
-    q->len += nitems;
+  if(q->lock) {
+    errno = ENOLCK;
+    return -1;
   }
 
-  return 0;
+  lock(q);
+  int ret = 0;
+
+  do {
+    if (q->max_len == 0) { // Uncapped
+      if (reverse)
+        memrev(items, nitems, sizeof(*items));
+
+      if (linkedlist_addall((linkedlist *)q->arr, items, nitems) < 0) {
+        ret = -1;
+        break;
+      }
+    } else { // Capped
+      if (q->len + nitems > q->max_len) {
+        ret = -2;
+        break;
+      }
+
+      if (reverse)
+        for (size_t i = nitems - 1; i >= 0; i--, q->rear %= q->max_len)
+          q->arr[q->rear++] = items[i];
+      else
+        for (size_t i = 0; i < nitems; i++, q->rear %= q->max_len)
+          q->arr[q->rear++] = items[i];
+      q->len += nitems;
+    }
+  } while(false);
+
+  unlock(q);
+
+  return ret;
 }
 
 int queue_add(queue *q, void *item) { return queue_addall(q, &item, 1, false); }
@@ -115,14 +146,30 @@ void *queue_peek(queue *restrict q) {
     return NULL;
   }
 
-  if (q->max_len == 0) // Uncapped
-    return linkedlist_get((linkedlist *)q->arr, 0);
-
-  // Capped
-  if (queue_length(q) == 0UL)
+  if(q->lock) {
+    errno = ENOLCK;
     return NULL;
+  }
 
-  return q->arr[q->front];
+  lock(q);
+  void *ret = NULL;
+
+  do {
+    if (q->max_len == 0) { // Uncapped
+      ret = linkedlist_get((linkedlist *)q->arr, 0);
+      break;
+    }
+
+    // Capped
+    if (q->len == 0UL)
+      break;
+
+    ret = q->arr[q->front];
+  } while(false);
+
+  unlock(q);
+
+  return ret;
 }
 
 void *queue_poll(queue *q) {
@@ -131,17 +178,33 @@ void *queue_poll(queue *q) {
     return NULL;
   }
 
-  if (q->max_len == 0) // Uncapped
-    return linkedlist_remove((linkedlist *)q->arr, 0);
-
-  // Capped
-  if (queue_length(q) == 0UL)
+  if(q->lock) {
+    errno = ENOLCK;
     return NULL;
+  }
 
-  void *item = q->arr[q->front++];
-  q->front %= q->max_len;
-  q->len--;
-  return item;
+  lock(q);
+  void *ret = NULL;
+
+  do {
+    if (q->max_len == 0) { // Uncapped
+      ret = linkedlist_remove((linkedlist *)q->arr, 0);
+      break;
+    }
+
+    // Capped
+    if (q->len == 0UL)
+      break;
+
+    void *item = q->arr[q->front++];
+    q->front %= q->max_len;
+    q->len--;
+    ret = item;
+  } while(false);
+
+  unlock(q);
+
+  return ret;
 }
 
 void queue_destroy(queue *q) {
