@@ -18,7 +18,7 @@ linkedlist *linkedlist_new(void);
  * @param list The list from to get length from.
  * @return Length of the list
  */
-size_t linkedlist_length(linkedlist *restrict list);
+size_t linkedlist_length(linkedlist * list);
 
 /**
  * Adds an element to the linked list.
@@ -68,7 +68,7 @@ int linkedlist_insertall(linkedlist *list, void **elements, size_t nitems,
  * @param index The index at which to get the item from.
  * @return The item, or NULL on error.
  */
-void *linkedlist_get(linkedlist *restrict list, size_t index);
+void *linkedlist_get(linkedlist * list, size_t index);
 
 /**
  * Removes an element at index, and returns it.
@@ -87,7 +87,7 @@ void *linkedlist_remove(linkedlist *list, size_t index);
  * @param pipe A pointer passed through to cb.
  * @return 0 on success, a negative value on error.
  */
-int linkedlist_foreach(linkedlist *restrict list, void (*cb)(void *item, void *pipe),
+int linkedlist_foreach(linkedlist * list, void (*cb)(void *item, void *pipe),
                        void *pipe);
 
 /**
@@ -96,7 +96,7 @@ int linkedlist_foreach(linkedlist *restrict list, void (*cb)(void *item, void *p
  * @param list The list to convert into an array.
  * @return The generated array, or NULL on error.
  */
-void **linkedlist_to_array(linkedlist *restrict list);
+void **linkedlist_to_array(linkedlist * list);
 
 /**
  * Clears the linked list.

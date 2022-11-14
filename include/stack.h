@@ -36,7 +36,7 @@ int stack_push(stack *s, void *item);
  * @param s The stack to peek from.
  * @return The next element, or NULL if empty.
  */
-void *stack_peek(stack *restrict s);
+void *stack_peek(stack * s);
 
 /**
  * Pop the next element from the stack.
@@ -52,7 +52,7 @@ void *stack_pop(stack *s);
  * @param s The stack to get size from.
  * @return The size of the stack.
  */
-size_t stack_size(stack *restrict s);
+size_t stack_size(stack * s);
 
 /**
  * Deletes all elements from the stack.

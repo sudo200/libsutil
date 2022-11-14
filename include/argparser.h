@@ -98,7 +98,7 @@ typedef struct {
  * @param parse_stop A string which when encountered stops parsing.
  * @return The status of parsing.
  */
-argparser_status argparse(int argc, char **argv, argparser_opt *restrict opts,
+argparser_status argparse(int argc, char **argv, argparser_opt * opts,
                           int *optint, const char *longopt_start,
                           char shortopt_start, char longopt_seperator,
                           const char *parse_stop);

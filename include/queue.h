@@ -44,7 +44,7 @@ int queue_addall(queue *queue, void **items, size_t nitems, bool reverse);
  * @param queue The queue to operate on.
  * @return The next element, or NULL if empty.
  */
-void *queue_peek(queue *restrict queue);
+void *queue_peek(queue * queue);
 
 /**
  * Get the next element from the queue and removes it.
@@ -60,7 +60,7 @@ void *queue_poll(queue *queue);
  * @param queue The queue to operate on.
  * @return The length of the queue.
  */
-size_t queue_length(queue *restrict queue);
+size_t queue_length(queue * queue);
 
 /**
  * Destroys the queue.
