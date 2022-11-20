@@ -60,7 +60,7 @@ int arraylist_insertall(arraylist *list, void **items, size_t nitems,
  * @param index The index from which to get the value.
  * @return The element at index, or NULL if an error occured.
  */
-void *arraylist_get(arraylist * list, size_t index);
+void *arraylist_get(arraylist *list, size_t index);
 
 /**
  * Gets the length (element count) of the arraylist.
@@ -68,7 +68,7 @@ void *arraylist_get(arraylist * list, size_t index);
  * @param list The arraylist to operate on.
  * @return The length.
  */
-size_t arraylist_length(arraylist * list);
+size_t arraylist_length(arraylist *list);
 
 /**
  * Removes the element at given index from the arraylist and returns it.
@@ -87,7 +87,7 @@ void *arraylist_remove(arraylist *list, size_t index);
  * @param pipe A pointer passed through to cb.
  * @return 0 if successful, else a negative value.
  */
-int arraylist_foreach(arraylist * list, void (*cb)(void *item, void *pipe),
+int arraylist_foreach(arraylist *list, void (*cb)(void *item, void *pipe),
                       void *pipe);
 
 /**
@@ -96,7 +96,7 @@ int arraylist_foreach(arraylist * list, void (*cb)(void *item, void *pipe),
  * @param list The list to convert to an array.
  * @return The generated array, or NULL on error.
  */
-void **arraylist_to_array(arraylist * list);
+void **arraylist_to_array(arraylist *list);
 
 /**
  * Empties the given arraylist.

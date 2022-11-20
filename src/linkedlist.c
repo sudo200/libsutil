@@ -1,8 +1,8 @@
 #include <errno.h>
 
 #include "dmem.h"
-#include "list.h"
 #include "linkedlist.h"
+#include "list.h"
 
 typedef struct linkednode linkednode;
 struct linkednode {
@@ -103,7 +103,6 @@ linkedlist *linkedlist_new(void) {
     return NULL;
   }
 
-  
   list->first = NULL;
   list->last = NULL;
   list->len = 0UL;
@@ -177,7 +176,7 @@ int linkedlist_insertall(linkedlist *list, void **elements, size_t nitems,
   return 0;
 }
 
-void *linkedlist_get(linkedlist * list, size_t index) {
+void *linkedlist_get(linkedlist *list, size_t index) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;

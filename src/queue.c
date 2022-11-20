@@ -18,8 +18,8 @@ struct queue {
   bool lock;
 };
 
-#define lock(q)   (q->lock = true)
-#define unlock(q)   (q->lock = false)
+#define lock(q) (q->lock = true)
+#define unlock(q) (q->lock = false)
 
 queue *queue_new_capped(size_t max_len) {
   if (max_len == 0) {
@@ -70,13 +70,13 @@ queue *queue_new_uncapped(void) {
   return q;
 }
 
-size_t queue_length(queue * q) {
+size_t queue_length(queue *q) {
   if (q == NULL) {
     errno = EINVAL;
     return 0;
   }
 
-  if(q->lock) {
+  if (q->lock) {
     errno = ENOLCK;
     return 0;
   }
@@ -100,7 +100,7 @@ int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
     return -1;
   }
 
-  if(q->lock) {
+  if (q->lock) {
     errno = ENOLCK;
     return -1;
   }
@@ -131,7 +131,7 @@ int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
           q->arr[q->rear++] = items[i];
       q->len += nitems;
     }
-  } while(false);
+  } while (false);
 
   unlock(q);
 
@@ -140,13 +140,13 @@ int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
 
 int queue_add(queue *q, void *item) { return queue_addall(q, &item, 1, false); }
 
-void *queue_peek(queue * q) {
+void *queue_peek(queue *q) {
   if (q == NULL) {
     errno = EINVAL;
     return NULL;
   }
 
-  if(q->lock) {
+  if (q->lock) {
     errno = ENOLCK;
     return NULL;
   }
@@ -165,7 +165,7 @@ void *queue_peek(queue * q) {
       break;
 
     ret = q->arr[q->front];
-  } while(false);
+  } while (false);
 
   unlock(q);
 
@@ -178,7 +178,7 @@ void *queue_poll(queue *q) {
     return NULL;
   }
 
-  if(q->lock) {
+  if (q->lock) {
     errno = ENOLCK;
     return NULL;
   }
@@ -200,7 +200,7 @@ void *queue_poll(queue *q) {
     q->front %= q->max_len;
     q->len--;
     ret = item;
-  } while(false);
+  } while (false);
 
   unlock(q);
 

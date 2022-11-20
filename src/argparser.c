@@ -51,7 +51,7 @@ static argparser_opt *getshortopt(const argparser_opt *opts, char short_name) {
 }
 
 // Public functions
-argparser_status argparse(int argc, char **argv, argparser_opt * opts,
+argparser_status argparse(int argc, char **argv, argparser_opt *opts,
                           int *optint, const char *longopt_start,
                           char _shortopt_start, char longopt_seperator,
                           const char *parse_stop) {

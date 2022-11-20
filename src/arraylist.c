@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "arraylist.h"
-#include "list.h"
 #include "dmem.h"
+#include "list.h"
 
 struct arraylist {
   list_type type; // This has t be the 1st member.
@@ -92,7 +92,7 @@ int arraylist_insertall(arraylist *list, void **items, size_t nitems,
   return 0;
 }
 
-void *arraylist_get(arraylist * list, size_t index) {
+void *arraylist_get(arraylist *list, size_t index) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;
@@ -106,7 +106,7 @@ void *arraylist_get(arraylist * list, size_t index) {
   return list->arr[index];
 }
 
-size_t arraylist_length(arraylist * list) {
+size_t arraylist_length(arraylist *list) {
   if (list == NULL) {
     errno = EINVAL;
     return 0UL;
@@ -137,7 +137,7 @@ void *arraylist_remove(arraylist *list, size_t index) {
   return tmp;
 }
 
-int arraylist_foreach(arraylist * list, void (*cb)(void *, void *), void *pipe) {
+int arraylist_foreach(arraylist *list, void (*cb)(void *, void *), void *pipe) {
   if (list == NULL || *(void **)&cb == NULL) {
     errno = EINVAL;
     return -1;
@@ -148,7 +148,7 @@ int arraylist_foreach(arraylist * list, void (*cb)(void *, void *), void *pipe) 
   return 0;
 }
 
-void **arraylist_to_array(arraylist * list) {
+void **arraylist_to_array(arraylist *list) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;

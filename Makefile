@@ -15,45 +15,16 @@ all: $(OUT)/lib$(LIBNAME).so
 	$(CPY) -r $(INCLUDE) $(OUT)/$(LIBNAME)
 
 $(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/argparser.o $(OBJ)/logger.o $(OBJ)/stack.o $(OBJ)/globals.o
-	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(OBJ)/*.o
+	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(wildcard $(OBJ)/*.o) $(LDFLAGS)
 	chmod -x $(OUT)/lib$(LIBNAME).so	
 	$(OBJCPY) --only-keep-debug $(OUT)/lib$(LIBNAME).so $(OUT)/lib$(LIBNAME).so.dbg
 	chmod -x $(OUT)/lib$(LIBNAME).so.dbg
 	$(OBJCPY) --strip-unneeded $(OUT)/lib$(LIBNAME).so
 	$(OBJCPY) --add-gnu-debuglink=$(OUT)/lib$(LIBNAME).so.dbg $(OUT)/lib$(LIBNAME).so
 
-$(OBJ)/dmem.o: $(OBJ) $(SRC)/dmem.c $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/dmem.o $(SRC)/dmem.c $(CFLAGS)
+$(OBJ)/%.o: $(OBJ) $(SRC)/%.c
+	$(CC) -c -o '$@' -I'$(INCLUDE)' '$(SRC)/$(patsubst $(OBJ)/%.o,%,$@).c' $(CFLAGS)
 
-$(OBJ)/file.o: $(OBJ) $(SRC)/file.c $(INCLUDE)/file.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/file.o $(SRC)/file.c $(CFLAGS)
-
-$(OBJ)/mstring.o: $(OBJ) $(SRC)/mstring.c $(INCLUDE)/mstring.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/mstring.o $(SRC)/mstring.c $(CFLAGS)
-
-$(OBJ)/arraylist.o: $(OBJ) $(SRC)/arraylist.c $(INCLUDE)/arraylist.h $(INCLUDE)/list.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/arraylist.o $(SRC)/arraylist.c $(CFLAGS)
-
-$(OBJ)/linkedlist.o: $(OBJ) $(SRC)/linkedlist.c $(INCLUDE)/linkedlist.h $(INCLUDE)/list.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/linkedlist.o $(SRC)/linkedlist.c $(CFLAGS)
-
-$(OBJ)/queue.o: $(OBJ) $(SRC)/queue.c $(INCLUDE)/queue.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/queue.o $(SRC)/queue.c $(CFLAGS)
-
-$(OBJ)/util.o: $(OBJ) $(SRC)/util.c $(INCLUDE)/util.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/util.o $(SRC)/util.c $(CFLAGS)
-
-$(OBJ)/argparser.o: $(OBJ) $(SRC)/argparser.c $(INCLUDE)/argparser.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/argparser.o $(SRC)/argparser.c $(CFLAGS)
-
-$(OBJ)/logger.o: $(OBJ) $(SRC)/logger.c $(INCLUDE)/logger.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/logger.o $(SRC)/logger.c $(CFLAGS)
-
-$(OBJ)/stack.o: $(OBJ) $(SRC)/stack.c $(INCLUDE)/stack.h $(INCLUDE)/dmem.h $(INCLUDE)/types.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/stack.o $(SRC)/stack.c $(CFLAGS)
-
-$(OBJ)/globals.o: $(OBJ) $(SRC)/globals.c $(INCLUDE)/globals.h
-	$(CC) -c -I$(INCLUDE) -o$(OBJ)/globals.o $(SRC)/globals.c $(CFLAGS)
 
 $(OUT):
 	mkdir -p $(OUT)
@@ -81,8 +52,8 @@ compile-config: clean
 	bear -- $(MAKE) build
 
 format:
-	$(FORMATTER) $(FORMATTER_OPTIONS) */*.h
-	$(FORMATTER) $(FORMATTER_OPTIONS) */*.c
+	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(INCLUDE)/*.h)
+	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(SRC)/*.c)
 
 include $(TEST_DIR)/tests.mk
 
