@@ -4,7 +4,8 @@
 #include "dmem.h"
 #include "mstring.h"
 
-#define EQUALS(x, y) (strcmp(x, y) == 0)
+#define EQUALS(x, y)        (strcmp(x, y) == 0)
+#define MEMQUALS(x, y, len) (memcmp(x, y, len) == 0)
 
 // Private functions
 static bool not_terminate(const argparser_opt *opt) {
@@ -26,12 +27,14 @@ static bool not_terminate(const argparser_opt *opt) {
 }
 
 static argparser_opt *getlongopt(const argparser_opt *opts,
-                                 const char *long_name) {
+                                 const char *long_name, size_t len) {
   for (; not_terminate(opts); opts++) {
     if (opts->long_name == NULL)
       continue;
+    if(strlen(opts->long_name) < len)
+      continue;
 
-    if (EQUALS(opts->long_name, long_name))
+    if (MEMQUALS(opts->long_name, long_name, len))
       return (argparser_opt *)opts;
   }
 
@@ -75,12 +78,12 @@ argparser_status argparse(int argc, char **argv, argparser_opt *opts,
 
   for (argparser_opt *opt = opts; not_terminate(opt); opt++) {
     if (opt->flag_exists != NULL)
-      *(opt->flag_exists) = false;
+      *opt->flag_exists = false;
     if (opt->argument != NULL)
-      (*opt->argument) = NULL;
+      *opt->argument = NULL;
   }
 
-  for (*optint = 1; *optint < argc; (*optint)++) {
+  for (*optint = 1; *optint < argc; ++*optint) {
     if (EQUALS(argv[*optint], parse_stop))
       break;
     argparser_opt *opt;
@@ -88,51 +91,59 @@ argparser_status argparse(int argc, char **argv, argparser_opt *opts,
     if (startswith(argv[*optint], shortopt_start) &&
         !startswith(argv[*optint], longopt_start)) // short option
     {
-      const char *opt_str = argv[*optint] + 1;
+      const char *opt_str = argv[*optint] + 1; // Skip prefix
 
-      for (; *opt_str; opt_str++) {
+      for (; *opt_str != '\0'; opt_str++) {
         if ((opt = getshortopt(opts, *opt_str)) == NULL)
           return ARGPARSE_UNKNOWN_FLAG;
 
         *opt->flag_exists = true;
 
-        if (opt->mode != NO_ARG)
+        if (opt->mode != NO_ARG) // if a binary flag, keep interpreting string as short flags
           break;
       }
+      opt_str++;
 
-      if (strlen(opt_str) == 0 &&
-          (*optint >= argc || startswith(argv[*optint + 1], longopt_start) ||
-           startswith(argv[*optint + 1], shortopt_start)))
-        return ARGPARSE_ARG_REQ;
-
-      msprintf(opt->argument, "%s",
-               strlen(opt_str) > 1 ? opt_str + 1 : argv[++(*optint)]);
-    } else if (startswith(argv[*optint], longopt_start)) // long option
-    {
-      char *opt_str, *arg;
-      msprintf(&opt_str, "%s", argv[*optint] + strlen(longopt_start));
-      if ((arg = strchr(opt_str, longopt_seperator)) != NULL)
-        *arg++ = '\0';
-
-      if ((opt = getlongopt(opts, opt_str)) == NULL) {
-        ufree(opt_str);
-        return ARGPARSE_UNKNOWN_FLAG;
-      }
-      *(opt->flag_exists) = true;
-
-      if (opt->mode == NO_ARG) {
-        ufree(opt_str);
+      if(strlen(opt_str) != 0) { // Argument appended
+        if(opt->argument != NULL)
+          *opt->argument = opt_str;
         continue;
       }
 
-      if (arg == NULL && opt->mode == REQ_ARG)
-        return ARGPARSE_ARG_REQ;
-
-      if (arg != NULL) {
-        msprintf(opt->argument, "%s", arg);
-        ufree(opt_str);
+      if(*optint >= argc) {
+        if(opt->mode == REQ_ARG)
+          return ARGPARSE_ARG_REQ;
+        continue;
       }
-    } else // Smth. else
+
+      if(opt->argument != NULL)
+        *opt->argument = argv[++*optint];
+    } else if (startswith(argv[*optint], longopt_start)) // long option
+    {
+      const char *opt_str = argv[*optint] + strlen(longopt_start); // Skip prefix
+      const size_t opt_str_len = strlen(opt_str);
+
+      const char *name_end = strchr(opt_str, longopt_seperator);
+      if(name_end == NULL)
+        name_end = opt_str + opt_str_len;
+      else
+       name_end++;
+
+      if((opt = getlongopt(opts, opt_str, name_end - opt_str - 1)) == NULL)
+        return ARGPARSE_UNKNOWN_FLAG;
+
+      *opt->flag_exists = true;
+
+      if(name_end == opt_str + opt_str_len) {
+        if(opt->mode == REQ_ARG)
+          return ARGPARSE_ARG_REQ;
+        continue;
+      }
+
+      if(opt->argument != NULL)
+        *opt->argument = name_end;
+    }
+    else
       break;
   }
 

@@ -12,7 +12,7 @@ int main(void) {
   char *argv1[] = {"/bin/dummy", "-acFoo", "-de", "Bar", "Huhu!"};
 
   bool a, b, c, d, e;
-  char *c_val, *e_val;
+  const char *c_val, *e_val;
 
   int optint;
   argparser_opt opts[] = {
@@ -36,9 +36,6 @@ int main(void) {
 
   test("optint == 4", optint == 4);
 
-  ufree(c_val);
-  ufree(e_val);
-
   int argc2 = 6;
   char *argv2[] = {"/usr/local/bin/another_dummy",
                    "--aaa=nope",
@@ -60,8 +57,6 @@ int main(void) {
   test("e_val == NULL", e_val == NULL);
 
   test("optint == 4", optint == 4);
-
-  ufree(c_val);
 
   return 0;
 }

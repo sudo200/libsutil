@@ -78,7 +78,7 @@ typedef struct {
    * it is written into this pointer.
    * Can be NULL, if no argument are accepted.
    */
-  char **argument;
+  const char **argument;
 } argparser_opt;
 
 /**
