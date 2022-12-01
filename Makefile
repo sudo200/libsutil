@@ -52,11 +52,10 @@ compile-config: clean
 	bear -- $(MAKE) build
 
 format:
-	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(INCLUDE)/*.h)
-	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(SRC)/*.c)
+	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(INCLUDE)/*.h) $(wildcard $(SRC)/*.c)
 
 docs:
-	$(DOCGEN)	$(DOCGEN_OPTIONS)	$(wildcard $(INCLUDE)/*.h) $(wildcard $(SRC)/*.c)
+	$(DOCGEN) $(DOCGEN_OPTIONS) $(wildcard $(INCLUDE)/*.h) $(wildcard $(SRC)/*.c)
 
 include $(TEST_DIR)/tests.mk
 
