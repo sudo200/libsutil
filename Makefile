@@ -47,7 +47,7 @@ clean:
 	$(RM) -r $(OBJ)
 	$(RM) -r $(OUT)
 
-compile-config: clean
+compiledb: clean
 	$(RM) compile_commands.json
 	bear -- $(MAKE) build
 

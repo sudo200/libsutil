@@ -4,7 +4,7 @@
 #include "dmem.h"
 #include "mstring.h"
 
-#define EQUALS(x, y)        (strcmp(x, y) == 0)
+#define EQUALS(x, y) (strcmp(x, y) == 0)
 #define MEMQUALS(x, y, len) (memcmp(x, y, len) == 0)
 
 // Private functions
@@ -31,7 +31,7 @@ static argparser_opt *getlongopt(const argparser_opt *opts,
   for (; not_terminate(opts); opts++) {
     if (opts->long_name == NULL)
       continue;
-    if(strlen(opts->long_name) < len)
+    if (strlen(opts->long_name) < len)
       continue;
 
     if (MEMQUALS(opts->long_name, long_name, len))
@@ -99,51 +99,52 @@ argparser_status argparse(int argc, char **argv, argparser_opt *opts,
 
         *opt->flag_exists = true;
 
-        if (opt->mode != NO_ARG) // if a binary flag, keep interpreting string as short flags
+        if (opt->mode !=
+            NO_ARG) // if a binary flag, keep interpreting string as short flags
           break;
       }
       opt_str++;
 
-      if(strlen(opt_str) != 0) { // Argument appended
-        if(opt->argument != NULL)
+      if (strlen(opt_str) != 0) { // Argument appended
+        if (opt->argument != NULL)
           *opt->argument = opt_str;
         continue;
       }
 
-      if(*optint >= argc) {
-        if(opt->mode == REQ_ARG)
+      if (*optint >= argc) {
+        if (opt->mode == REQ_ARG)
           return ARGPARSE_ARG_REQ;
         continue;
       }
 
-      if(opt->argument != NULL)
+      if (opt->argument != NULL)
         *opt->argument = argv[++*optint];
     } else if (startswith(argv[*optint], longopt_start)) // long option
     {
-      const char *opt_str = argv[*optint] + strlen(longopt_start); // Skip prefix
+      const char *opt_str =
+          argv[*optint] + strlen(longopt_start); // Skip prefix
       const size_t opt_str_len = strlen(opt_str);
 
       const char *name_end = strchr(opt_str, longopt_seperator);
-      if(name_end == NULL)
+      if (name_end == NULL)
         name_end = opt_str + opt_str_len;
       else
-       name_end++;
+        name_end++;
 
-      if((opt = getlongopt(opts, opt_str, name_end - opt_str - 1)) == NULL)
+      if ((opt = getlongopt(opts, opt_str, name_end - opt_str - 1)) == NULL)
         return ARGPARSE_UNKNOWN_FLAG;
 
       *opt->flag_exists = true;
 
-      if(name_end == opt_str + opt_str_len) {
-        if(opt->mode == REQ_ARG)
+      if (name_end == opt_str + opt_str_len) {
+        if (opt->mode == REQ_ARG)
           return ARGPARSE_ARG_REQ;
         continue;
       }
 
-      if(opt->argument != NULL)
+      if (opt->argument != NULL)
         *opt->argument = name_end;
-    }
-    else
+    } else
       break;
   }
 
