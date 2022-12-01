@@ -55,7 +55,9 @@ format:
 	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(INCLUDE)/*.h)
 	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(SRC)/*.c)
 
+docs:
+	$(DOCGEN)	$(DOCGEN_OPTIONS)	$(wildcard $(INCLUDE)/*.h) $(wildcard $(SRC)/*.c)
+
 include $(TEST_DIR)/tests.mk
 
-.PHONY: clean build all compile-config format install uninstall
-
+.PHONY: clean build all compile-config format install uninstall docs

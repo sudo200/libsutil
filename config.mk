@@ -29,3 +29,6 @@ CPY=cp
 FORMATTER=clang-format
 FORMATTER_OPTIONS=-i
 
+DOCGEN=clang-doc
+DOCGEN_OPTIONS=--doxygen --format=md --output=docs --p=.
+
