@@ -23,9 +23,12 @@ char *fpeeks(FILE *stream, size_t n) {
   if (buffer == NULL)
     return NULL;
 
-  for (size_t i = 0; i < n; i++)
-    if ((buffer[i] = fgetc(stream)) == EOF)
+  for (size_t i = 0; i < n; i++) {
+    int b = fgetc(stream);
+    buffer[i] = (char)b;
+    if (b == EOF)
       return NULL;
+  }
   buffer[n] = '\0';
 
   for (size_t i = n; i > 0; i--)
