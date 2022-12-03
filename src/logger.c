@@ -1,3 +1,5 @@
+#include <syslog.h>
+
 #include "logger.h"
 
 #include "dmem.h"
@@ -7,9 +9,22 @@ static const char *const loglevel_str[] = {"TRACE",   "DEBUG", "INFO",
                                            "NOTICE",  "INFO",  "NOTICE",
                                            "WARNING", "ERROR", "FATAL"};
 
+static int logger2syslog(loglevel lvl) {
+  switch (lvl) {
+    case TRACE:
+    case DEBUG: return LOG_DEBUG;
+    case INFO: return LOG_INFO;
+    case NOTICE: return LOG_NOTICE;
+    case WARNING: return LOG_WARNING;
+    case ERROR: return LOG_ERR;
+    case FATAL: return LOG_EMERG;
+  }
+}
+
 struct logger {
   FILE *info;
   FILE *error;
+  bool _syslog;
 };
 
 struct marker {
@@ -18,7 +33,7 @@ struct marker {
 
 loglevel loggerlevel = INFO;
 
-logger *logger_new(FILE *info, FILE *error) {
+logger *logger_new(FILE *info, FILE *error, bool _syslog) {
   if (info == NULL && error == NULL) {
     info = stdout;
     error = stderr;
@@ -34,7 +49,11 @@ logger *logger_new(FILE *info, FILE *error) {
   *log = (logger){
       .info = info,
       .error = error,
+      ._syslog = _syslog,
   };
+
+  if(_syslog)
+    openlog(NULL, LOG_PID, LOG_USER);
 
   return log;
 }
@@ -67,8 +86,12 @@ int logger_printf(logger *log, loglevel lvl, marker *m, const char *format,
   if (r < 0)
     return -1;
 
+  const char *_format = (m == NULL) ? "[%1$s] %2$s" : "[%1$s] <%3$s> %2$s";
+
+  syslog(logger2syslog(lvl) | LOG_USER, _format, loglevel_str[lvl], buffer, m->name);
+
   if (fprintf((lvl < WARNING) ? log->info : log->error,
-              m == NULL ? "[%1$s] %2$s" : "[%1$s] <%3$s> %2$s",
+              _format,
               loglevel_str[lvl], buffer, m->name) <= 0) {
     ufree(buffer);
     return -1;
@@ -87,6 +110,9 @@ int logger_print(logger *log, loglevel lvl, marker *m, const char *msg) {
 void logger_destroy(logger *log) {
   if (log == NULL)
     return;
+
+  if(log->_syslog)
+    closelog();
 
   fflush(log->info);
   fflush(log->error);

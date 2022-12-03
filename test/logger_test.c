@@ -36,7 +36,7 @@ int main(void) {
   test("logger_printf NULL pointer", logger_printf(NULL, FATAL, NULL, "") < 0);
   test("logger_print NULL pointer", logger_print(NULL, FATAL, NULL, "") < 0);
 
-  logger *log = logger_new(info_stream, error_stream);
+  logger *log = logger_new(info_stream, error_stream, false);
 
   logger_debug(log, "Hello there!");
   test("std logger level", EQUALS(info_buffer, ""));

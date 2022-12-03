@@ -31,8 +31,12 @@ extern loglevel loggerlevel;
  *
  * If both info and error are NULL, info is set
  * to stdout and error to stderr.
+ *
+ * @param info  The stream to write messages below WARNING into.
+ * @param error The stream to write messages from and above WARNING into.
+ * @param _syslog If true, also write into syslog
  */
-logger *logger_new(FILE *info, FILE *error);
+logger *logger_new(FILE *info, FILE *error, bool _syslog);
 
 bool logger_do_trace(logger *log);
 bool logger_do_debug(logger *log);
