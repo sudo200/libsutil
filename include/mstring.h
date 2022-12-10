@@ -92,4 +92,22 @@ int strjoin(char **out, string_array_t arr, const char *first,
  */
 char *strreplace(char **str, const char *search, const char *replace);
 
+
+/**
+ * Converts the string {@args str} to UPPERCASE.
+ *
+ * @param str The string to convert to uppercase.
+ * @return {@args str} or {@value NULL} on error.
+ */
+char *strupp(char *str);
+
+
+/**
+ * Converts the string {@args str} to lowercase.
+ *
+ * @param str The string to convert to lowercase.
+ * @return {@args str} or {@value NULL} on error.
+ */
+char *strlow(char *str);
+
 #endif //___MSTRING_H__

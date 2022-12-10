@@ -5,6 +5,8 @@
 #include "dmem.h"
 #include "mstring.h"
 
+#define LETTER_CASE_OFFSET  32U
+
 int msprintf(char **out, const char *format, ...) {
   va_list args;
   va_start(args, format);
@@ -129,4 +131,26 @@ char *strreplace(char **str, const char *search, const char *replace) {
   ufree(*str);
 
   return *str = new_str;
+}
+
+char *strupp(char *str) {
+  if(str == NULL)
+    return NULL;
+
+  for(char *s = str; *s != '\0'; s++)
+    if(*s <= 'z' && *s >= 'a')
+      *s -= LETTER_CASE_OFFSET;
+
+  return str;
+}
+
+char *strlow(char *str) {
+  if(str == NULL)
+    return NULL;
+
+  for(char *s = str; *s != '\0'; s++)
+    if(*s <= 'Z' && *s >= 'A')
+      *s += LETTER_CASE_OFFSET;
+
+  return str;
 }

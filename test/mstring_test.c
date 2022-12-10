@@ -48,5 +48,13 @@ int main(void) {
   test("strreplace equal", EQUALS(s, s_cpy));
   ufree(s);
 
+  char teststr[] = {"tEsTsTrIng123456789@!$&/"};
+  test("strupp exec", strupp(teststr) == teststr);
+  test("strupp result", EQUALS(teststr, "TESTSTRING123456789@!$&/"));
+
+  strcpy(teststr, "tEsTsTrIng123456789@!$&/");
+  test("strlow exec", strlow(teststr) == teststr);
+  test("strlow result", EQUALS(teststr, "teststring123456789@!$&/"));
+
   return 0;
 }
