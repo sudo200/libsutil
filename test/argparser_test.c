@@ -7,34 +7,37 @@
 
 #define EQUALS(x, y) (strcmp(x, y) == 0)
 
-int main(void) {
-  int argc1 = 5;
-  char *argv1[] = {"/bin/dummy", "-acFoo", "-de", "Bar", "Huhu!"};
 
-  bool a, b, c, d, e;
-  const char *c_val, *e_val;
+int argc1 = 5;
+char *argv1[] = {"/bin/dummy", "-acFoo", "-de", "Bar", "Huhu!"};
 
-  int optint;
-  argparser_opt opts[] = {
-      {"aaa", 'a', NO_ARG, &a, NULL},      {NULL, 'b', NO_ARG, &b, NULL},
-      {"count", 'c', REQ_ARG, &c, &c_val}, {"delete", 'd', NO_ARG, &d, NULL},
-      {NULL, 'e', REQ_ARG, &e, &e_val},
+bool a, b, c, d, e;
+const char *c_val, *e_val;
 
-      {NULL, 0, NO_ARG, NULL, NULL}};
+int optint;
+argparser_opt opts[] = {
+    {"aaa", 'a', NO_ARG, &a, NULL},      {NULL, 'b', NO_ARG, &b, NULL},
+    {"count", 'c', REQ_ARG, &c, &c_val}, {"delete", 'd', NO_ARG, &d, NULL},
+    {NULL, 'e', REQ_ARG, &e, &e_val},
 
-  test("argparse exec", argparse(argc1, argv1, opts, &optint, NULL, '\0', '\0',
-                                 NULL) == ARGPARSE_OK);
+    {NULL, 0, NO_ARG, NULL, NULL}};
 
-  test("a == true", a);
-  test("b == false", !b);
-  test("c == true", c);
-  test("d == true", d);
-  test("e == true", e);
+void argparse_exec_0(void) {
+  ASSERT(argparse(argc1, argv1, opts, &optint, NULL, '\0', '\0', NULL) == ARGPARSE_OK);
+}
 
-  test("c_val == \"Foo\"", EQUALS(c_val, "Foo"));
-  test("e_val == \"Bar\"", EQUALS(e_val, "Bar"));
+void argparse_args_0(void) {
+  ASSERT(a == true);
+  ASSERT(b == false);
+  ASSERT(c == true);
+  ASSERT(d == true);
+  ASSERT(e == true);
 
-  test("optint == 4", optint == 4);
+  ASSERT(EQUALS(c_val, "Foo"));
+  ASSERT(EQUALS(e_val, "Bar"));
+
+  ASSERT(optint == 4);
+}
 
   int argc2 = 6;
   char *argv2[] = {"/usr/local/bin/another_dummy",
@@ -44,19 +47,30 @@ int main(void) {
                    "/",
                    "ngfdjfr"};
 
-  test("argparse exec", argparse(argc2, argv2, opts, &optint, NULL, '\0', '\0',
+void argparse_exec_1(void) {
+  ASSERT(argparse(argc2, argv2, opts, &optint, NULL, '\0', '\0',
                                  NULL) == ARGPARSE_OK);
+}
 
-  test("a == true", a);
-  test("b == false", !b);
-  test("c == true", c);
-  test("d == true", d);
-  test("e == true", !e);
+void argparse_args_1(void) {
+  ASSERT(a == true);
+  ASSERT(b == false);
+  ASSERT(c == true);
+  ASSERT(d == true);
+  ASSERT(e == false);
 
-  test("c_val == \"12345\"", EQUALS(c_val, "12345"));
-  test("e_val == NULL", e_val == NULL);
+  ASSERT(EQUALS(c_val, "12345"));
+  ASSERT(e_val == NULL);
 
-  test("optint == 4", optint == 4);
+  ASSERT( optint == 4);
+}
+
+int main(void) {
+  RUN_TEST(argparse_exec_0);
+  RUN_TEST(argparse_args_0);
+
+  RUN_TEST(argparse_exec_1);
+  RUN_TEST(argparse_args_1);
 
   return 0;
 }

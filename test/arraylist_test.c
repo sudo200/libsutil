@@ -11,56 +11,130 @@
 static size_t i = 0;
 
 static void cb_function(void *ptr, void *pipe) {
-  test("foreach cb_function equals",
-       EQUALS((const char *)ptr, ((char **)pipe)[i++]));
+  assert(EQUALS((const char *)ptr, ((char **)pipe)[i++]));
 }
 
-#include <stdio.h>
+char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
+
+void add_NULL(void) {
+  ASSERT(arraylist_add(NULL, "") < 0);
+}
+
+void addall_NULL(void) {
+  ASSERT(arraylist_addall(NULL, NULL, 3) < 0);
+}
+
+arraylist *list;
+
+void new_non_NULL(void) {
+  list = arraylist_new();
+  ASSERT(list != NULL);
+}
+
+void empty_after_creation(void) {
+  assert(arraylist_get(list, 0) == NULL);
+  ASSERT(arraylist_length(list) == 0);
+}
+
+void add_0(void) {
+  ASSERT(arraylist_add(list, strs[0]) >= 0);
+}
+
+void add_1(void) {
+  ASSERT(arraylist_add(list, strs[1]) >= 0);
+}
+
+void add_2(void) {
+  ASSERT(arraylist_add(list, strs[2]) >= 0);
+}
+
+void check_after_add() {
+  printf("\n\tarraylist_length: %lu\n\n", arraylist_length(list));
+  assert(arraylist_length(list) == 3);
+  ASSERT(arraylist_get(list, 3) == NULL);
+}
+
+void add_3(void) {
+  ASSERT(arraylist_add(list, strs[3]) >= 0);
+}
+
+void addall(void) {
+  ASSERT(arraylist_addall(list, (void **)(strs + 4), 2) >= 0);
+}
+
+void confirm_length(void) {
+  ASSERT(arraylist_length(list) == 6);
+}
+
+void **arr;
+
+void to_array_not_NULL(void) {
+  arr = arraylist_to_array(list);
+  ASSERT(arr != NULL);
+}
+
+void to_array_equal(void) {
+  ASSERT(MEMEQUALS(arr, strs, sizeof(*arr) * arraylist_length(list)));
+  ufree(arr);
+}
+
+void foreach_0(void) {
+  ASSERT(arraylist_foreach(list, cb_function, strs) >= 0);
+}
+
+void remove_5(void) {
+  ASSERT(EQUALS(arraylist_remove(list, 5), strs[5]));
+}
+
+void remove_0(void) {
+  ASSERT(EQUALS(arraylist_remove(list, 0), strs[0]));
+}
+
+void foreach_1(void) {
+  i = 1;
+  ASSERT(arraylist_foreach(list, cb_function, strs) >= 0);
+}
+
+void insert(void) {
+  ASSERT(arraylist_insert(list, strs[0], 0) >= 0);
+}
+ 
+void foreach_2(void) {
+  i = 0;
+  ASSERT(arraylist_foreach(list, cb_function, strs) >= 0);
+}
+
+void clear(void) {
+  ASSERT(arraylist_clear(list) == 0);
+}
+
+void empty_after_clear(void) {
+  ASSERT(arraylist_length(list) == 0 &&
+      arraylist_get(list, 0) == NULL);
+}
 
 int main(void) {
-  char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
-
-  test("add NULL pointer", arraylist_add(NULL, "") < 0);
-  test("addall NULL pointer", arraylist_addall(NULL, NULL, 3) < 0);
-
-  arraylist *list = arraylist_new();
-  assert(list != NULL);
-
-  test("empty element",
-       arraylist_get(list, 0) == NULL); // Should be empty at first
-  test("empty len", arraylist_length(list) == 0);
-
-  test("add 0", arraylist_add(list, strs[0]) >= 0);
-  test("add 1", arraylist_add(list, strs[1]) >= 0);
-  test("add 2", arraylist_add(list, strs[2]) >= 0);
-
-  test("length == 3", arraylist_length(list) == 3);
-  test("list[3] == NULL", arraylist_get(list, 3) == NULL);
-
-  test("add 3", arraylist_add(list, strs[3]) >= 0);
-  test("add rest", arraylist_addall(list, (void **)(strs + 4), 2) >= 0);
-
-  test("length == 6", arraylist_length(list) == 6);
-  void **arr = arraylist_to_array(list);
-  test("to_array not NULL", arr != NULL);
-  test("to_array equal",
-       MEMEQUALS(arr, strs, sizeof(*arr) * arraylist_length(list)));
-  ufree(arr);
-  test("foreach exec", arraylist_foreach(list, cb_function, strs) >= 0);
-
-  test("remove 5", EQUALS(arraylist_remove(list, 5), strs[5]));
-  test("remove 0", EQUALS(arraylist_remove(list, 0), strs[0]));
-  i = 1;
-  test("foreach exec", arraylist_foreach(list, cb_function, strs) >= 0);
-
-  test("insert 0", arraylist_insert(list, strs[0], 0) >= 0);
-  i = 0;
-  test("foreach exec", arraylist_foreach(list, cb_function, strs) >= 0);
-
-  test("clear", arraylist_clear(list) == 0);
-
-  test("length == 0", arraylist_length(list) == 0);
-  test("list empty", arraylist_get(list, 0) == NULL);
+  RUN_TEST(add_NULL);
+  RUN_TEST(addall_NULL);
+  RUN_TEST(new_non_NULL);
+  RUN_TEST(empty_after_creation);
+  RUN_TEST(add_0);
+  RUN_TEST(add_1);
+  RUN_TEST(add_2);
+  RUN_TEST(check_after_add);
+  RUN_TEST(add_3);
+  RUN_TEST(addall);
+  RUN_TEST(confirm_length);
+  RUN_TEST(to_array_not_NULL);
+  RUN_TEST(to_array_equal);
+  RUN_TEST(foreach_0);
+  RUN_TEST(remove_5);
+  RUN_TEST(remove_0);
+  RUN_TEST(foreach_1);
+  RUN_TEST(insert);
+  RUN_TEST(foreach_2);
+  RUN_TEST(clear);
+  RUN_TEST(empty_after_clear);
 
   arraylist_destroy(list);
   return 0;

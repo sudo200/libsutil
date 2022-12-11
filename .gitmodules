@@ -1,0 +1,3 @@
+[submodule "libs/sunit"]
+	path = libs/sunit
+	url = https://github.com/sudo200/sunit
