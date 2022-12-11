@@ -92,7 +92,7 @@ int arraylist_insertall(arraylist *list, void **items, size_t nitems,
   return 0;
 }
 
-void *arraylist_get(arraylist *list, size_t index) {
+void *arraylist_get(const arraylist *list, size_t index) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;
@@ -106,7 +106,7 @@ void *arraylist_get(arraylist *list, size_t index) {
   return list->arr[index];
 }
 
-size_t arraylist_length(arraylist *list) {
+size_t arraylist_length(const arraylist *list) {
   if (list == NULL) {
     errno = EINVAL;
     return 0UL;

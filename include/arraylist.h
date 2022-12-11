@@ -60,7 +60,7 @@ int arraylist_insertall(arraylist *list, void **items, size_t nitems,
  * @param index The index from which to get the value.
  * @return The element at index, or NULL if an error occured.
  */
-void *arraylist_get(arraylist *list, size_t index);
+void *arraylist_get(const arraylist *list, size_t index);
 
 /**
  * Gets the length (element count) of the arraylist.
@@ -68,7 +68,7 @@ void *arraylist_get(arraylist *list, size_t index);
  * @param list The arraylist to operate on.
  * @return The length.
  */
-size_t arraylist_length(arraylist *list);
+size_t arraylist_length(const arraylist *list);
 
 /**
  * Removes the element at given index from the arraylist and returns it.

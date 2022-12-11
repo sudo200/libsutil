@@ -52,7 +52,7 @@ compiledb: clean
 	bear -- $(MAKE) build
 
 format:
-	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(INCLUDE)/*.h) $(wildcard $(SRC)/*.c)
+	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(INCLUDE)/*.h) $(wildcard $(SRC)/*.c) $(wildcard $(TEST_DIR)/*.c)
 
 docs:
 	$(DOCGEN) $(DOCGEN_OPTIONS) $(wildcard $(INCLUDE)/*.h) $(wildcard $(SRC)/*.c)

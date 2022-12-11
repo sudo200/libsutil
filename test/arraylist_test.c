@@ -16,13 +16,9 @@ static void cb_function(void *ptr, void *pipe) {
 
 char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
-void add_NULL(void) {
-  ASSERT(arraylist_add(NULL, "") < 0);
-}
+void add_NULL(void) { ASSERT(arraylist_add(NULL, "") < 0); }
 
-void addall_NULL(void) {
-  ASSERT(arraylist_addall(NULL, NULL, 3) < 0);
-}
+void addall_NULL(void) { ASSERT(arraylist_addall(NULL, NULL, 3) < 0); }
 
 arraylist *list;
 
@@ -37,34 +33,36 @@ void empty_after_creation(void) {
 }
 
 void add_0(void) {
-  ASSERT(arraylist_add(list, strs[0]) >= 0);
+  int ret = arraylist_add(list, strs[0]);
+  ASSERT(ret >= 0);
 }
 
 void add_1(void) {
-  ASSERT(arraylist_add(list, strs[1]) >= 0);
+  int ret = arraylist_add(list, strs[1]);
+  ASSERT(ret >= 0);
 }
 
 void add_2(void) {
-  ASSERT(arraylist_add(list, strs[2]) >= 0);
+  int ret = arraylist_add(list, strs[2]);
+  ASSERT(ret >= 0);
 }
 
 void check_after_add() {
-  printf("\n\tarraylist_length: %lu\n\n", arraylist_length(list));
   assert(arraylist_length(list) == 3);
   ASSERT(arraylist_get(list, 3) == NULL);
 }
 
 void add_3(void) {
-  ASSERT(arraylist_add(list, strs[3]) >= 0);
+  int ret = arraylist_add(list, strs[3]);
+  ASSERT(ret >= 0);
 }
 
 void addall(void) {
-  ASSERT(arraylist_addall(list, (void **)(strs + 4), 2) >= 0);
+  int ret = arraylist_addall(list, (void **)(strs + 4), 2);
+  ASSERT(ret >= 0)
 }
 
-void confirm_length(void) {
-  ASSERT(arraylist_length(list) == 6);
-}
+void confirm_length(void) { ASSERT(arraylist_length(list) == 6); }
 
 void **arr;
 
@@ -79,38 +77,45 @@ void to_array_equal(void) {
 }
 
 void foreach_0(void) {
-  ASSERT(arraylist_foreach(list, cb_function, strs) >= 0);
+  int ret = arraylist_foreach(list, cb_function, strs);
+  ASSERT(ret >= 0);
 }
 
 void remove_5(void) {
-  ASSERT(EQUALS(arraylist_remove(list, 5), strs[5]));
+  void *item = arraylist_remove(list, 5);
+  ASSERT(EQUALS(item, strs[5]));
 }
 
 void remove_0(void) {
-  ASSERT(EQUALS(arraylist_remove(list, 0), strs[0]));
+  void *item = arraylist_remove(list, 0);
+  ASSERT(EQUALS(item, strs[0]));
 }
 
 void foreach_1(void) {
   i = 1;
-  ASSERT(arraylist_foreach(list, cb_function, strs) >= 0);
+  int ret = arraylist_foreach(list, cb_function, strs);
+  ASSERT(ret >= 0);
 }
 
 void insert(void) {
-  ASSERT(arraylist_insert(list, strs[0], 0) >= 0);
+  int ret = arraylist_insert(list, strs[0], 0);
+  ASSERT(ret >= 0);
 }
- 
+
 void foreach_2(void) {
   i = 0;
-  ASSERT(arraylist_foreach(list, cb_function, strs) >= 0);
+  int ret = arraylist_insert(list, strs[0], 0);
+  ASSERT(ret >= 0);
 }
 
 void clear(void) {
-  ASSERT(arraylist_clear(list) == 0);
+  int ret = arraylist_clear(list);
+  ASSERT(ret == 0);
 }
 
 void empty_after_clear(void) {
-  ASSERT(arraylist_length(list) == 0 &&
-      arraylist_get(list, 0) == NULL);
+  assert(arraylist_length(list) == 0);
+  ASSERT(arraylist_get(list, 0) == NULL);
 }
 
 int main(void) {

@@ -11,13 +11,19 @@ static const char *const loglevel_str[] = {"TRACE",   "DEBUG", "INFO",
 
 static int logger2syslog(loglevel lvl) {
   switch (lvl) {
-    case TRACE:
-    case DEBUG: return LOG_DEBUG;
-    case INFO: return LOG_INFO;
-    case NOTICE: return LOG_NOTICE;
-    case WARNING: return LOG_WARNING;
-    case ERROR: return LOG_ERR;
-    case FATAL: return LOG_EMERG;
+  case TRACE:
+  case DEBUG:
+    return LOG_DEBUG;
+  case INFO:
+    return LOG_INFO;
+  case NOTICE:
+    return LOG_NOTICE;
+  case WARNING:
+    return LOG_WARNING;
+  case ERROR:
+    return LOG_ERR;
+  case FATAL:
+    return LOG_EMERG;
   }
 }
 
@@ -52,7 +58,7 @@ logger *logger_new(FILE *info, FILE *error, bool _syslog) {
       ._syslog = _syslog,
   };
 
-  if(_syslog)
+  if (_syslog)
     openlog(NULL, LOG_PID, LOG_USER);
 
   return log;
@@ -88,10 +94,10 @@ int logger_printf(logger *log, loglevel lvl, marker *m, const char *format,
 
   const char *_format = (m == NULL) ? "[%1$s] %2$s" : "[%1$s] <%3$s> %2$s";
 
-  syslog(logger2syslog(lvl) | LOG_USER, _format, loglevel_str[lvl], buffer, m->name);
+  syslog(logger2syslog(lvl) | LOG_USER, _format, loglevel_str[lvl], buffer,
+         m->name);
 
-  if (fprintf((lvl < WARNING) ? log->info : log->error,
-              _format,
+  if (fprintf((lvl < WARNING) ? log->info : log->error, _format,
               loglevel_str[lvl], buffer, m->name) <= 0) {
     ufree(buffer);
     return -1;
@@ -111,7 +117,7 @@ void logger_destroy(logger *log) {
   if (log == NULL)
     return;
 
-  if(log->_syslog)
+  if (log->_syslog)
     closelog();
 
   fflush(log->info);
