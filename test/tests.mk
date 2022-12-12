@@ -49,7 +49,7 @@ test_argparser: all
 	LD_LIBRARY_PATH=$(OUT) ./$(OUT)/test_argparser
 
 test_logger: all
-	$(CC) -o$(OUT)/test_logger $(TEST_INCLUDE) $(TEST_ARGPARSER) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
+	$(CC) -o$(OUT)/test_logger $(TEST_INCLUDE) $(TEST_LOGGER) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
 	LD_LIBRARY_PATH=$(OUT) ./$(OUT)/test_logger
 
 test_stack: all

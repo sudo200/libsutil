@@ -94,14 +94,16 @@ int logger_printf(logger *log, loglevel lvl, marker *m, const char *format,
 
   const char *_format = (m == NULL) ? "[%1$s] %2$s" : "[%1$s] <%3$s> %2$s";
 
-  syslog(logger2syslog(lvl) | LOG_USER, _format, loglevel_str[lvl], buffer,
-         m->name);
+  if(log->_syslog)
+    syslog(logger2syslog(lvl) | LOG_USER, _format, loglevel_str[lvl], buffer,
+         m == NULL ? NULL : m->name);
 
   if (fprintf((lvl < WARNING) ? log->info : log->error, _format,
-              loglevel_str[lvl], buffer, m->name) <= 0) {
+              loglevel_str[lvl], buffer, m == NULL ? NULL : m->name) <= 0) {
     ufree(buffer);
     return -1;
   }
+  putc('\n', (lvl < WARNING) ? log->info : log->error);
   ufree(buffer);
 
   return 0;
