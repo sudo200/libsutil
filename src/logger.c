@@ -6,8 +6,7 @@
 #include "mstring.h"
 
 static const char *const loglevel_str[] = {"TRACE",   "DEBUG", "INFO",
-                                           "NOTICE",  "INFO",  "NOTICE",
-                                           "WARNING", "ERROR", "FATAL"};
+                                           "NOTICE", "WARNING", "ERROR", "FATAL"};
 
 static int logger2syslog(loglevel lvl) {
   switch (lvl) {
@@ -110,7 +109,7 @@ int logger_printf(logger *log, loglevel lvl, marker *m, const char *format,
 }
 
 int logger_print(logger *log, loglevel lvl, marker *m, const char *msg) {
-  if (logger_printf(log, lvl, m, "%s\n", msg) < 0)
+  if (logger_printf(log, lvl, m, "%s", msg) < 0)
     return -1;
   return 0;
 }

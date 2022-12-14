@@ -12,9 +12,18 @@
 char info_buffer[BUFFER_SIZE], error_buffer[BUFFER_SIZE];
 FILE *info_stream, *error_stream;
 
+
+__attribute__((unused)) static void debug(const char *buf) {
+  fputs("\n** DEBUG **\n", stderr);
+  for(; *buf != '\0'; buf++)
+    fprintf(stderr, "\t%1$c\t%1$X\t%1$d\n", *buf);
+  fputs("**       **\n\n", stderr);
+}
+
+
 static void clear(void) {
-  memset(info_buffer, '\0', BUFFER_SIZE);
-  memset(error_buffer, '\0', BUFFER_SIZE);
+  memset(info_buffer, '\0', sizeof(info_buffer));
+  memset(error_buffer, '\0', sizeof(error_buffer));
 
   fseek(info_stream, 0L, SEEK_SET);
   fseek(error_stream, 0L, SEEK_SET);
@@ -26,8 +35,8 @@ static void flush(void) {
 }
 
 static void con(void) {
-  info_stream = fmemopen(info_buffer, BUFFER_SIZE, "r+");
-  error_stream = fmemopen(error_stream, BUFFER_SIZE, "r+");
+  info_stream = fmemopen(info_buffer, BUFFER_SIZE, "w");
+  error_stream = fmemopen(error_buffer, BUFFER_SIZE, "w");
   clear();
 }
 
@@ -66,22 +75,25 @@ void test_std_log_level(void) {
 
   logger_info(logg, "Hello there!");
   flush();
+  
   ASSERT(EQUALS(info_buffer, "[INFO] Hello there!\n"));
   clear();
 }
 
 void check_verbosity(void) {
+  clear();
+
   loggerlevel = TRACE;
 
   logger_trace(logg, "trace");
   logger_debug(logg, "debug");
   logger_info(logg, "info");
+  logger_notice(logg, "notice");
   logger_warning(logg, "warning");
   logger_error(logg, "error");
   logger_fatal(logg, "fatal");
-}
+  flush();
 
-void check_output(void) {
   assert(EQUALS(info_buffer, "[TRACE] trace\n[DEBUG] debug\n[INFO] info\n[NOTICE] notice\n"));
   ASSERT(EQUALS(error_buffer, "[WARNING] warning\n[ERROR] error\n[FATAL] fatal\n"));
   clear();
@@ -94,6 +106,7 @@ void check_marker_non_NULL(void) {
 }
 
 void check_output_marker(void) {
+  clear();
   logger_trace_m(logg, m, "trace");
   logger_debug_m(logg, m, "debug");
   logger_info_m(logg, m, "info");
@@ -101,6 +114,7 @@ void check_output_marker(void) {
   logger_warning_m(logg, m, "warning");
   logger_error_m(logg, m, "error");
   logger_fatal_m(logg, m, "fatal");
+  flush();
 
   assert(EQUALS(info_buffer,
               "[TRACE] <Hello> trace\n[DEBUG] <Hello> debug\n[INFO] <Hello> "
@@ -118,7 +132,6 @@ int main(void) {
   RUN_TEST(logger_new_non_NULL);
   RUN_TEST(test_std_log_level);
   RUN_TEST(check_verbosity);
-  RUN_TEST(check_output);
   RUN_TEST(check_marker_non_NULL);
   RUN_TEST(check_output_marker);
 
