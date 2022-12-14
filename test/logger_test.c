@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 
 #include "logger.h"
@@ -11,23 +12,26 @@
 char info_buffer[BUFFER_SIZE], error_buffer[BUFFER_SIZE];
 FILE *info_stream, *error_stream;
 
-void clear(void) {
-  memset(info_buffer, 0, BUFFER_SIZE);
-  memset(error_buffer, 0, BUFFER_SIZE);
+static void clear(void) {
+  memset(info_buffer, '\0', BUFFER_SIZE);
+  memset(error_buffer, '\0', BUFFER_SIZE);
 
   fseek(info_stream, 0L, SEEK_SET);
   fseek(error_stream, 0L, SEEK_SET);
 }
 
-__attribute__((constructor)) void
-X19hdHRyaWJ1dGVfXygoY29uc3RydWN0b3IpKSB2b2lkICh2b2lkKQo(void) {
-  info_stream = fmemopen(info_buffer, BUFFER_SIZE, "w");
-  error_stream = fmemopen(error_stream, BUFFER_SIZE, "w");
+static void flush(void) {
+  fflush(info_stream);
+  fflush(error_stream);
+}
+
+static void con(void) {
+  info_stream = fmemopen(info_buffer, BUFFER_SIZE, "r+");
+  error_stream = fmemopen(error_stream, BUFFER_SIZE, "r+");
   clear();
 }
 
-__attribute__((destructor)) void
-X19hdHRyaWJ1dGVfXygoZGVzdHJ1Y3RvcikpIHZvaWQgKHZvaWQpCg(void) {
+static void des(void) {
   fclose(info_stream);
   fclose(error_stream);
 }
@@ -52,15 +56,18 @@ void logger_new_non_NULL(void) {
 
 void test_std_log_level(void) {
   logger_debug(logg, "Hello there!");
+  flush();
   assert(EQUALS(info_buffer, ""));
-
-  // FIXME
-  logger_info(logg, "Hello there!");
-  assert(EQUALS(info_buffer, "[INFO] Hello there!\n"));
   clear();
+
   assert(!logger_do_trace(logg));
   assert(!logger_do_debug(logg));
-  ASSERT(logger_do_info(logg));
+  assert(logger_do_info(logg));
+
+  logger_info(logg, "Hello there!");
+  flush();
+  ASSERT(EQUALS(info_buffer, "[INFO] Hello there!\n"));
+  clear();
 }
 
 void check_verbosity(void) {
@@ -103,6 +110,11 @@ void check_output_marker(void) {
 }
 
 int main(void) {
+  con();
+  clear();
+
+  RUN_TEST(logger_print_NULL_ptr);
+  RUN_TEST(logger_printf_NULL_ptr);
   RUN_TEST(logger_new_non_NULL);
   RUN_TEST(test_std_log_level);
   RUN_TEST(check_verbosity);
@@ -112,5 +124,6 @@ int main(void) {
 
   marker_destroy(m);
   logger_destroy(logg);
+  des();
   return 0;
 }
