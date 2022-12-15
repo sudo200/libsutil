@@ -18,13 +18,9 @@ char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
 linkedlist *list;
 
-void add_NULL(void) {
-  ASSERT(linkedlist_add(NULL, ""));
-}
+void add_NULL(void) { ASSERT(linkedlist_add(NULL, "")); }
 
-void addall_NULL(void) {
-  ASSERT(linkedlist_addall(NULL, NULL, 3));
-}
+void addall_NULL(void) { ASSERT(linkedlist_addall(NULL, NULL, 3)); }
 
 void new_non_NULL(void) {
   list = linkedlist_new();
@@ -61,9 +57,7 @@ void addall(void) {
   ASSERT(ret >= 0);
 }
 
-void confirm_length(void) {
-  ASSERT(linkedlist_length(list) == 6);
-}
+void confirm_length(void) { ASSERT(linkedlist_length(list) == 6); }
 
 void **arr;
 
@@ -118,7 +112,6 @@ void empty_after_clear(void) {
   assert(linkedlist_length(list) == 0);
   ASSERT(linkedlist_get(list, 0) == NULL);
 }
-
 
 int main(void) {
   RUN_TEST(add_NULL);

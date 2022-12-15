@@ -22,7 +22,7 @@ void memrev_test(void) {
 void spawn_test(void) {
   process proc;
   char buffer[0xFF];
-  
+
   pid_t ret = spawn(&proc, "/bin/sh", NULL, NULL);
 
   assert(ret > 0);

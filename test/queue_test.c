@@ -4,11 +4,10 @@
 
 #include "test.h"
 
-#define equals(x, y)  (strcmp(x, y) == 0)
-#define len(arr)      (sizeof(arr)/sizeof(*arr))
+#define equals(x, y) (strcmp(x, y) == 0)
+#define len(arr) (sizeof(arr) / sizeof(*arr))
 
 static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
-
 
 static void add_NULL(void) {
   int ret = queue_add(NULL, NULL);
@@ -70,7 +69,7 @@ static void uncapped_addall(void) {
 }
 
 static void uncapped_poll(void) {
-  for(size_t i = 0UL; i < len(strs); i++) {
+  for (size_t i = 0UL; i < len(strs); i++) {
     const char *ret = (const char *)queue_poll(q);
     assert(ret != NULL);
     puts(ret);
@@ -106,14 +105,13 @@ static void capped_full(void) {
 }
 
 static void capped_poll(void) {
-  for(size_t i = 0UL; i < len(strs); i++) {
+  for (size_t i = 0UL; i < len(strs); i++) {
     const char *ret = (const char *)queue_poll(q);
     assert(ret != NULL);
     assert(equals(strs[i], ret));
   }
   ASSERT(true);
 }
-
 
 int main(void) {
   RUN_TEST(add_NULL);

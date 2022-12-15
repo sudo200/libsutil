@@ -12,14 +12,12 @@
 char info_buffer[BUFFER_SIZE], error_buffer[BUFFER_SIZE];
 FILE *info_stream, *error_stream;
 
-
 __attribute__((unused)) static void debug(const char *buf) {
   fputs("\n** DEBUG **\n", stderr);
-  for(; *buf != '\0'; buf++)
+  for (; *buf != '\0'; buf++)
     fprintf(stderr, "\t%1$c\t%1$X\t%1$d\n", *buf);
   fputs("**       **\n\n", stderr);
 }
-
 
 static void clear(void) {
   memset(info_buffer, '\0', sizeof(info_buffer));
@@ -56,12 +54,11 @@ void logger_print_NULL_ptr(void) {
 }
 
 logger *logg;
-  
+
 void logger_new_non_NULL(void) {
   logg = logger_new(info_stream, error_stream, false);
   ASSERT(logg != NULL);
 }
-
 
 void test_std_log_level(void) {
   logger_debug(logg, "Hello there!");
@@ -75,7 +72,7 @@ void test_std_log_level(void) {
 
   logger_info(logg, "Hello there!");
   flush();
-  
+
   ASSERT(EQUALS(info_buffer, "[INFO] Hello there!\n"));
   clear();
 }
@@ -94,8 +91,11 @@ void check_verbosity(void) {
   logger_fatal(logg, "fatal");
   flush();
 
-  assert(EQUALS(info_buffer, "[TRACE] trace\n[DEBUG] debug\n[INFO] info\n[NOTICE] notice\n"));
-  ASSERT(EQUALS(error_buffer, "[WARNING] warning\n[ERROR] error\n[FATAL] fatal\n"));
+  assert(
+      EQUALS(info_buffer,
+             "[TRACE] trace\n[DEBUG] debug\n[INFO] info\n[NOTICE] notice\n"));
+  ASSERT(EQUALS(error_buffer,
+                "[WARNING] warning\n[ERROR] error\n[FATAL] fatal\n"));
   clear();
 }
 
@@ -117,10 +117,10 @@ void check_output_marker(void) {
   flush();
 
   assert(EQUALS(info_buffer,
-              "[TRACE] <Hello> trace\n[DEBUG] <Hello> debug\n[INFO] <Hello> "
-              "info\n[NOTICE] <Hello> notice\n"));
+                "[TRACE] <Hello> trace\n[DEBUG] <Hello> debug\n[INFO] <Hello> "
+                "info\n[NOTICE] <Hello> notice\n"));
   ASSERT(EQUALS(error_buffer, "[WARNING] <Hello> warning\n[ERROR] <Hello> "
-                            "error\n[FATAL] <Hello> fatal\n"));
+                              "error\n[FATAL] <Hello> fatal\n"));
 }
 
 int main(void) {

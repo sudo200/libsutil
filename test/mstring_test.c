@@ -12,7 +12,8 @@
 char *mystr;
 
 static void check_msprintf(void) {
-  int ret = msprintf(&mystr, "%s a test: %.3f, 0x%X %c", "This is", 653.76965364, 42, '\n');
+  int ret = msprintf(&mystr, "%s a test: %.3f, 0x%X %c", "This is",
+                     653.76965364, 42, '\n');
   assert(ret > 0);
   ASSERT(EQUALS(mystr, "This is a test: 653.770, 0x2A \n"));
 }
@@ -35,7 +36,7 @@ static void check_endswith(void) {
   ASSERT(ret);
 }
 
-  string_array_t arr;
+string_array_t arr;
 
 static void check_strspl(void) {
   int ret = strspl(&arr, "Hello there!", " ");
@@ -68,7 +69,7 @@ static void check_strreplace(void) {
   ufree(s);
 }
 
-  char teststr[] = {"tEsTsTrIng123456789@!$&/"};
+char teststr[] = {"tEsTsTrIng123456789@!$&/"};
 
 static void check_strupp(void) {
   bool ret = (strupp(teststr) == teststr);

@@ -27,7 +27,7 @@ static void uncapped_check_empty_size(void) {
 }
 
 static void uncapped_push(void) {
-  for(size_t i = 0UL; i < LENGTH(strs); i++) {
+  for (size_t i = 0UL; i < LENGTH(strs); i++) {
     int ret = stack_push(s, strs[i]);
     assert(ret >= 0);
   }
@@ -40,7 +40,7 @@ static void uncapped_check_size(void) {
 }
 
 static void uncapped_pop(void) {
-  for(size_t i = LENGTH(strs) - 1; i >= 3; i--) {
+  for (size_t i = LENGTH(strs) - 1; i >= 3; i--) {
     const char *ret = (const char *)stack_pop(s);
     assert(ret != NULL);
     assert(EQUALS(ret, strs[i]));
@@ -68,7 +68,7 @@ static void capped_check_empty_size(void) {
 }
 
 static void capped_push(void) {
-  for(size_t i = 0UL; i < LENGTH(strs); i++) {
+  for (size_t i = 0UL; i < LENGTH(strs); i++) {
     int ret = stack_push(s, strs[i]);
     assert(ret >= 0);
   }
@@ -86,7 +86,7 @@ static void capped_check_full(void) {
 }
 
 static void capped_pop(void) {
-  for(size_t i = LENGTH(strs) - 1; i >= 3; i--) {
+  for (size_t i = LENGTH(strs) - 1; i >= 3; i--) {
     const char *ret = (const char *)stack_pop(s);
     assert(ret != NULL);
     assert(EQUALS(ret, strs[i]));

@@ -8,13 +8,10 @@
 
 #include "test.h"
 
-
 char b[] = "Hello there!\nGENERAL KENOBI!";
 FILE *testfile;
 
-void test_fsize(void) {
-  ASSERT(fsize(testfile) == sizeof(b));
-}
+void test_fsize(void) { ASSERT(fsize(testfile) == sizeof(b)); }
 
 void test_fpeek(void) {
   assert(fpeek(testfile) == 'H');

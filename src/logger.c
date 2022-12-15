@@ -5,8 +5,8 @@
 #include "dmem.h"
 #include "mstring.h"
 
-static const char *const loglevel_str[] = {"TRACE",   "DEBUG", "INFO",
-                                           "NOTICE", "WARNING", "ERROR", "FATAL"};
+static const char *const loglevel_str[] = {"TRACE",   "DEBUG", "INFO", "NOTICE",
+                                           "WARNING", "ERROR", "FATAL"};
 
 static int logger2syslog(loglevel lvl) {
   switch (lvl) {
@@ -93,9 +93,9 @@ int logger_printf(logger *log, loglevel lvl, marker *m, const char *format,
 
   const char *_format = (m == NULL) ? "[%1$s] %2$s" : "[%1$s] <%3$s> %2$s";
 
-  if(log->_syslog)
+  if (log->_syslog)
     syslog(logger2syslog(lvl) | LOG_USER, _format, loglevel_str[lvl], buffer,
-         m == NULL ? NULL : m->name);
+           m == NULL ? NULL : m->name);
 
   if (fprintf((lvl < WARNING) ? log->info : log->error, _format,
               loglevel_str[lvl], buffer, m == NULL ? NULL : m->name) <= 0) {
