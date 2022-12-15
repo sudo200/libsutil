@@ -9,70 +9,119 @@
 
 static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
-void capped_test(void) {
-  test("empty capped stack", stack_new_capped(0UL) == NULL);
-
-  stack *cs = stack_new_capped(5);
-  test("capped stack not NULL", cs != NULL);
-
-  test("capped init size", stack_size(cs) == 0UL);
-
-  for (size_t i = 0; i < 5; i++)
-    test("capped push no error", stack_push(cs, strs[i]) >= 0);
-
-  test("capped size full", stack_size(cs) == 5UL);
-
-  test("capped push full", stack_push(cs, strs[5]) < 0);
-
-  test("capped size full", stack_size(cs) == 5UL);
-
-  for (size_t i = 0; i < 3; i++)
-    test("capped peek equal", EQUALS((const char *)stack_peek(cs), strs[4]));
-
-  for (size_t i = 4; i > 1; i--)
-    test("capped pop equal", EQUALS((const char *)stack_pop(cs), strs[i]));
-
-  test("capped clear exec", stack_clear(cs) >= 0);
-
-  test("capped size empty", stack_size(cs) == 0UL);
-  test("capped peek empty", stack_peek(cs) == NULL);
-  test("capped pop empty", stack_pop(cs) == NULL);
-
-  stack_destroy(cs);
+static void push_NULL(void) {
+  int ret = stack_push(NULL, NULL);
+  ASSERT(ret < 0);
 }
 
-void uncapped_test(void) {
-  stack *us = stack_new_uncapped();
-  test("uncapped stack not NULL", us != NULL);
+stack *s;
 
-  test("uncapped init size", stack_size(us) == 0UL);
+static void uncapped_non_NULL(void) {
+  s = stack_new_uncapped();
+  ASSERT(s != NULL);
+}
 
-  for (size_t i = 0; i < LENGTH(strs); i++)
-    test("uncapped push no error", stack_push(us, strs[i]) >= 0);
+static void uncapped_check_empty_size(void) {
+  size_t len = stack_size(s);
+  ASSERT(len == 0UL);
+}
 
-  test("uncapped size", stack_size(us) == 6UL);
+static void uncapped_push(void) {
+  for(size_t i = 0UL; i < LENGTH(strs); i++) {
+    int ret = stack_push(s, strs[i]);
+    assert(ret >= 0);
+  }
+  ASSERT(true);
+}
 
-  for (size_t i = 0; i < 3; i++)
-    test("uncapped peek equal", EQUALS((const char *)stack_peek(us), strs[5]));
+static void uncapped_check_size(void) {
+  size_t len = stack_size(s);
+  ASSERT(len == LENGTH(strs));
+}
 
-  for (size_t i = 5; i > 3; i--)
-    test("uncapped pop equal", EQUALS((const char *)stack_pop(us), strs[i]));
+static void uncapped_pop(void) {
+  for(size_t i = LENGTH(strs) - 1; i >= 3; i--) {
+    const char *ret = (const char *)stack_pop(s);
+    assert(ret != NULL);
+    assert(EQUALS(ret, strs[i]));
+  }
+  ASSERT(true);
+}
 
-  for (size_t i = 0; i < 3; i++)
-    test("uncapped peek equal", EQUALS((const char *)stack_peek(us), strs[3]));
+static void uncapped_clear(void) {
+  int ret = stack_clear(s);
+  assert(ret >= 0);
+  size_t len = stack_size(s);
+  assert(len == 0UL);
+  const char *str = (const char *)stack_pop(s);
+  ASSERT(str == NULL);
+}
 
-  test("uncapped clear exec", stack_clear(us) >= 0);
+static void capped_non_NULL(void) {
+  s = stack_new_capped(LENGTH(strs));
+  ASSERT(s != NULL);
+}
 
-  test("uncapped size empty", stack_size(us) == 0UL);
-  test("uncapped peek empty", stack_peek(us) == NULL);
-  test("uncapped pop empty", stack_pop(us) == NULL);
+static void capped_check_empty_size(void) {
+  size_t len = stack_size(s);
+  ASSERT(len == 0UL);
+}
 
-  stack_destroy(us);
+static void capped_push(void) {
+  for(size_t i = 0UL; i < LENGTH(strs); i++) {
+    int ret = stack_push(s, strs[i]);
+    assert(ret >= 0);
+  }
+  ASSERT(true);
+}
+
+static void capped_check_size(void) {
+  size_t len = stack_size(s);
+  ASSERT(len == LENGTH(strs));
+}
+
+static void capped_check_full(void) {
+  int ret = stack_push(s, strs[LENGTH(strs) - 1]);
+  ASSERT(ret < 0);
+}
+
+static void capped_pop(void) {
+  for(size_t i = LENGTH(strs) - 1; i >= 3; i--) {
+    const char *ret = (const char *)stack_pop(s);
+    assert(ret != NULL);
+    assert(EQUALS(ret, strs[i]));
+  }
+  ASSERT(true);
+}
+
+static void capped_clear(void) {
+  int ret = stack_clear(s);
+  assert(ret >= 0);
+  size_t len = stack_size(s);
+  assert(len == 0UL);
+  const char *str = (const char *)stack_pop(s);
+  ASSERT(str == NULL);
 }
 
 int main(void) {
-  capped_test();
-  uncapped_test();
+  RUN_TEST(push_NULL);
+
+  RUN_TEST(uncapped_non_NULL);
+  RUN_TEST(uncapped_check_empty_size);
+  RUN_TEST(uncapped_push);
+  RUN_TEST(uncapped_check_size);
+  RUN_TEST(uncapped_pop);
+  RUN_TEST(uncapped_clear);
+  stack_destroy(s);
+
+  RUN_TEST(capped_non_NULL);
+  RUN_TEST(capped_check_empty_size);
+  RUN_TEST(capped_push);
+  RUN_TEST(capped_check_size);
+  RUN_TEST(capped_check_full);
+  RUN_TEST(capped_pop);
+  RUN_TEST(capped_clear);
+  stack_destroy(s);
 
   return 0;
 }
