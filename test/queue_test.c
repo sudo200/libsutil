@@ -4,41 +4,140 @@
 
 #include "test.h"
 
-#define equals(x, y) (strcmp(x, y) == 0)
+#define equals(x, y)  (strcmp(x, y) == 0)
+#define len(arr)      (sizeof(arr)/sizeof(*arr))
 
 static char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
-static const char *const msgs[][2] = {
-    {"new_uncapped NULL", "new_capped NULL"},
-    {"uncapped add 0", "capped add 0"},
-    {"uncapped add 1", "capped add 1"},
-    {"uncapped add 2", "capped add 2"},
-    {"uncapped addall rest", "capped addall rest"},
-    {"uncapped peek equals", "capped peek equals"},
-    {"uncapped poll equals", "capped poll equals"}};
+
+static void add_NULL(void) {
+  int ret = queue_add(NULL, NULL);
+  ASSERT(ret < 0);
+}
+
+static void addall_NULL(void) {
+  int ret = queue_addall(NULL, NULL, 0UL, false);
+  ASSERT(ret < 0);
+}
+
+static void peek_NULL(void) {
+  void *ret = queue_peek(NULL);
+  ASSERT(ret == NULL);
+}
+
+static void poll_NULL(void) {
+  void *ret = queue_poll(NULL);
+  ASSERT(ret == NULL);
+}
+
+static void zero_length_capped_NULL(void) {
+  queue *q = queue_new_capped(0UL);
+  ASSERT(q == NULL);
+}
+
+queue *q;
+
+static void uncapped_non_NULL(void) {
+  q = queue_new_uncapped();
+  ASSERT(q != NULL);
+}
+
+static void uncapped_add_0(void) {
+  int ret = queue_add(q, strs[0]);
+  ASSERT(ret >= 0);
+}
+
+static void uncapped_add_1(void) {
+  int ret = queue_add(q, strs[1]);
+  ASSERT(ret >= 0);
+}
+
+static void uncapped_add_2(void) {
+  int ret = queue_add(q, strs[2]);
+  ASSERT(ret >= 0);
+}
+
+static void uncapped_peek(void) {
+  const char *str = (const char *)queue_peek(q);
+
+  assert(str != NULL);
+  ASSERT(equals(str, strs[0]));
+}
+
+static void uncapped_addall(void) {
+  int ret = queue_addall(q, (void **)strs + 3, 3UL, false);
+  ASSERT(ret >= 0);
+}
+
+static void uncapped_poll(void) {
+  for(size_t i = 0UL; i < len(strs); i++) {
+    const char *ret = (const char *)queue_poll(q);
+    assert(ret != NULL);
+    puts(ret);
+    assert(equals(strs[i], ret));
+  }
+  ASSERT(true);
+}
+
+static void capped_non_NULL(void) {
+  q = queue_new_capped(len(strs));
+  ASSERT(q != NULL);
+}
+
+static void capped_addall(void) {
+  int ret = queue_addall(q, (void **)strs, len(strs) - 1, false);
+  ASSERT(ret >= 0);
+}
+
+static void capped_peek(void) {
+  const char *ret = (const char *)queue_peek(q);
+  assert(ret != NULL);
+  ASSERT(equals(strs[0], ret));
+}
+
+static void capped_add(void) {
+  int ret = queue_add(q, strs[len(strs) - 1]);
+  ASSERT(ret >= 0);
+}
+
+static void capped_full(void) {
+  int ret = queue_add(q, strs[len(strs) - 1]);
+  ASSERT(ret < 0);
+}
+
+static void capped_poll(void) {
+  for(size_t i = 0UL; i < len(strs); i++) {
+    const char *ret = (const char *)queue_poll(q);
+    assert(ret != NULL);
+    assert(equals(strs[i], ret));
+  }
+  ASSERT(true);
+}
+
 
 int main(void) {
-  test("add NULL pointer", queue_add(NULL, NULL) == -1);
-  test("addall NULL pointer", queue_addall(NULL, NULL, 1, false) == -1);
-  test("new_capped(0) == NULL", queue_new_capped(0) == NULL);
+  RUN_TEST(add_NULL);
+  RUN_TEST(addall_NULL);
+  RUN_TEST(peek_NULL);
+  RUN_TEST(poll_NULL);
+  RUN_TEST(zero_length_capped_NULL);
 
-  for (size_t n = 0; n < 2; n++) {
-    queue *q = (n == 1) ? queue_new_uncapped() : queue_new_capped(6);
-    test(msgs[0][n], q != NULL);
+  RUN_TEST(uncapped_non_NULL);
+  RUN_TEST(uncapped_add_0);
+  RUN_TEST(uncapped_add_1);
+  RUN_TEST(uncapped_add_2);
+  RUN_TEST(uncapped_peek);
+  RUN_TEST(uncapped_addall);
+  RUN_TEST(uncapped_poll);
+  queue_destroy(q);
 
-    test(msgs[1][n], queue_add(q, strs[0]) >= 0);
-    test(msgs[2][n], queue_add(q, strs[1]) >= 0);
-    test(msgs[3][n], queue_add(q, strs[2]) >= 0);
+  RUN_TEST(capped_non_NULL);
+  RUN_TEST(capped_addall);
+  RUN_TEST(capped_peek);
+  RUN_TEST(capped_add);
+  RUN_TEST(capped_full);
+  RUN_TEST(capped_poll);
+  queue_destroy(q);
 
-    test(msgs[4][n], queue_addall(q, (void **)strs + 3, 3, false) >= 0);
-
-    for (size_t i = 0; i < 3; i++)
-      test(msgs[5][n], equals((const char *)queue_peek(q), strs[0]));
-
-    for (size_t i = 0; i < 6; i++)
-      test(msgs[6][n], equals((const char *)queue_poll(q), strs[i]));
-
-    queue_destroy(q);
-  }
   return 0;
 }

@@ -15,7 +15,7 @@ struct queue {
   void **arr;
   size_t front; // Start
   size_t rear;  // End
-  bool lock;
+  volatile bool lock;
 };
 
 #define lock(q) (q->lock = true)
@@ -127,7 +127,7 @@ int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
         for (size_t i = nitems - 1; i >= 0; i--, q->rear %= q->max_len)
           q->arr[q->rear++] = items[i];
       else
-        for (size_t i = 0; i < nitems; i++, q->rear %= q->max_len)
+        for (size_t i = 0UL; i < nitems; i++, q->rear %= q->max_len)
           q->arr[q->rear++] = items[i];
       q->len += nitems;
     }
