@@ -54,9 +54,9 @@ pid_t spawn(process *proc, const char *file, char *const *argv,
     close(_stderr[1]);
 
     proc->pid = pid;
-    proc->stdin = _stdin[1];
-    proc->stdout = _stdout[0];
-    proc->stderr = _stderr[0];
+    proc->stdin_ = _stdin[1];
+    proc->stdout_ = _stdout[0];
+    proc->stderr_ = _stderr[0];
     return pid;
   }
 }

@@ -20,21 +20,21 @@ typedef struct {
    * of the child process'
    * standard input.
    */
-  fd_t stdin;
+  fd_t stdin_;
 
   /**
    * The filedescriptor
    * of the child process'
    * standard output.
    */
-  fd_t stdout;
+  fd_t stdout_;
 
   /**
    * The filedescriptor
    * of the child process'
    * standard error.
    */
-  fd_t stderr;
+  fd_t stderr_;
 } process;
 
 /**

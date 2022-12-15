@@ -27,10 +27,10 @@ void spawn_test(void) {
 
   assert(ret > 0);
 
-  int nbytes = dprintf(proc.stdin, "echo \"%s\"\n", text);
+  int nbytes = dprintf(proc.stdin_, "echo \"%s\"\n", text);
   assert(nbytes > 0);
 
-  nbytes = read(proc.stdout, buffer, sizeof(buffer));
+  nbytes = read(proc.stdout_, buffer, sizeof(buffer));
   assert(nbytes > 0);
 
   ASSERT(equals(buffer, text, strlen(text)));
