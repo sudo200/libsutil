@@ -9,52 +9,90 @@
 
 #include "test.h"
 
-int main(void) {
-  char *mystr;
-  test("msprintf exec", msprintf(&mystr, "%s a test: %.3f, 0x%X %c", "This is",
-                                 653.76965364, 42, '\n') > 0);
-  test("msprintf string", EQUALS(mystr, "This is a test: 653.770, 0x2A \n"));
+char *mystr;
 
-  test("mstrcat exec", mstrcat(&mystr, "foo bar boom\n") != NULL);
-  test("mstrcat string",
-       EQUALS(mystr, "This is a test: 653.770, 0x2A \nfoo bar boom\n"));
+static void check_msprintf(void) {
+  int ret = msprintf(&mystr, "%s a test: %.3f, 0x%X %c", "This is", 653.76965364, 42, '\n');
+  assert(ret > 0);
+  ASSERT(EQUALS(mystr, "This is a test: 653.770, 0x2A \n"));
+}
+
+static void check_mstrcat(void) {
+  char *ret = mstrcat(&mystr, "foo bar boom\n");
+  assert(ret != NULL);
+  ASSERT(EQUALS(mystr, "This is a test: 653.770, 0x2A \nfoo bar boom\n"));
 
   ufree(mystr);
+}
 
-  test("startswith test", startswith("Hello there!", "Hel"));
-  test("endswith", endswith("Foo!", "!"));
+static void check_startswith(void) {
+  bool ret = startswith("Hello there!", "Hel");
+  ASSERT(ret);
+}
+
+static void check_endswith(void) {
+  bool ret = endswith("Foo!", "!");
+  ASSERT(ret);
+}
 
   string_array_t arr;
 
-  test("strspl exec", strspl(&arr, "Hello there!", " ") >= 0);
-  test("strspl len", arr.len == 2);
-  test("strspl arr[0]", EQUALS(arr.arr[0], "Hello"));
-  test("strspl arr[1]", EQUALS(arr.arr[1], "there!"));
+static void check_strspl(void) {
+  int ret = strspl(&arr, "Hello there!", " ");
+  assert(ret >= 0);
+  assert(arr.len == 2UL);
+  assert(EQUALS(arr.arr[0], "Hello"));
+  ASSERT(EQUALS(arr.arr[1], "there!"));
+}
 
+static void check_strjoin(void) {
   char *str;
-  test("strjoin exec", strjoin(&str, arr, "(", " ", ")") >= 0);
-  test("strjoin string", EQUALS(str, "(Hello there!)"));
+  int ret = strjoin(&str, arr, "(", " ", ")");
+  assert(ret >= 0);
+  ASSERT(EQUALS(str, "(Hello there!)"));
 
   ufree(str);
   ufree(*arr.arr);
   ufree(arr.arr);
+}
 
+static void check_strreplace(void) {
   char *s;
-  msprintf(&s, "%s", "a b  c dhgdf e ");
+  msprintf(&s, "%s", "a b  c dhgdf e "); // For dyn. str
   char s_cpy[] = "a,b,,c,dhgdf,e,";
 
-  test("strreplace exec", strreplace(&s, " ", ",") != NULL);
+  char *ret = strreplace(&s, " ", ",");
+  assert(ret != NULL);
 
-  test("strreplace equal", EQUALS(s, s_cpy));
+  ASSERT(EQUALS(s, s_cpy));
   ufree(s);
+}
 
   char teststr[] = {"tEsTsTrIng123456789@!$&/"};
-  test("strupp exec", strupp(teststr) == teststr);
-  test("strupp result", EQUALS(teststr, "TESTSTRING123456789@!$&/"));
 
+static void check_strupp(void) {
+  bool ret = (strupp(teststr) == teststr);
+  assert(ret);
+  ASSERT(EQUALS(teststr, "TESTSTRING123456789@!$&/"));
+}
+
+static void check_strlow(void) {
   strcpy(teststr, "tEsTsTrIng123456789@!$&/");
-  test("strlow exec", strlow(teststr) == teststr);
-  test("strlow result", EQUALS(teststr, "teststring123456789@!$&/"));
+  bool ret = (strlow(teststr) == teststr);
+  assert(ret);
+  ASSERT(EQUALS(teststr, "teststring123456789@!$&/"));
+}
+
+int main(void) {
+  RUN_TEST(check_msprintf);
+  RUN_TEST(check_mstrcat);
+  RUN_TEST(check_startswith);
+  RUN_TEST(check_endswith);
+  RUN_TEST(check_strspl);
+  RUN_TEST(check_strjoin);
+  RUN_TEST(check_strreplace);
+  RUN_TEST(check_strupp);
+  RUN_TEST(check_strlow);
 
   return 0;
 }
