@@ -72,7 +72,6 @@ static void uncapped_poll(void) {
   for (size_t i = 0UL; i < len(strs); i++) {
     const char *ret = (const char *)queue_poll(q);
     assert(ret != NULL);
-    puts(ret);
     assert(equals(strs[i], ret));
   }
   ASSERT(true);
