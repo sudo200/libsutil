@@ -27,14 +27,14 @@ void argparse_exec_0(void) {
 }
 
 void argparse_args_0(void) {
-  ASSERT(a == true);
-  ASSERT(b == false);
-  ASSERT(c == true);
-  ASSERT(d == true);
-  ASSERT(e == true);
+  assert(a == true);
+  assert(b == false);
+  assert(c == true);
+  assert(d == true);
+  assert(e == true);
 
-  ASSERT(EQUALS(c_val, "Foo"));
-  ASSERT(EQUALS(e_val, "Bar"));
+  assert(EQUALS(c_val, "Foo"));
+  assert(EQUALS(e_val, "Bar"));
 
   ASSERT(optint == 4);
 }
@@ -53,14 +53,14 @@ void argparse_exec_1(void) {
 }
 
 void argparse_args_1(void) {
-  ASSERT(a == true);
-  ASSERT(b == false);
-  ASSERT(c == true);
-  ASSERT(d == true);
-  ASSERT(e == false);
+  assert(a == true);
+  assert(b == false);
+  assert(c == true);
+  assert(d == true);
+  assert(e == false);
 
-  ASSERT(EQUALS(c_val, "12345"));
-  ASSERT(e_val == NULL);
+  assert(EQUALS(c_val, "12345"));
+  assert(e_val == NULL);
 
   ASSERT(optint == 4);
 }
