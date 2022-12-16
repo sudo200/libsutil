@@ -18,7 +18,7 @@ linkedlist *linkedlist_new(void);
  * @param list The list from to get length from.
  * @return Length of the list
  */
-size_t linkedlist_length(linkedlist *list);
+size_t linkedlist_length(linkedlist *list) __attribute__((const, pure));
 
 /**
  * Adds an element to the linked list.
@@ -68,7 +68,7 @@ int linkedlist_insertall(linkedlist *list, void **elements, size_t nitems,
  * @param index The index at which to get the item from.
  * @return The item, or NULL on error.
  */
-void *linkedlist_get(linkedlist *list, size_t index);
+void *linkedlist_get(linkedlist *list, size_t index) __attribute__((pure));
 
 /**
  * Removes an element at index, and returns it.
