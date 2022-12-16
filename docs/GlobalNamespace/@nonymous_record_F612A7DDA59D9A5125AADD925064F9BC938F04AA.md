@@ -10,11 +10,11 @@
 
 public pid_t pid
 
-public fd_t stdin
+public fd_t stdin_
 
-public fd_t stdout
+public fd_t stdout_
 
-public fd_t stderr
+public fd_t stderr_
 
 
 

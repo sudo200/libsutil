@@ -14,7 +14,7 @@ public size_t front
 
 public size_t rear
 
-public _Bool lock
+public volatile _Bool lock
 
 
 

@@ -1,6 +1,6 @@
 # struct logger
 
-*Defined at src/logger.c#24*
+*Defined at src/logger.c#29*
 
 ## Members
 

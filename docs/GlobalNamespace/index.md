@@ -7,14 +7,14 @@
 * [](.md)
 * [arraylist](arraylist.md)
 * [list](list.md)
-* [](.md)
 * [logger](logger.md)
 * [marker](marker.md)
+* [](.md)
+* [](.md)
 * [linkedlist](linkedlist.md)
 * [linkednode](linkednode.md)
-* [queue](queue.md)
-* [](.md)
 * [stack](stack.md)
+* [queue](queue.md)
 
 
 ## Functions
@@ -105,7 +105,7 @@
 
 ### arraylist_get
 
-*void * arraylist_get(arraylist * list, size_t index)*
+*void * arraylist_get(const arraylist * list, size_t index)*
 
 *Defined at src/arraylist.c#95*
 
@@ -121,7 +121,7 @@
 
 ### arraylist_length
 
-*size_t arraylist_length(arraylist * list)*
+*size_t arraylist_length(const arraylist * list)*
 
 *Defined at src/arraylist.c#109*
 
@@ -261,6 +261,222 @@
 
 **return** The size in bytes of the stream.
 
+### logger_new
+
+*logger * logger_new(FILE * info, FILE * error, _Bool _syslog)*
+
+*Defined at src/logger.c#41*
+
+ Creates a new logger with given streams for writting output to.
+
+ If both info and error are not NULL, info is used for output below WARNING and error for output from and above WARNING.
+
+ If info is not NULL and error is NULL, or vice versa, the one stream is used for all output.
+
+ If both info and error are NULL, info is set to stdout and error to stderr.
+
+
+
+**info**
+
+**error**
+
+**_syslog**
+
+### logger_do_trace
+
+*_Bool logger_do_trace(logger * log)*
+
+*Defined at src/logger.c#66*
+
+### logger_do_debug
+
+*_Bool logger_do_debug(logger * log)*
+
+*Defined at src/logger.c#68*
+
+### logger_do_info
+
+*_Bool logger_do_info(logger * log)*
+
+*Defined at src/logger.c#70*
+
+### logger_do_notice
+
+*_Bool logger_do_notice(logger * log)*
+
+*Defined at src/logger.c#72*
+
+### logger_do_warning
+
+*_Bool logger_do_warning(logger * log)*
+
+*Defined at src/logger.c#74*
+
+### logger_do_error
+
+*_Bool logger_do_error(logger * log)*
+
+*Defined at src/logger.c#76*
+
+### logger_do_fatal
+
+*_Bool logger_do_fatal(logger * log)*
+
+*Defined at src/logger.c#78*
+
+### logger_printf
+
+*int logger_printf(logger * log, loglevel lvl, marker * m, const char * format)*
+
+*Defined at src/logger.c#80*
+
+### logger_print
+
+*int logger_print(logger * log, loglevel lvl, marker * m, const char * msg)*
+
+*Defined at src/logger.c#111*
+
+### logger_destroy
+
+*void logger_destroy(logger * log)*
+
+*Defined at src/logger.c#117*
+
+ Destroys the given logger instance.
+
+ IMPORTANT: Used streams are NOT closed BUT flushed.
+
+### marker_new
+
+*marker * marker_new(const char * name)*
+
+*Defined at src/logger.c#130*
+
+ Creates a new marker with the given name.
+
+
+
+**name**
+
+**return** The new marker or NULL on error.
+
+### marker_destroy
+
+*void marker_destroy(marker * m)*
+
+*Defined at src/logger.c#140*
+
+ Destroys the given marker.
+
+
+
+**m**
+
+### msprintf
+
+*int msprintf(char ** out, const char * format)*
+
+*Defined at src/mstring.c#10*
+
+ Like sprintf, but allocates a buffer big enough to hold the finished string.
+
+
+
+**out**
+
+**format**
+
+**...**
+
+**return** The amount of bytes written, or a negative value on error.
+
+### vmsprintf
+
+*int vmsprintf(char ** out, const char * format, va_list args)*
+
+*Defined at src/mstring.c#18*
+
+ Like msprintf, but gets the varargs from a va_list.
+
+
+
+**out**
+
+**format**
+
+**args**
+
+**return** The amount of bytes written, or a negative value on error.
+
+### mstrcat
+
+*char * mstrcat(char ** dest, const char * src)*
+
+*Defined at src/mstring.c#37*
+
+ Like strcat, but automatically reallocates the dest-buffer to hold the concatenated string.
+
+ IMPORTANT: dest has to be dynamically allocates using another library function or ualloc/urealloc.
+
+
+
+**dest**
+
+**src**
+
+**return** dest, or NULL on error.
+
+### startswith
+
+*_Bool startswith(const char * str, const char * start)*
+
+*Defined at src/mstring.c#44*
+
+ Returns true if str starts with start, false otherwise.
+
+
+
+**str**
+
+**start**
+
+**return** true if str starts with start, false otherwise.
+
+### endswith
+
+*_Bool endswith(const char * str, const char * end)*
+
+*Defined at src/mstring.c#53*
+
+ Returns true if str ends with end, false otherwise.
+
+
+
+**str**
+
+**end**
+
+**return** true if str ends with end, false otherwise.
+
+### strspl
+
+*int strspl(string_array_t * out, const char * str, const char * delim)*
+
+*Defined at src/mstring.c#62*
+
+ Splits the string str on every occurance of delim.
+
+
+
+**out**
+
+**str**
+
+**delim**
+
+**return** 0 on success, a negative value otherwise.
+
 ### spawn
 
 *pid_t spawn(process * proc, const char * file, char *const * argv, char *const * envp)*
@@ -285,6 +501,26 @@
 
 **see** execve
 
+### strjoin
+
+*int strjoin(char ** out,  arr, const char * first, const char * delim, const char * last)*
+
+*Defined at src/mstring.c#82*
+
+ Joins a string array to a string.
+
+
+
+**out**
+
+**arr**
+
+**first**
+
+**delim**
+
+**last**
+
 ### memrev
 
 *void * memrev(void * arr, size_t nitems, size_t size)*
@@ -303,6 +539,24 @@
 
 **return** a pointer to arr, or NULL if an error occured.
 
+### strreplace
+
+*char * strreplace(char ** str, const char * search, const char * replace)*
+
+*Defined at src/mstring.c#108*
+
+ Replaces search by replace for every occurance in str.
+
+
+
+**str**
+
+**search**
+
+**replace**
+
+**return** str or NULL on error.
+
 ### setsignal
 
 *int setsignal(int signum, sighandler_t handler)*
@@ -319,265 +573,93 @@
 
 **return** 0 on success, a negative value on error.
 
-### logger_new
+### strupp
 
-*logger * logger_new(FILE * info, FILE * error, _Bool _syslog)*
+*char * strupp(char * str)*
 
-*Defined at src/logger.c#36*
+*Defined at src/mstring.c#136*
 
- Creates a new logger with given streams for writting output to.
+ Converts the string {
 
- If both info and error are not NULL, info is used for output below WARNING and error for output from and above WARNING.
-
- If info is not NULL and error is NULL, or vice versa, the one stream is used for all output.
-
- If both info and error are NULL, info is set to stdout and error to stderr.
-
-
-
-**info**
-
-**error**
-
-**_syslog**
-
-### logger_do_trace
-
-*_Bool logger_do_trace(logger * log)*
-
-*Defined at src/logger.c#61*
-
-### logger_do_debug
-
-*_Bool logger_do_debug(logger * log)*
-
-*Defined at src/logger.c#63*
-
-### logger_do_info
-
-*_Bool logger_do_info(logger * log)*
-
-*Defined at src/logger.c#65*
-
-### logger_do_notice
-
-*_Bool logger_do_notice(logger * log)*
-
-*Defined at src/logger.c#67*
-
-### logger_do_warning
-
-*_Bool logger_do_warning(logger * log)*
-
-*Defined at src/logger.c#69*
-
-### logger_do_error
-
-*_Bool logger_do_error(logger * log)*
-
-*Defined at src/logger.c#71*
-
-### logger_do_fatal
-
-*_Bool logger_do_fatal(logger * log)*
-
-*Defined at src/logger.c#73*
-
-### logger_printf
-
-*int logger_printf(logger * log, loglevel lvl, marker * m, const char * format)*
-
-*Defined at src/logger.c#75*
-
-### logger_print
-
-*int logger_print(logger * log, loglevel lvl, marker * m, const char * msg)*
-
-*Defined at src/logger.c#104*
-
-### logger_destroy
-
-*void logger_destroy(logger * log)*
-
-*Defined at src/logger.c#110*
-
- Destroys the given logger instance.
-
- IMPORTANT: Used streams are NOT closed BUT flushed.
-
-### marker_new
-
-*marker * marker_new(const char * name)*
-
-*Defined at src/logger.c#123*
-
- Creates a new marker with the given name.
-
-
-
-**name**
-
-**return** The new marker or NULL on error.
-
-### marker_destroy
-
-*void marker_destroy(marker * m)*
-
-*Defined at src/logger.c#133*
-
- Destroys the given marker.
-
-
-
-**m**
-
-### msprintf
-
-*int msprintf(char ** out, const char * format)*
-
-*Defined at src/mstring.c#8*
-
- Like sprintf, but allocates a buffer big enough to hold the finished string.
-
-
-
-**out**
-
-**format**
-
-**...**
-
-**return** The amount of bytes written, or a negative value on error.
-
-### vmsprintf
-
-*int vmsprintf(char ** out, const char * format, va_list args)*
-
-*Defined at src/mstring.c#16*
-
- Like msprintf, but gets the varargs from a va_list.
-
-
-
-**out**
-
-**format**
-
-**args**
-
-**return** The amount of bytes written, or a negative value on error.
-
-### mstrcat
-
-*char * mstrcat(char ** dest, const char * src)*
-
-*Defined at src/mstring.c#35*
-
- Like strcat, but automatically reallocates the dest-buffer to hold the concatenated string.
-
- IMPORTANT: dest has to be dynamically allocates using another library function or ualloc/urealloc.
-
-
-
-**dest**
-
-**src**
-
-**return** dest, or NULL on error.
-
-### startswith
-
-*_Bool startswith(const char * str, const char * start)*
-
-*Defined at src/mstring.c#42*
-
- Returns true if str starts with start, false otherwise.
+**arg** str} to UPPERCASE.
 
 
 
 **str**
 
-**start**
+**return** {
 
-**return** true if str starts with start, false otherwise.
+**arg** str} or {**<not a builtin command>**  NULL} on error.
 
-### endswith
+### strlow
 
-*_Bool endswith(const char * str, const char * end)*
+*char * strlow(char * str)*
 
-*Defined at src/mstring.c#51*
+*Defined at src/mstring.c#147*
 
- Returns true if str ends with end, false otherwise.
+ Converts the string {
 
-
-
-**str**
-
-**end**
-
-**return** true if str ends with end, false otherwise.
-
-### strspl
-
-*int strspl(string_array_t * out, const char * str, const char * delim)*
-
-*Defined at src/mstring.c#60*
-
- Splits the string str on every occurance of delim.
-
-
-
-**out**
-
-**str**
-
-**delim**
-
-**return** 0 on success, a negative value otherwise.
-
-### strjoin
-
-*int strjoin(char ** out,  arr, const char * first, const char * delim, const char * last)*
-
-*Defined at src/mstring.c#80*
-
- Joins a string array to a string.
-
-
-
-**out**
-
-**arr**
-
-**first**
-
-**delim**
-
-**last**
-
-### strreplace
-
-*char * strreplace(char ** str, const char * search, const char * replace)*
-
-*Defined at src/mstring.c#106*
-
- Replaces search by replace for every occurance in str.
+**arg** str} to lowercase.
 
 
 
 **str**
 
-**search**
+**return** {
 
-**replace**
-
-**return** str or NULL on error.
+**arg** str} or {**<not a builtin command>**  NULL} on error.
 
 ### logger2syslog
 
 *int logger2syslog(loglevel lvl)*
 
-*Defined at src/logger.c#12*
+*Defined at src/logger.c#11*
+
+### argparse
+
+*argparser_status argparse(int argc, char ** argv, argparser_opt * opts, int * optint, const char * longopt_start, char shortopt_start, char longopt_seperator, const char * parse_stop)*
+
+*Defined at src/argparser.c#57*
+
+ Parses program arguments.
+
+
+
+**argc**
+
+**argv**
+
+**opts**
+
+**optint**
+
+**longopt_start**
+
+**shortopt_start**
+
+**longopt_seperator**
+
+**parse_stop**
+
+**return** The status of parsing.
+
+### not_terminate
+
+*_Bool not_terminate(const argparser_opt * opt)*
+
+*Defined at src/argparser.c#11*
+
+### getlongopt
+
+*argparser_opt * getlongopt(const argparser_opt * opts, const char * long_name, size_t len)*
+
+*Defined at src/argparser.c#29*
+
+### getshortopt
+
+*argparser_opt * getshortopt(const argparser_opt * opts, char short_name)*
+
+*Defined at src/argparser.c#44*
 
 ### linkedlist_new
 
@@ -787,162 +869,6 @@
 
 *Defined at src/linkedlist.c#66*
 
-### queue_new_capped
-
-*queue * queue_new_capped(size_t max_len)*
-
-*Defined at src/queue.c#24*
-
- Creates a new queue, which can hold a maximum of max_len items. Insert operations will return -2, if capacity is exhausted.
-
-
-
-**return** A new queue with max_len capacity.
-
-### queue_new_uncapped
-
-*queue * queue_new_uncapped()*
-
-*Defined at src/queue.c#51*
-
- Creates a new queue, which can theoretically grow to infinity.
-
-
-
-**return** A new uncapped queue.
-
-### queue_add
-
-*int queue_add(queue * queue, void * item)*
-
-*Defined at src/queue.c#141*
-
- Adds an element to the queue.
-
-
-
-**queue**
-
-**item**
-
-### queue_addall
-
-*int queue_addall(queue * queue, void ** items, size_t nitems, _Bool reverse)*
-
-*Defined at src/queue.c#97*
-
- Adds an array of elements to the queue.
-
-
-
-**queue**
-
-**items**
-
-**nitems**
-
-**reverse**
-
-### queue_peek
-
-*void * queue_peek(queue * queue)*
-
-*Defined at src/queue.c#143*
-
- Get the next element from the queue without removing it.
-
-
-
-**queue**
-
-**return** The next element, or NULL if empty.
-
-### queue_poll
-
-*void * queue_poll(queue * queue)*
-
-*Defined at src/queue.c#175*
-
- Get the next element from the queue and removes it.
-
-
-
-**queue**
-
-**return** The next element, or NULL if empty.
-
-### queue_length
-
-*size_t queue_length(queue * queue)*
-
-*Defined at src/queue.c#73*
-
- Get the length of the queue.
-
-
-
-**queue**
-
-**return** The length of the queue.
-
-### queue_destroy
-
-*void queue_destroy(queue * queue)*
-
-*Defined at src/queue.c#210*
-
- Destroys the queue. IMPORTANT: Stored elements are not deallocated.
-
-
-
-**queue**
-
-### argparse
-
-*argparser_status argparse(int argc, char ** argv, argparser_opt * opts, int * optint, const char * longopt_start, char shortopt_start, char longopt_seperator, const char * parse_stop)*
-
-*Defined at src/argparser.c#57*
-
- Parses program arguments.
-
-
-
-**argc**
-
-**argv**
-
-**opts**
-
-**optint**
-
-**longopt_start**
-
-**shortopt_start**
-
-**longopt_seperator**
-
-**parse_stop**
-
-**return** The status of parsing.
-
-### not_terminate
-
-*_Bool not_terminate(const argparser_opt * opt)*
-
-*Defined at src/argparser.c#11*
-
-### getlongopt
-
-*argparser_opt * getlongopt(const argparser_opt * opts, const char * long_name, size_t len)*
-
-*Defined at src/argparser.c#29*
-
-### getshortopt
-
-*argparser_opt * getshortopt(const argparser_opt * opts, char short_name)*
-
-*Defined at src/argparser.c#44*
-
 ### stack_new_capped
 
 *stack * stack_new_capped(size_t max_len)*
@@ -1052,6 +978,116 @@
 
 
 **s**
+
+### queue_new_capped
+
+*queue * queue_new_capped(size_t max_len)*
+
+*Defined at src/queue.c#24*
+
+ Creates a new queue, which can hold a maximum of max_len items. Insert operations will return -2, if capacity is exhausted.
+
+
+
+**return** A new queue with max_len capacity.
+
+### queue_new_uncapped
+
+*queue * queue_new_uncapped()*
+
+*Defined at src/queue.c#51*
+
+ Creates a new queue, which can theoretically grow to infinity.
+
+
+
+**return** A new uncapped queue.
+
+### queue_add
+
+*int queue_add(queue * queue, void * item)*
+
+*Defined at src/queue.c#141*
+
+ Adds an element to the queue.
+
+
+
+**queue**
+
+**item**
+
+### queue_addall
+
+*int queue_addall(queue * queue, void ** items, size_t nitems, _Bool reverse)*
+
+*Defined at src/queue.c#97*
+
+ Adds an array of elements to the queue.
+
+
+
+**queue**
+
+**items**
+
+**nitems**
+
+**reverse**
+
+### queue_peek
+
+*void * queue_peek(queue * queue)*
+
+*Defined at src/queue.c#143*
+
+ Get the next element from the queue without removing it.
+
+
+
+**queue**
+
+**return** The next element, or NULL if empty.
+
+### queue_poll
+
+*void * queue_poll(queue * queue)*
+
+*Defined at src/queue.c#175*
+
+ Get the next element from the queue and removes it.
+
+
+
+**queue**
+
+**return** The next element, or NULL if empty.
+
+### queue_length
+
+*size_t queue_length(queue * queue)*
+
+*Defined at src/queue.c#73*
+
+ Get the length of the queue.
+
+
+
+**queue**
+
+**return** The length of the queue.
+
+### queue_destroy
+
+*void queue_destroy(queue * queue)*
+
+*Defined at src/queue.c#210*
+
+ Destroys the queue. IMPORTANT: Stored elements are not deallocated.
+
+
+
+**queue**
 
 
 
