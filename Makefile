@@ -14,7 +14,19 @@ include config.mk
 all: $(OUT)/lib$(LIBNAME).so
 	$(CPY) -r $(INCLUDE) $(OUT)/$(LIBNAME)
 
-$(OUT)/lib$(LIBNAME).so: $(OUT) $(OBJ)/file.o $(OBJ)/mstring.o $(OBJ)/dmem.o $(OBJ)/arraylist.o $(OBJ)/linkedlist.o $(OBJ)/queue.o $(OBJ)/util.o $(OBJ)/argparser.o $(OBJ)/logger.o $(OBJ)/stack.o $(OBJ)/globals.o
+$(OUT)/lib$(LIBNAME).so: $(OUT) \
+	$(OBJ)/file.o \
+	$(OBJ)/mstring.o \
+	$(OBJ)/dmem.o \
+	$(OBJ)/arraylist.o \
+	$(OBJ)/linkedlist.o \
+	$(OBJ)/queue.o \
+	$(OBJ)/util.o \
+	$(OBJ)/argparser.o \
+	$(OBJ)/logger.o \
+	$(OBJ)/stack.o \
+	$(OBJ)/globals.o \
+	
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(wildcard $(OBJ)/*.o) $(LDFLAGS)
 	chmod -x $(OUT)/lib$(LIBNAME).so	
 	$(OBJCPY) --only-keep-debug $(OUT)/lib$(LIBNAME).so $(OUT)/lib$(LIBNAME).so.dbg

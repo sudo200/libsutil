@@ -56,8 +56,25 @@ test_stack: all
 	$(CC) -o$(OUT)/test_stack $(TEST_INCLUDE) $(TEST_STACK) $(CFLAGS) -L$(OUT) -l$(LIBNAME)
 	LD_LIBRARY_PATH=$(OUT) ./$(OUT)/test_stack
 
-test: test_file test_mstring test_arraylist test_queue test_util test_argparser test_logger test_stack
+test: test_file \
+	test_mstring \
+	test_arraylist \
+	test_queue \
+	test_util \
+	test_argparser \
+	test_logger \
+	test_stack \
+	
 	@echo 'ALL TESTS PASSED!'
 
-.PHONY: test test_file test_mstring test_arraylist test_linkedlist test_queue test_util test_argparser test_logger test_stack
+.PHONY: test \
+	test_file \
+	test_mstring \
+	test_arraylist \
+	test_linkedlist \
+	test_queue \
+	test_util \
+	test_argparser \
+	test_logger \
+	test_stack \
 
