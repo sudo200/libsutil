@@ -20,6 +20,12 @@ typedef int fd_t;
  */
 typedef int errno_t;
 
+
+/**
+ * Datatype for hashes
+ */
+typedef uint64_t hash_t;
+
 /**
  * A function getting nothing and returning nothing.
  * Often used as a callback.
