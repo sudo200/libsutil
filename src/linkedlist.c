@@ -151,7 +151,7 @@ int linkedlist_insert(linkedlist *list, void *element, size_t index) {
   }
 
   if (list->len <= index) {
-    errno = ELNRNG;
+    errno = EINVAL;
     return -1;
   }
 
@@ -166,7 +166,7 @@ int linkedlist_insertall(linkedlist *list, void **elements, size_t nitems,
   }
 
   if (list->len <= index) {
-    errno = ELNRNG;
+    errno = EINVAL;
     return -1;
   }
 
@@ -183,7 +183,7 @@ void *linkedlist_get(linkedlist *list, size_t index) {
   }
 
   if (list->len <= index) {
-    errno = ELNRNG;
+    errno = EINVAL;
     return NULL;
   }
 
@@ -197,7 +197,7 @@ void *linkedlist_remove(linkedlist *list, size_t index) {
   }
 
   if (list->len <= index) {
-    errno = ELNRNG;
+    errno = EINVAL;
     return NULL;
   }
 

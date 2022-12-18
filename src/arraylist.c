@@ -88,7 +88,7 @@ int arraylist_insertall(arraylist *list, void **items, size_t nitems,
   }
 
   if (index >= list->len) {
-    errno = ELNRNG;
+    errno = EINVAL;
     return -1;
   }
 
@@ -109,7 +109,7 @@ void *arraylist_get(const arraylist *list, size_t index) {
   }
 
   if (index >= list->len) {
-    errno = ELNRNG;
+    errno = EINVAL;
     return NULL;
   }
 
@@ -132,7 +132,7 @@ void *arraylist_remove(arraylist *list, size_t index) {
   }
 
   if (index >= list->len) {
-    errno = ELNRNG;
+    errno = EINVAL;
     return NULL;
   }
 
