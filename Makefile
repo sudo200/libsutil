@@ -26,6 +26,8 @@ $(OUT)/lib$(LIBNAME).so: $(OUT) \
 	$(OBJ)/logger.o \
 	$(OBJ)/stack.o \
 	$(OBJ)/globals.o \
+	$(OBJ)/hash.o \
+	$(OBJ)/hashset.o \
 	
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(wildcard $(OBJ)/*.o) $(LDFLAGS)
 	chmod -x $(OUT)/lib$(LIBNAME).so	
@@ -61,7 +63,7 @@ clean:
 
 compiledb: clean
 	$(RM) compile_commands.json
-	bear -- $(MAKE) build
+	bear -- $(MAKE) test
 
 format:
 	$(FORMATTER) $(FORMATTER_OPTIONS) $(wildcard $(INCLUDE)/*.h) $(wildcard $(SRC)/*.c) $(wildcard $(TEST_DIR)/*.c)

@@ -22,7 +22,7 @@ test: $(OUT)/test_file \
 	@echo 'ALL TESTS PASSED!'
 
 $(OUT)/test_%: all
-	$(CC) -o$@ $(TEST_INCLUDE) $(TEST_DIR)/$(patsubst $(OUT)/test_%,%,$@)_test.c $(CFLAGS) -L$(OUT) -l$(LIBNAME)
+	$(CC) -o$@ $(TEST_INCLUDE) $(TEST_DIR)/$(patsubst $(OUT)/test_%,%,$@)_test.c $(CFLAGS) -L$(OUT) -l$(LIBNAME) $(LDFLAGS)
 	LD_LIBRARY_PATH=$(OUT) ./$@
 
 .PHONY: test \

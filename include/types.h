@@ -24,7 +24,12 @@ typedef int errno_t;
 /**
  * Datatype for hashes
  */
-typedef uint64_t hash_t;
+typedef uintmax_t hash_t;
+
+/**
+ * A function converting arbitrary data into a hash value.
+ */
+typedef hash_t (*hashfunction_t)(const void *, size_t);
 
 /**
  * A function getting nothing and returning nothing.
