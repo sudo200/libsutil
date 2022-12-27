@@ -1,6 +1,10 @@
 #ifndef ___HASHSET_H__
 #define ___HASHSET_H__
 
+#ifndef __HASHSET_IMPL
+#error "The hashset currently lacks an implementation, and therefore cannot be used!"
+#endif
+
 #include "types.h"
 
 typedef struct hashset hashset;
