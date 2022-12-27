@@ -10,7 +10,7 @@ typedef struct arraylist arraylist;
  *
  * @return The new arraylist, or NULL if an error occured.
  */
-arraylist *arraylist_new();
+arraylist *arraylist_new(void);
 
 /**
  * Adds the given element at the end of the arraylist.
