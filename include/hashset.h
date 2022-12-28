@@ -1,11 +1,6 @@
 #ifndef ___HASHSET_H__
 #define ___HASHSET_H__
 
-#ifndef __HASHSET_IMPL
-#error                                                                         \
-    "The hashset currently lacks an implementation, and therefore cannot be used!"
-#endif
-
 #include "types.h"
 
 typedef struct hashset hashset;
@@ -20,13 +15,13 @@ int hashset_add(hashset *set, void *item, size_t size);
 
 int hashset_clear(hashset *set);
 
-void *hashset_remove(hashset *set, void *item, size_t size);
+bool hashset_remove(hashset *set, void *item, size_t size);
 
-int hashset_foreach(hashset *set,
+int hashset_foreach(const hashset *set,
                     void (*cb)(void *item, size_t size, void *pipe),
                     void *pipe);
 
-bool hashset_contains(hashset *set, const void *item, size_t size);
+bool hashset_contains(const hashset *set, const void *item, size_t size);
 
 void hashset_destroy(hashset *set);
 
