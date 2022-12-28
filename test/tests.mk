@@ -18,6 +18,7 @@ test: $(OUT)/test_file \
 	$(OUT)/test_argparser \
 	$(OUT)/test_logger \
 	$(OUT)/test_stack \
+	$(OUT)/test_hashmap \
 	
 	@echo 'ALL TESTS PASSED!'
 
