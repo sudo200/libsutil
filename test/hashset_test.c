@@ -28,8 +28,8 @@ static void clear_NULL(void) {
 }
 
 static void remove_NULL(void) {
-  void *ret = hashset_remove(NULL, "", 1UL);
-  ASSERT(ret == NULL && errno == EINVAL);
+  bool ret = hashset_remove(NULL, "", 1UL);
+  ASSERT(ret == false && errno == EINVAL);
 }
 
 static void contains_NULL(void) {
@@ -95,7 +95,6 @@ static void check_size(void) {
 static void cb_func(void *item, size_t size, void *pipe) {
   size_t *i = (size_t *)pipe;
   const char *str = (const char *)item;
-  puts(str);
 
   ++*i;
   for (size_t j = 0UL; j < len(strs); j++)
