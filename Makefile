@@ -29,6 +29,7 @@ $(OUT)/lib$(LIBNAME).so: $(OUT) \
 	$(OBJ)/hash.o \
 	$(OBJ)/hashset.o \
 	$(OBJ)/buffer.o \
+	$(OBJ)/hashmap.o \
 	
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(wildcard $(OBJ)/*.o) $(LDFLAGS)
 	chmod -x $(OUT)/lib$(LIBNAME).so	
