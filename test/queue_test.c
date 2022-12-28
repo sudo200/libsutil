@@ -30,11 +30,11 @@ static void poll_NULL(void) {
 }
 
 static void zero_length_capped_NULL(void) {
-  queue *q = queue_new_capped(0UL);
+  queue_t *q = queue_new_capped(0UL);
   ASSERT(q == NULL);
 }
 
-queue *q;
+queue_t *q;
 
 static void uncapped_non_NULL(void) {
   q = queue_new_uncapped();

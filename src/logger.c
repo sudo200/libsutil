@@ -38,7 +38,7 @@ struct marker {
 
 loglevel loggerlevel = INFO;
 
-logger *logger_new(FILE *info, FILE *error, bool _syslog) {
+logger_t *logger_new(FILE *info, FILE *error, bool _syslog) {
   if (info == NULL && error == NULL) {
     info = stdout;
     error = stderr;
@@ -47,11 +47,11 @@ logger *logger_new(FILE *info, FILE *error, bool _syslog) {
   else if (info == NULL && error != NULL)
     info = error;
 
-  logger *log = (logger *)ualloc(sizeof(*log));
+  logger_t *log = (logger_t *)ualloc(sizeof(*log));
   if (log == NULL)
     return NULL;
 
-  *log = (logger){
+  *log = (logger_t){
       .info = info,
       .error = error,
       ._syslog = _syslog,
@@ -63,21 +63,21 @@ logger *logger_new(FILE *info, FILE *error, bool _syslog) {
   return log;
 }
 
-bool logger_do_trace(logger *log) { return loggerlevel <= TRACE; }
+bool logger_do_trace(logger_t *log) { return loggerlevel <= TRACE; }
 
-bool logger_do_debug(logger *log) { return loggerlevel <= DEBUG; }
+bool logger_do_debug(logger_t *log) { return loggerlevel <= DEBUG; }
 
-bool logger_do_info(logger *log) { return loggerlevel <= INFO; }
+bool logger_do_info(logger_t *log) { return loggerlevel <= INFO; }
 
-bool logger_do_notice(logger *log) { return loggerlevel <= NOTICE; }
+bool logger_do_notice(logger_t *log) { return loggerlevel <= NOTICE; }
 
-bool logger_do_warning(logger *log) { return loggerlevel <= WARNING; }
+bool logger_do_warning(logger_t *log) { return loggerlevel <= WARNING; }
 
-bool logger_do_error(logger *log) { return loggerlevel <= ERROR; }
+bool logger_do_error(logger_t *log) { return loggerlevel <= ERROR; }
 
-bool logger_do_fatal(logger *log) { return loggerlevel <= FATAL; }
+bool logger_do_fatal(logger_t *log) { return loggerlevel <= FATAL; }
 
-int logger_printf(logger *log, loglevel lvl, marker *m, const char *format,
+int logger_printf(logger_t *log, loglevel lvl, marker *m, const char *format,
                   ...) {
   if (log == NULL || lvl < loggerlevel)
     return -1;
@@ -108,13 +108,13 @@ int logger_printf(logger *log, loglevel lvl, marker *m, const char *format,
   return 0;
 }
 
-int logger_print(logger *log, loglevel lvl, marker *m, const char *msg) {
+int logger_print(logger_t *log, loglevel lvl, marker *m, const char *msg) {
   if (logger_printf(log, lvl, m, "%s", msg) < 0)
     return -1;
   return 0;
 }
 
-void logger_destroy(logger *log) {
+void logger_destroy(logger_t *log) {
   if (log == NULL)
     return;
 

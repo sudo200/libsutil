@@ -53,7 +53,7 @@ void logger_print_NULL_ptr(void) {
   ASSERT(ret < 0);
 }
 
-logger *logg;
+logger_t *logg;
 
 void logger_new_non_NULL(void) {
   logg = logger_new(info_stream, error_stream, false);

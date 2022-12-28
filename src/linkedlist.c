@@ -21,7 +21,7 @@ struct linkedlist {
 
 // Private functions
 
-static int __linkedlist_add(linkedlist *list, void *element) {
+static int __linkedlist_add(linkedlist_t *list, void *element) {
   linkednode *node = list->last;
   linkednode *newnode = (linkednode *)ualloc(sizeof(*newnode));
   if (newnode == NULL) {
@@ -45,7 +45,7 @@ static int __linkedlist_add(linkedlist *list, void *element) {
   return 0;
 }
 
-static linkednode *__linkedlist_get(linkedlist *list, size_t index) {
+static linkednode *__linkedlist_get(linkedlist_t *list, size_t index) {
   const size_t half_len = list->len >> 1;
   linkednode *node = NULL;
   if (index > half_len) // Start from end
@@ -63,7 +63,8 @@ static linkednode *__linkedlist_get(linkedlist *list, size_t index) {
   return node;
 }
 
-static int __linkedlist_insert(linkedlist *list, void *element, size_t index) {
+static int __linkedlist_insert(linkedlist_t *list, void *element,
+                               size_t index) {
   linkednode *newnode = (linkednode *)ualloc(sizeof(*newnode));
   if (newnode == NULL) {
     errno = ENOMEM;
@@ -95,8 +96,8 @@ static int __linkedlist_insert(linkedlist *list, void *element, size_t index) {
 
 // Public functions
 
-linkedlist *linkedlist_new(void) {
-  linkedlist *list = (linkedlist *)ualloc(sizeof(*list));
+linkedlist_t *linkedlist_new(void) {
+  linkedlist_t *list = (linkedlist_t *)ualloc(sizeof(*list));
 
   if (list == NULL) {
     errno = ENOMEM;
@@ -112,7 +113,7 @@ linkedlist *linkedlist_new(void) {
   return list;
 }
 
-size_t linkedlist_length(linkedlist *list) {
+size_t linkedlist_length(linkedlist_t *list) {
   if (list == NULL) {
     errno = EINVAL;
     return 0;
@@ -121,7 +122,7 @@ size_t linkedlist_length(linkedlist *list) {
   return list->len;
 }
 
-int linkedlist_add(linkedlist *list, void *element) {
+int linkedlist_add(linkedlist_t *list, void *element) {
   if (list == NULL) {
     errno = EINVAL;
     return -1;
@@ -129,7 +130,7 @@ int linkedlist_add(linkedlist *list, void *element) {
   return __linkedlist_add(list, element);
 }
 
-int linkedlist_addall(linkedlist *list, void **elements, size_t nitems) {
+int linkedlist_addall(linkedlist_t *list, void **elements, size_t nitems) {
   if (nitems == 0)
     return 0;
 
@@ -144,7 +145,7 @@ int linkedlist_addall(linkedlist *list, void **elements, size_t nitems) {
   return 0;
 }
 
-int linkedlist_insert(linkedlist *list, void *element, size_t index) {
+int linkedlist_insert(linkedlist_t *list, void *element, size_t index) {
   if (list == NULL) {
     errno = EINVAL;
     return -1;
@@ -158,7 +159,7 @@ int linkedlist_insert(linkedlist *list, void *element, size_t index) {
   return __linkedlist_insert(list, element, index);
 }
 
-int linkedlist_insertall(linkedlist *list, void **elements, size_t nitems,
+int linkedlist_insertall(linkedlist_t *list, void **elements, size_t nitems,
                          size_t index) {
   if (list == NULL || elements == NULL) {
     errno = EINVAL;
@@ -176,7 +177,7 @@ int linkedlist_insertall(linkedlist *list, void **elements, size_t nitems,
   return 0;
 }
 
-void *linkedlist_get(linkedlist *list, size_t index) {
+void *linkedlist_get(linkedlist_t *list, size_t index) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;
@@ -190,7 +191,7 @@ void *linkedlist_get(linkedlist *list, size_t index) {
   return __linkedlist_get(list, index)->value;
 }
 
-void *linkedlist_remove(linkedlist *list, size_t index) {
+void *linkedlist_remove(linkedlist_t *list, size_t index) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;
@@ -220,7 +221,7 @@ void *linkedlist_remove(linkedlist *list, size_t index) {
   return value;
 }
 
-int linkedlist_foreach(linkedlist *list, void (*func)(void *, void *),
+int linkedlist_foreach(linkedlist_t *list, void (*func)(void *, void *),
                        void *pipe) {
   if (list == NULL || *(void **)&func == NULL) {
     errno = EINVAL;
@@ -233,7 +234,7 @@ int linkedlist_foreach(linkedlist *list, void (*func)(void *, void *),
   return 0;
 }
 
-void **linkedlist_to_array(linkedlist *list) {
+void **linkedlist_to_array(linkedlist_t *list) {
   if (list == NULL) {
     errno = EINVAL;
     return NULL;
@@ -252,7 +253,7 @@ void **linkedlist_to_array(linkedlist *list) {
   return arr;
 }
 
-int linkedlist_clear(linkedlist *list) {
+int linkedlist_clear(linkedlist_t *list) {
   if (list == NULL) {
     errno = EINVAL;
     return -1;
@@ -271,7 +272,7 @@ int linkedlist_clear(linkedlist *list) {
   return 0;
 }
 
-void linkedlist_destroy(linkedlist *list) {
+void linkedlist_destroy(linkedlist_t *list) {
   if (list == NULL)
     return;
 

@@ -14,7 +14,7 @@ static void push_NULL(void) {
   ASSERT(ret < 0);
 }
 
-stack *s;
+stack_t *s;
 
 static void uncapped_non_NULL(void) {
   s = stack_new_uncapped();

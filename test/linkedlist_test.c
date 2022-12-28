@@ -16,7 +16,7 @@ void cb_function(void *item, void *pipe) {
 
 char *strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
-linkedlist *list;
+linkedlist_t *list;
 
 void add_NULL(void) { ASSERT(linkedlist_add(NULL, "")); }
 

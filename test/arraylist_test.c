@@ -20,7 +20,7 @@ void add_NULL(void) { ASSERT(arraylist_add(NULL, "") < 0); }
 
 void addall_NULL(void) { ASSERT(arraylist_addall(NULL, NULL, 3) < 0); }
 
-arraylist *list;
+arraylist_t *list;
 
 void new_non_NULL(void) {
   list = arraylist_new();

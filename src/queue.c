@@ -21,13 +21,13 @@ struct queue {
 #define lock(q) (q->lock = true)
 #define unlock(q) (q->lock = false)
 
-queue *queue_new_capped(size_t max_len) {
+queue_t *queue_new_capped(size_t max_len) {
   if (max_len == 0) {
     errno = EINVAL;
     return NULL;
   }
 
-  queue *q = (queue *)ualloc(sizeof(*q));
+  queue_t *q = (queue_t *)ualloc(sizeof(*q));
   if (q == NULL) {
     errno = ENOMEM;
     return NULL;
@@ -48,8 +48,8 @@ queue *queue_new_capped(size_t max_len) {
   return q;
 }
 
-queue *queue_new_uncapped(void) {
-  queue *q = (queue *)ualloc(sizeof(*q));
+queue_t *queue_new_uncapped(void) {
+  queue_t *q = (queue_t *)ualloc(sizeof(*q));
   if (q == NULL) {
     errno = EINVAL;
     return NULL;
@@ -70,7 +70,7 @@ queue *queue_new_uncapped(void) {
   return q;
 }
 
-size_t queue_length(queue *q) {
+size_t queue_length(queue_t *q) {
   if (q == NULL) {
     errno = EINVAL;
     return 0;
@@ -85,7 +85,7 @@ size_t queue_length(queue *q) {
   size_t len = 0UL;
 
   if (q->max_len == 0UL) // Uncapped
-    len = linkedlist_length((linkedlist *)q->arr);
+    len = linkedlist_length((linkedlist_t *)q->arr);
   else // Capped
     len = q->len;
 
@@ -94,7 +94,7 @@ size_t queue_length(queue *q) {
   return len;
 }
 
-int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
+int queue_addall(queue_t *q, void **items, size_t nitems, bool reverse) {
   if (q == NULL || items == NULL) {
     errno = EINVAL;
     return -1;
@@ -113,7 +113,7 @@ int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
       if (reverse)
         memrev(items, nitems, sizeof(*items));
 
-      if (linkedlist_addall((linkedlist *)q->arr, items, nitems) < 0) {
+      if (linkedlist_addall((linkedlist_t *)q->arr, items, nitems) < 0) {
         ret = -1;
         break;
       }
@@ -138,9 +138,11 @@ int queue_addall(queue *q, void **items, size_t nitems, bool reverse) {
   return ret;
 }
 
-int queue_add(queue *q, void *item) { return queue_addall(q, &item, 1, false); }
+int queue_add(queue_t *q, void *item) {
+  return queue_addall(q, &item, 1, false);
+}
 
-void *queue_peek(queue *q) {
+void *queue_peek(queue_t *q) {
   if (q == NULL) {
     errno = EINVAL;
     return NULL;
@@ -156,7 +158,7 @@ void *queue_peek(queue *q) {
 
   do {
     if (q->max_len == 0) { // Uncapped
-      ret = linkedlist_get((linkedlist *)q->arr, 0);
+      ret = linkedlist_get((linkedlist_t *)q->arr, 0);
       break;
     }
 
@@ -172,7 +174,7 @@ void *queue_peek(queue *q) {
   return ret;
 }
 
-void *queue_poll(queue *q) {
+void *queue_poll(queue_t *q) {
   if (q == NULL) {
     errno = EINVAL;
     return NULL;
@@ -188,7 +190,7 @@ void *queue_poll(queue *q) {
 
   do {
     if (q->max_len == 0) { // Uncapped
-      ret = linkedlist_remove((linkedlist *)q->arr, 0);
+      ret = linkedlist_remove((linkedlist_t *)q->arr, 0);
       break;
     }
 
@@ -207,13 +209,13 @@ void *queue_poll(queue *q) {
   return ret;
 }
 
-void queue_destroy(queue *q) {
+void queue_destroy(queue_t *q) {
   if (q == NULL)
     return;
 
   if (q->max_len == 0) // Uncapped
   {
-    linkedlist_destroy((linkedlist *)q->arr);
+    linkedlist_destroy((linkedlist_t *)q->arr);
   } else // Capped
   {
     if (q->arr != NULL)

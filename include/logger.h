@@ -5,7 +5,7 @@
 
 #include "types.h"
 
-typedef struct logger logger;
+typedef struct logger logger_t;
 typedef struct marker marker;
 
 typedef enum {
@@ -36,26 +36,26 @@ extern loglevel loggerlevel;
  * @param error The stream to write messages from and above WARNING into.
  * @param _syslog If true, also write into syslog
  */
-logger *logger_new(FILE *info, FILE *error, bool _syslog);
+logger_t *logger_new(FILE *info, FILE *error, bool _syslog);
 
-bool logger_do_trace(logger *log);
-bool logger_do_debug(logger *log);
-bool logger_do_info(logger *log);
-bool logger_do_notice(logger *log);
-bool logger_do_warning(logger *log);
-bool logger_do_error(logger *log);
-bool logger_do_fatal(logger *log);
+bool logger_do_trace(logger_t *log);
+bool logger_do_debug(logger_t *log);
+bool logger_do_info(logger_t *log);
+bool logger_do_notice(logger_t *log);
+bool logger_do_warning(logger_t *log);
+bool logger_do_error(logger_t *log);
+bool logger_do_fatal(logger_t *log);
 
 __attribute__((format(printf, 4, 5))) int
-logger_printf(logger *log, loglevel lvl, marker *m, const char *format, ...);
-int logger_print(logger *log, loglevel lvl, marker *m, const char *msg);
+logger_printf(logger_t *log, loglevel lvl, marker *m, const char *format, ...);
+int logger_print(logger_t *log, loglevel lvl, marker *m, const char *msg);
 
 /**
  * Destroys the given logger instance.
  *
  * IMPORTANT: Used streams are NOT closed BUT flushed.
  */
-void logger_destroy(logger *log);
+void logger_destroy(logger_t *log);
 
 /**
  * Creates a new marker with the given name.
