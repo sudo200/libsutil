@@ -4,8 +4,6 @@
 #include "dmem.h"
 #include "hashmap.h"
 
-#include <stdio.h>
-
 #define HASHMAP_INITIAL_CAP 4UL
 #define equals(x, y, len) (memcmp(x, y, len) == 0)
 
@@ -86,6 +84,8 @@ static int hashmap_realloc(hashmap_t *map) {
 }
 
 #ifdef SUTIL_DEBUG
+#include <stdio.h>
+
 // DEBUG
 void hashmap_dump_buckets(hashmap_t *map) {
   fputs("\n\n", stderr);
