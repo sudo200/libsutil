@@ -1,24 +1,16 @@
 #include <errno.h>
 #include <string.h>
 
-#include "hashset.h"
 #include "hash.h"
+#include "hashset.h"
 
 #include "test.h"
 
-
-#define len(arr)  (sizeof(arr)/sizeof(*arr))
-#define equals(x, y)  (strcmp(x, y) == 0)
+#define len(arr) (sizeof(arr) / sizeof(*arr))
+#define equals(x, y) (strcmp(x, y) == 0)
 #define stra(str) (void *)str, (size_t)strlen((const char *)str)
 
-static char *const strs[] = {
-  "foo",
-  "bar",
-  "boom",
-  "saas",
-  "sees",
-  "soos"
-};
+static char *const strs[] = {"foo", "bar", "boom", "saas", "sees", "soos"};
 
 static void add_NULL(void) {
   int ret = hashset_add(NULL, "", 1UL);
@@ -106,13 +98,13 @@ static void cb_func(void *item, size_t size, void *pipe) {
   puts(str);
 
   ++*i;
-  for(size_t j = 0UL; j < len(strs); j++)
-    if(equals(strs[j], str))
+  for (size_t j = 0UL; j < len(strs); j++)
+    if (equals(strs[j], str))
       return;
   assert(false);
 }
 
-static void foreach(void) {
+static void foreach (void) {
   size_t i = 0UL;
   int ret = hashset_foreach(set, cb_func, &i);
   assert(ret >= 0);
@@ -141,4 +133,3 @@ int main(void) {
 
   return 0;
 }
-

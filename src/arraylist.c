@@ -5,7 +5,7 @@
 #include "dmem.h"
 #include "list.h"
 
-#define ARRAYLIST_INITIAL_CAPACITY  4UL
+#define ARRAYLIST_INITIAL_CAPACITY 4UL
 
 struct arraylist {
   list_type type; // This has to be the 1st member.
@@ -19,7 +19,8 @@ struct arraylist {
 static int arraylist_realloc(arraylist *list) {
 
   list->capacity *= 2;
-  if ((list->arr = (void **)urealloc(list->arr, sizeof(*list->arr) * list->capacity)) == NULL) {
+  if ((list->arr = (void **)urealloc(list->arr, sizeof(*list->arr) *
+                                                    list->capacity)) == NULL) {
     errno = ENOMEM;
     return -1;
   }
@@ -28,7 +29,7 @@ static int arraylist_realloc(arraylist *list) {
 
 // Public functions
 arraylist *arraylist_new_prealloc(size_t initial_cap) {
-  if(initial_cap <= 0UL) {
+  if (initial_cap <= 0UL) {
     errno = EINVAL;
     return NULL;
   }
@@ -175,7 +176,6 @@ int arraylist_clear(arraylist *list) {
     errno = EINVAL;
     return -1;
   }
-
 
   ufree(list->arr);
 

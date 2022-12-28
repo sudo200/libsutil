@@ -1,23 +1,18 @@
 #include <errno.h>
 #include <string.h>
 
-#include "hashmap.h"
 #include "hash.h"
+#include "hashmap.h"
 
 #include "test.h"
 
-#define len(arr)  (sizeof(arr)/sizeof(*arr))
-#define equals(x, y)  (strcmp(x, y) == 0)
+#define len(arr) (sizeof(arr) / sizeof(*arr))
+#define equals(x, y) (strcmp(x, y) == 0)
 #define stra(str) (void *)str, (size_t)strlen((const char *)str)
 
-static char *const strs[][2] = {
-  {"foo",   "haha"},
-  {"bar",   "hehe"},
-  {"boom",  "hihi"},
-  {"saas",  "hoho"},
-  {"sees",  "huhu"},
-  {"soos",  "lol"}
-};
+static char *const strs[][2] = {{"foo", "haha"},  {"bar", "hehe"},
+                                {"boom", "hihi"}, {"saas", "hoho"},
+                                {"sees", "huhu"}, {"soos", "lol"}};
 
 static void put_NULL(void) {
   errno = 0;
@@ -28,7 +23,7 @@ static void put_NULL(void) {
 static void get_NULL(void) {
   errno = 0;
   void *ret = hashmap_get(NULL, NULL, 0UL);
-  ASSERT(ret == NULL && errno == EINVAL );
+  ASSERT(ret == NULL && errno == EINVAL);
 }
 
 static void size_NULL(void) {
@@ -45,7 +40,8 @@ static void contains_key_NULL(void) {
 
 static void foreach_NULL(void) {
   errno = 0;
-  int ret = hashmap_foreach(NULL, (void (*)(void *, size_t, void *, void *))NULL, NULL);
+  int ret = hashmap_foreach(
+      NULL, (void (*)(void *, size_t, void *, void *))NULL, NULL);
   ASSERT(ret < 0 && errno == EINVAL);
 }
 
@@ -127,20 +123,19 @@ static void cb_func(void *key, size_t keysize, void *value, void *pipe) {
 
   ++*i;
   bool key_found = false;
-  for(size_t j = 0UL; j < 6UL; j++)
-    if(equals(keystr, strs[j][0]))
+  for (size_t j = 0UL; j < 6UL; j++)
+    if (equals(keystr, strs[j][0]))
       key_found = true;
   assert(key_found);
 
   bool value_found = false;
-  for(size_t j = 0UL; j < 6UL; j++)
-    if(equals(valuestr, strs[j][1]))
+  for (size_t j = 0UL; j < 6UL; j++)
+    if (equals(valuestr, strs[j][1]))
       value_found = true;
   assert(value_found);
 }
 
-
-static void foreach(void) {
+static void foreach (void) {
   size_t i = 0UL;
   int ret = hashmap_foreach(map, cb_func, &i);
   assert(ret >= 0);
@@ -192,9 +187,8 @@ int main(void) {
   RUN_TEST(foreach);
   RUN_TEST(remove_);
   RUN_TEST(clear);
-  
+
   hashmap_destroy(map);
 
   return 0;
 }
-

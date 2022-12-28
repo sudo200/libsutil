@@ -11,14 +11,14 @@ struct buffer {
 };
 
 buffer_t *buffer_new(size_t len) {
-  buffer_t *buf = (buffer_t *) ualloc(sizeof(*buf));
-  
-  if(buf == NULL) {
+  buffer_t *buf = (buffer_t *)ualloc(sizeof(*buf));
+
+  if (buf == NULL) {
     errno = ENOMEM;
     return NULL;
   }
 
-  if((buf->buffer = ualloc(len)) == NULL) {
+  if ((buf->buffer = ualloc(len)) == NULL) {
     errno = ENOMEM;
     return NULL;
   }
@@ -30,7 +30,7 @@ buffer_t *buffer_new(size_t len) {
 buffer_t *buffer_new_from_pointer(const void *buffer, size_t len) {
   buffer_t *buf = buffer_new(len);
 
-  if(buf == NULL)
+  if (buf == NULL)
     return NULL;
 
   memcpy(buf->buffer, buffer, buf->size = len);
@@ -39,14 +39,14 @@ buffer_t *buffer_new_from_pointer(const void *buffer, size_t len) {
 }
 
 buffer_t *buffer_new_from_string(const char *str) {
-  if(str == NULL)
+  if (str == NULL)
     return NULL;
 
   return buffer_new_from_pointer(str, strlen(str) + 1);
 }
 
 void *buffer_get(buffer_t *buf) {
-  if(buf == NULL) {
+  if (buf == NULL) {
     errno = EINVAL;
     return NULL;
   }
@@ -55,7 +55,7 @@ void *buffer_get(buffer_t *buf) {
 }
 
 size_t buffer_size(buffer_t *buf) {
-  if(buf == NULL) {
+  if (buf == NULL) {
     errno = EINVAL;
     return 0UL;
   }
@@ -64,8 +64,7 @@ size_t buffer_size(buffer_t *buf) {
 }
 
 void buffer_destroy(buffer_t *buffer) {
-  if(buffer->buffer != NULL)
+  if (buffer->buffer != NULL)
     ufree(buffer->buffer);
   ufree(buffer);
 }
-

@@ -18,5 +18,4 @@ hash_t fnv1a(const void *data, size_t size);
  */
 hash_t murmurhash3(const void *data, size_t size);
 
-#endif  //___HASH_H__
-
+#endif //___HASH_H__

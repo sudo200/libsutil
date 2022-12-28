@@ -20,7 +20,6 @@ typedef int fd_t;
  */
 typedef int errno_t;
 
-
 /**
  * Datatype for hashes
  */

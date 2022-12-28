@@ -46,7 +46,8 @@ bool logger_do_warning(logger *log);
 bool logger_do_error(logger *log);
 bool logger_do_fatal(logger *log);
 
-__attribute__((format(printf,4,5))) int logger_printf(logger *log, loglevel lvl, marker *m, const char *format, ...);
+__attribute__((format(printf, 4, 5))) int
+logger_printf(logger *log, loglevel lvl, marker *m, const char *format, ...);
 int logger_print(logger *log, loglevel lvl, marker *m, const char *msg);
 
 /**

@@ -25,23 +25,25 @@ struct hashmap {
 };
 
 // Private functions
-static void hashmap_init_buckets(struct hashmap_bucket *buckets, size_t nbuckets) {
+static void hashmap_init_buckets(struct hashmap_bucket *buckets,
+                                 size_t nbuckets) {
   memset(buckets, 0, sizeof(*buckets) * nbuckets);
-  for(size_t i = 0UL; i < nbuckets; ++i)
+  for (size_t i = 0UL; i < nbuckets; ++i)
     buckets[(i - 1) % nbuckets].next = buckets + i;
 }
 
-static struct hashmap_bucket *hashmap_get_bucket(const hashmap_t *map, const void *key, size_t keysize) {
+static struct hashmap_bucket *
+hashmap_get_bucket(const hashmap_t *map, const void *key, size_t keysize) {
   size_t cap = map->capacity;
   hash_t hash = map->hasher(key, keysize);
   struct hashmap_bucket *b = map->buckets + (hash % map->capacity);
   bool found = false;
-  while(true) {
-    if(b->keysize == keysize && equals(b->key, key, keysize)) {
+  while (true) {
+    if (b->keysize == keysize && equals(b->key, key, keysize)) {
       found = true;
       break;
     }
-    if(b->next == NULL || cap-- <= 0UL) {
+    if (b->next == NULL || cap-- <= 0UL) {
       break;
     }
     b = b->next;
@@ -55,15 +57,17 @@ static int hashmap_realloc(hashmap_t *map) {
   struct hashmap_bucket *old_bs = map->buckets;
 
   map->capacity *= 2;
-  if((map->buckets = (struct hashmap_bucket *)ualloc(sizeof(*map->buckets) * map->capacity)) == NULL) {
+  if ((map->buckets = (struct hashmap_bucket *)ualloc(sizeof(*map->buckets) *
+                                                      map->capacity)) == NULL) {
     errno = ENOMEM;
     return -1;
   }
   hashmap_init_buckets(map->buckets, map->capacity);
 
-  for(size_t i = 0UL; i < old_cap; i++) {
+  for (size_t i = 0UL; i < old_cap; i++) {
     struct hashmap_bucket *old_b = old_bs + i;
-    if (old_b->key == NULL) continue; // skip empty buckets
+    if (old_b->key == NULL)
+      continue; // skip empty buckets
     hash_t hash = map->hasher(old_b->key, old_b->keysize);
 
     struct hashmap_bucket *new_b = map->buckets + (hash % map->capacity);
@@ -89,22 +93,18 @@ static int hashmap_realloc(hashmap_t *map) {
 // DEBUG
 void hashmap_dump_buckets(hashmap_t *map) {
   fputs("\n\n", stderr);
-  for(size_t i = 0UL; i < map->capacity; i++) {
+  for (size_t i = 0UL; i < map->capacity; i++) {
     struct hashmap_bucket *b = map->buckets + i;
     fprintf(stderr,
-        "Bucket %lu:\n"
-        "\tKey: %p (%s)\n"
-        "\tKeysize: %lu\n"
-        "\tValue: %p (%s)\n",
-        i,
-        b->key, (char *)b->key,
-        b->keysize,
-        b->value, (char *)b->value
-        );
+            "Bucket %lu:\n"
+            "\tKey: %p (%s)\n"
+            "\tKeysize: %lu\n"
+            "\tValue: %p (%s)\n",
+            i, b->key, (char *)b->key, b->keysize, b->value, (char *)b->value);
   }
   fputs("\n\n", stderr);
 }
-#endif //SUTIL_DEBUG
+#endif // SUTIL_DEBUG
 
 // Public functions
 hashmap_t *hashmap_new(hashfunction_t hasher) {
@@ -113,7 +113,7 @@ hashmap_t *hashmap_new(hashfunction_t hasher) {
 
 hashmap_t *hashmap_new_prealloc(hashfunction_t hasher, size_t initial_cap) {
   hashmap_t *map = (hashmap_t *)ualloc(sizeof(*map));
-  if(map == NULL) {
+  if (map == NULL) {
     errno = ENOMEM;
     return NULL;
   }
@@ -122,7 +122,8 @@ hashmap_t *hashmap_new_prealloc(hashfunction_t hasher, size_t initial_cap) {
   map->capacity = initial_cap;
   map->size = 0UL;
 
-  if((map->buckets = (struct hashmap_bucket *)ualloc(sizeof(*map->buckets) * map->capacity)) == NULL) {
+  if ((map->buckets = (struct hashmap_bucket *)ualloc(sizeof(*map->buckets) *
+                                                      map->capacity)) == NULL) {
     errno = ENOMEM;
     return NULL;
   }
@@ -132,18 +133,19 @@ hashmap_t *hashmap_new_prealloc(hashfunction_t hasher, size_t initial_cap) {
 }
 
 int hashmap_put(hashmap_t *map, void *key, size_t keysize, void *value) {
-  if(map == NULL || key == NULL) {
+  if (map == NULL || key == NULL) {
     errno = EINVAL;
     return -1;
   }
 
-  if(map->size + 1 >= map->capacity)
-    if(hashmap_realloc(map) < 0)
+  if (map->size + 1 >= map->capacity)
+    if (hashmap_realloc(map) < 0)
       return -1;
 
   hash_t hash = map->hasher(key, keysize);
   struct hashmap_bucket *b = map->buckets + (hash % map->capacity);
-  for(; b->key != NULL; b = b->next);
+  for (; b->key != NULL; b = b->next)
+    ;
 
   b->key = key;
   b->keysize = keysize;
@@ -154,13 +156,13 @@ int hashmap_put(hashmap_t *map, void *key, size_t keysize, void *value) {
 }
 
 void *hashmap_get(const hashmap_t *map, const void *key, size_t keysize) {
-  if(map == NULL || key == NULL) {
+  if (map == NULL || key == NULL) {
     errno = EINVAL;
     return NULL;
   }
 
   struct hashmap_bucket *b = hashmap_get_bucket(map, key, keysize);
-  if(b == NULL) {
+  if (b == NULL) {
     errno = ENOENT;
     return NULL;
   }
@@ -168,7 +170,7 @@ void *hashmap_get(const hashmap_t *map, const void *key, size_t keysize) {
 }
 
 size_t hashmap_size(const hashmap_t *map) {
-  if(map == NULL) {
+  if (map == NULL) {
     errno = EINVAL;
     return 0UL;
   }
@@ -176,8 +178,9 @@ size_t hashmap_size(const hashmap_t *map) {
   return map->size;
 }
 
-bool hashmap_contains_key(const hashmap_t *map, const void *key, size_t keysize) {
-  if(map == NULL || key == NULL) {
+bool hashmap_contains_key(const hashmap_t *map, const void *key,
+                          size_t keysize) {
+  if (map == NULL || key == NULL) {
     errno = EINVAL;
     return false;
   }
@@ -185,15 +188,16 @@ bool hashmap_contains_key(const hashmap_t *map, const void *key, size_t keysize)
   return hashmap_get_bucket(map, key, keysize) != NULL;
 }
 
-int hashmap_foreach(const hashmap_t *map, void (*cb)(void *, size_t, void *, void *), void *pipe) {
-  if(map == NULL) {
+int hashmap_foreach(const hashmap_t *map,
+                    void (*cb)(void *, size_t, void *, void *), void *pipe) {
+  if (map == NULL) {
     errno = EINVAL;
     return -1;
   }
 
-  for(size_t i = 0UL; i < map->capacity; i++) {
+  for (size_t i = 0UL; i < map->capacity; i++) {
     struct hashmap_bucket *b = map->buckets + i;
-    if(b->key == NULL)
+    if (b->key == NULL)
       continue;
 
     cb(b->key, b->keysize, b->value, pipe);
@@ -202,7 +206,7 @@ int hashmap_foreach(const hashmap_t *map, void (*cb)(void *, size_t, void *, voi
 }
 
 int hashmap_clear(hashmap_t *map) {
-  if(map == NULL) {
+  if (map == NULL) {
     errno = EINVAL;
     return -1;
   }
@@ -210,7 +214,8 @@ int hashmap_clear(hashmap_t *map) {
   ufree(map->buckets);
   map->capacity = HASHMAP_INITIAL_CAP;
   map->size = 0UL;
-  if((map->buckets = (struct hashmap_bucket *)ualloc(sizeof(*map->buckets) * map->capacity)) == NULL) {
+  if ((map->buckets = (struct hashmap_bucket *)ualloc(sizeof(*map->buckets) *
+                                                      map->capacity)) == NULL) {
     errno = ENOMEM;
     return -1;
   }
@@ -220,13 +225,13 @@ int hashmap_clear(hashmap_t *map) {
 }
 
 void *hashmap_remove(hashmap_t *map, void *key, size_t keysize) {
-  if(map == NULL || key == NULL) {
+  if (map == NULL || key == NULL) {
     errno = EINVAL;
     return NULL;
   }
 
   struct hashmap_bucket *b = hashmap_get_bucket(map, key, keysize);
-  if(b == NULL) {
+  if (b == NULL) {
     errno = ENOENT;
     return NULL;
   }
@@ -240,10 +245,9 @@ void *hashmap_remove(hashmap_t *map, void *key, size_t keysize) {
 }
 
 void hashmap_destroy(hashmap_t *map) {
-  if(map == NULL)
+  if (map == NULL)
     return;
 
   ufree(map->buckets);
   ufree(map);
 }
-

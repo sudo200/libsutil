@@ -18,4 +18,3 @@ size_t buffer_size(buffer_t *buf);
 void buffer_destroy(buffer_t *buffer);
 
 #endif //___BUFFER_H__
-

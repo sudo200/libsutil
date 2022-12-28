@@ -2,7 +2,8 @@
 #define ___HASHSET_H__
 
 #ifndef __HASHSET_IMPL
-#error "The hashset currently lacks an implementation, and therefore cannot be used!"
+#error                                                                         \
+    "The hashset currently lacks an implementation, and therefore cannot be used!"
 #endif
 
 #include "types.h"
@@ -21,7 +22,9 @@ int hashset_clear(hashset *set);
 
 void *hashset_remove(hashset *set, void *item, size_t size);
 
-int hashset_foreach(hashset *set, void (*cb)(void *item, size_t size, void *pipe), void *pipe);
+int hashset_foreach(hashset *set,
+                    void (*cb)(void *item, size_t size, void *pipe),
+                    void *pipe);
 
 bool hashset_contains(hashset *set, const void *item, size_t size);
 
