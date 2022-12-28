@@ -13,8 +13,8 @@ struct hashset {
 };
 
 // Private functions
-__attribute__((always_inline)) static hashset *hashset_alloc_struct(void) {
-  hashset *set = (hashset *)ualloc(sizeof(*set));
+__attribute__((always_inline)) static hashset_t *hashset_alloc_struct(void) {
+  hashset_t *set = (hashset_t *)ualloc(sizeof(*set));
 
   if (set == NULL) {
     errno = ENOMEM;
@@ -37,8 +37,8 @@ static void cb_helper(void *key, size_t keylen, void *val, void *pipe) {
 }
 
 // Public functions
-hashset *hashset_new_prealloc(size_t initial_cap, hashfunction_t hasher) {
-  hashset *set = hashset_alloc_struct();
+hashset_t *hashset_new_prealloc(size_t initial_cap, hashfunction_t hasher) {
+  hashset_t *set = hashset_alloc_struct();
   if (set == NULL)
     return NULL;
 
@@ -48,8 +48,8 @@ hashset *hashset_new_prealloc(size_t initial_cap, hashfunction_t hasher) {
   return set;
 }
 
-hashset *hashset_new(hashfunction_t hasher) {
-  hashset *set = hashset_alloc_struct();
+hashset_t *hashset_new(hashfunction_t hasher) {
+  hashset_t *set = hashset_alloc_struct();
   if (set == NULL)
     return NULL;
 
@@ -59,7 +59,7 @@ hashset *hashset_new(hashfunction_t hasher) {
   return set;
 }
 
-size_t hashset_size(const hashset *set) {
+size_t hashset_size(const hashset_t *set) {
   if (set == NULL) {
     errno = EINVAL;
     return 0UL;
@@ -68,7 +68,7 @@ size_t hashset_size(const hashset *set) {
   return hashmap_size(set->map);
 }
 
-int hashset_add(hashset *set, void *item, size_t size) {
+int hashset_add(hashset_t *set, void *item, size_t size) {
   if (set == NULL || item == NULL) {
     errno = EINVAL;
     return -1;
@@ -77,7 +77,7 @@ int hashset_add(hashset *set, void *item, size_t size) {
   return hashmap_put(set->map, item, size, NULL);
 }
 
-int hashset_clear(hashset *set) {
+int hashset_clear(hashset_t *set) {
   if (set == NULL) {
     errno = EINVAL;
     return -1;
@@ -86,7 +86,7 @@ int hashset_clear(hashset *set) {
   return hashmap_clear(set->map);
 }
 
-bool hashset_remove(hashset *set, void *item, size_t size) {
+bool hashset_remove(hashset_t *set, void *item, size_t size) {
   if (set == NULL) {
     errno = EINVAL;
     return false;
@@ -97,7 +97,7 @@ bool hashset_remove(hashset *set, void *item, size_t size) {
   return errno == 0;
 }
 
-int hashset_foreach(const hashset *set, void (*cb)(void *, size_t, void *),
+int hashset_foreach(const hashset_t *set, void (*cb)(void *, size_t, void *),
                     void *pipe) {
   if (set == NULL || *(void **)&cb == NULL) {
     errno = EINVAL;
@@ -110,7 +110,7 @@ int hashset_foreach(const hashset *set, void (*cb)(void *, size_t, void *),
   return hashmap_foreach(set->map, cb_helper, &struc);
 }
 
-bool hashset_contains(const hashset *set, const void *item, size_t size) {
+bool hashset_contains(const hashset_t *set, const void *item, size_t size) {
   if (set == NULL) {
     errno = EINVAL;
     return false;
@@ -119,7 +119,7 @@ bool hashset_contains(const hashset *set, const void *item, size_t size) {
   return hashmap_contains_key(set->map, item, size);
 }
 
-void hashset_destroy(hashset *set) {
+void hashset_destroy(hashset_t *set) {
   if (set == NULL)
     return;
 

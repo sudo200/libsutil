@@ -37,7 +37,7 @@ static void contains_NULL(void) {
   ASSERT(!ret && errno == EINVAL);
 }
 
-hashset *set;
+hashset_t *set;
 
 static void new_non_NULL(void) {
   set = hashset_new(djb2);

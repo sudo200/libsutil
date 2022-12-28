@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-typedef struct stack stack;
+typedef struct stack stack_t;
 
 /**
  * Creates a new stack, which can hold a maximum of max_len items.
@@ -11,14 +11,14 @@ typedef struct stack stack;
  *
  * @return A new stack with max_len capacity.
  */
-stack *stack_new_capped(size_t max_len);
+stack_t *stack_new_capped(size_t max_len);
 
 /**
  * Creates a new queue, which can theoretically grow to infinity.
  *
  * @return A new uncapped queue.
  */
-stack *stack_new_uncapped(void);
+stack_t *stack_new_uncapped(void);
 
 /**
  * Pushes an item onto the stack.
@@ -28,7 +28,7 @@ stack *stack_new_uncapped(void);
  * @return 0 on success, -2 when capacity is exhausted, or another negative
  * number on error.
  */
-int stack_push(stack *s, void *item);
+int stack_push(stack_t *s, void *item);
 
 /**
  * Get the next element from the stack without removing it.
@@ -36,7 +36,7 @@ int stack_push(stack *s, void *item);
  * @param s The stack to peek from.
  * @return The next element, or NULL if empty.
  */
-void *stack_peek(stack *s) __attribute__((pure));
+void *stack_peek(stack_t *s) __attribute__((pure));
 
 /**
  * Pop the next element from the stack.
@@ -44,7 +44,7 @@ void *stack_peek(stack *s) __attribute__((pure));
  * @param s The stack to pop the item from.
  * @return The next element, or NULL if empty.
  */
-void *stack_pop(stack *s);
+void *stack_pop(stack_t *s);
 
 /**
  * Get the current size of the stack
@@ -52,7 +52,7 @@ void *stack_pop(stack *s);
  * @param s The stack to get size from.
  * @return The size of the stack.
  */
-size_t stack_size(stack *s) __attribute__((const, pure));
+size_t stack_size(stack_t *s) __attribute__((const, pure));
 
 /**
  * Deletes all elements from the stack.
@@ -61,7 +61,7 @@ size_t stack_size(stack *s) __attribute__((const, pure));
  *
  * @param s The stack to clear.
  */
-int stack_clear(stack *s);
+int stack_clear(stack_t *s);
 
 /**
  * Destroys the stack.
@@ -70,6 +70,6 @@ int stack_clear(stack *s);
  *
  * @param s The stack to destroy.
  */
-void stack_destroy(stack *s);
+void stack_destroy(stack_t *s);
 
 #endif //___STACK_H__
