@@ -4,7 +4,10 @@
 #include "dmem.h"
 #include "hashmap.h"
 
+#include <stdio.h>
+
 #define HASHMAP_INITIAL_CAP 4UL
+#define equals(x, y, len) (memcmp(x, y, len) == 0)
 
 struct hashmap_bucket {
   void *key;
@@ -34,11 +37,19 @@ static struct hashmap_bucket *hashmap_get_bucket(const hashmap_t *map, const voi
   size_t cap = map->capacity;
   hash_t hash = map->hasher(key, keysize);
   struct hashmap_bucket *b = map->buckets + (hash % map->capacity);
-  for(; b != NULL; b = b->next)
-    if(cap-- <= 0UL)
-      return NULL;
+  bool found = false;
+  while(true) {
+    if(b->keysize == keysize && equals(b->key, key, keysize)) {
+      found = true;
+      break;
+    }
+    if(b->next == NULL || cap-- <= 0UL) {
+      break;
+    }
+    b = b->next;
+  }
 
-  return b;
+  return found ? b : NULL;
 }
 
 static int hashmap_realloc(hashmap_t *map) {
@@ -54,17 +65,46 @@ static int hashmap_realloc(hashmap_t *map) {
 
   for(size_t i = 0UL; i < old_cap; i++) {
     struct hashmap_bucket *old_b = old_bs + i;
-    hash_t hash = map->hasher(old_bs->key, old_bs->keysize);
+    if (old_b->key == NULL) continue; // skip empty buckets
+    hash_t hash = map->hasher(old_b->key, old_b->keysize);
 
     struct hashmap_bucket *new_b = map->buckets + (hash % map->capacity);
+    while (new_b->key != NULL) { // find an empty bucket
+      if (new_b->next == NULL) {
+        new_b->next = (struct hashmap_bucket *)ualloc(sizeof(*new_b->next));
+        new_b->next->key = NULL;
+      }
+      new_b = new_b->next;
+    }
 
     new_b->key = old_b->key;
     new_b->keysize = old_b->keysize;
     new_b->value = old_b->value;
   }
-
+  ufree(old_bs);
   return 0;
 }
+
+#ifdef SUTIL_DEBUG
+// DEBUG
+void hashmap_dump_buckets(hashmap_t *map) {
+  fputs("\n\n", stderr);
+  for(size_t i = 0UL; i < map->capacity; i++) {
+    struct hashmap_bucket *b = map->buckets + i;
+    fprintf(stderr,
+        "Bucket %lu:\n"
+        "\tKey: %p (%s)\n"
+        "\tKeysize: %lu\n"
+        "\tValue: %p (%s)\n",
+        i,
+        b->key, (char *)b->key,
+        b->keysize,
+        b->value, (char *)b->value
+        );
+  }
+  fputs("\n\n", stderr);
+}
+#endif //SUTIL_DEBUG
 
 // Public functions
 hashmap_t *hashmap_new(hashfunction_t hasher) {
@@ -108,6 +148,7 @@ int hashmap_put(hashmap_t *map, void *key, size_t keysize, void *value) {
   b->key = key;
   b->keysize = keysize;
   b->value = value;
+  map->size++;
 
   return 0;
 }
@@ -194,6 +235,7 @@ void *hashmap_remove(hashmap_t *map, void *key, size_t keysize) {
   b->key = NULL;
   b->value = NULL;
   b->keysize = 0UL;
+  map->size--;
   return value;
 }
 
@@ -202,5 +244,6 @@ void hashmap_destroy(hashmap_t *map) {
     return;
 
   ufree(map->buckets);
+  ufree(map);
 }
 
