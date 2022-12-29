@@ -12,6 +12,8 @@ to entire data structures.
 * Arraylist (fast random access to stored elements).
 * Linked list (fast random element insertion and removal).
 * Queue and Stack in capped and uncapped versions.
+* Hashmap
+* Hashset
 * Minimal logging framework with seven verbosity levels \
   (TRACE, DEBUG, INFO, NOTICE, WARNING, ERROR, FATAL).
 * String functions with dynamic (re)allocation.
@@ -44,7 +46,7 @@ and was as of now only tested on Linux.
 You have to have `binutils`, `make` and a C compiler (e.g. `clang`) installed on your system.
 
 1. Clone this repo and cd into it: \
-`$ git clone https://github.com/sudo200/libsutil.git`
+`$ git clone https://github.com/sudo200/libsutil.git` \
 `$ cd libsutil`
 2. Run `make`:
 `$ make`
