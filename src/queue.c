@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include <pthread.h>
+
 #include "dmem.h"
 #include "queue.h"
 
@@ -15,11 +17,9 @@ struct queue {
   void **arr;
   size_t front; // Start
   size_t rear;  // End
-  volatile bool lock;
-};
 
-#define lock(q) (q->lock = true)
-#define unlock(q) (q->lock = false)
+  pthread_mutex_t lock;
+};
 
 queue_t *queue_new_capped(size_t max_len) {
   if (max_len == 0) {
@@ -43,7 +43,7 @@ queue_t *queue_new_capped(size_t max_len) {
 
   q->front = 0UL;
   q->rear = 0UL;
-  q->lock = false;
+  pthread_mutex_init(&q->lock, NULL);
 
   return q;
 }
@@ -65,7 +65,7 @@ queue_t *queue_new_uncapped(void) {
 
   q->front = 0UL;
   q->rear = 0UL;
-  q->lock = false;
+  pthread_mutex_init(&q->lock, NULL);
 
   return q;
 }
@@ -76,12 +76,7 @@ size_t queue_length(queue_t *q) {
     return 0;
   }
 
-  if (q->lock) {
-    errno = ENOLCK;
-    return 0;
-  }
-
-  lock(q);
+  pthread_mutex_lock(&q->lock);
   size_t len = 0UL;
 
   if (q->max_len == 0UL) // Uncapped
@@ -89,7 +84,7 @@ size_t queue_length(queue_t *q) {
   else // Capped
     len = q->len;
 
-  unlock(q);
+  pthread_mutex_unlock(&q->lock);
 
   return len;
 }
@@ -100,12 +95,7 @@ int queue_addall(queue_t *q, void **items, size_t nitems, bool reverse) {
     return -1;
   }
 
-  if (q->lock) {
-    errno = ENOLCK;
-    return -1;
-  }
-
-  lock(q);
+  pthread_mutex_lock(&q->lock);
   int ret = 0;
 
   do {
@@ -133,7 +123,7 @@ int queue_addall(queue_t *q, void **items, size_t nitems, bool reverse) {
     }
   } while (false);
 
-  unlock(q);
+  pthread_mutex_unlock(&q->lock);
 
   return ret;
 }
@@ -148,12 +138,7 @@ void *queue_peek(queue_t *q) {
     return NULL;
   }
 
-  if (q->lock) {
-    errno = ENOLCK;
-    return NULL;
-  }
-
-  lock(q);
+  pthread_mutex_lock(&q->lock);
   void *ret = NULL;
 
   do {
@@ -169,7 +154,7 @@ void *queue_peek(queue_t *q) {
     ret = q->arr[q->front];
   } while (false);
 
-  unlock(q);
+  pthread_mutex_unlock(&q->lock);
 
   return ret;
 }
@@ -180,12 +165,7 @@ void *queue_poll(queue_t *q) {
     return NULL;
   }
 
-  if (q->lock) {
-    errno = ENOLCK;
-    return NULL;
-  }
-
-  lock(q);
+  pthread_mutex_lock(&q->lock);
   void *ret = NULL;
 
   do {
@@ -204,7 +184,7 @@ void *queue_poll(queue_t *q) {
     ret = item;
   } while (false);
 
-  unlock(q);
+  pthread_mutex_unlock(&q->lock);
 
   return ret;
 }
@@ -221,5 +201,7 @@ void queue_destroy(queue_t *q) {
     if (q->arr != NULL)
       ufree(q->arr);
   }
+
+  pthread_mutex_destroy(&q->lock);
   ufree(q);
 }

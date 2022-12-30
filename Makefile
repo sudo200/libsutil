@@ -51,9 +51,10 @@ $(OBJ):
 
 build: all
 
-install: build
+install: all
 	$(CPY) $(OUT)/lib$(LIBNAME).so $(LIBINSTALLDIR)
-	[ -d '$(LIBINCLUDEINSTALLDIR)/$(LIBNAME)' ] || $(CPY) -r $(OUT)/$(LIBNAME) $(LIBINCLUDEINSTALLDIR)
+	[ -d '$(LIBINCLUDEINSTALLDIR)/$(LIBNAME)' ] || $(RM) -r $(LIBINCLUDEINSTALLDIR)/$(LIBNAME)
+	$(CPY) -r $(OUT)/$(LIBNAME) $(LIBINCLUDEINSTALLDIR)
 
 uninstall:
 	$(RM) -r $(LIBINCLUDEINSTALLDIR)/$(LIBNAME)
