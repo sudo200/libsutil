@@ -6,6 +6,8 @@
 #include "dmem.h"
 #include "util.h"
 
+#define equal(x, y) (strcmp(x, y) == 0)
+
 extern char **environ;
 
 pid_t spawn(process *proc, const char *file, char *const *argv,
@@ -91,4 +93,14 @@ int setsignal(int signum, sighandler_t handler) {
       .sa_handler = handler,
   };
   return sigaction(signum, &action, NULL);
+}
+
+FILE *fopenor(const char *file, const char *modes, FILE *stream) {
+  if (file == NULL)
+    return NULL;
+
+  if (equal(file, "-"))
+    return stream;
+
+  return fopen(file, modes);
 }

@@ -1,6 +1,7 @@
 #ifndef ___ARRAYLIST_H__
 #define ___ARRAYLIST_H__
 
+#include <stdio.h>
 #include <unistd.h>
 
 #include "types.h"
@@ -71,5 +72,15 @@ void *memrev(void *arr, size_t nitems, size_t size);
  * @return 0 on success, a negative value on error.
  */
 int setsignal(int signum, sighandler_t handler);
+
+/**
+ * @brief Opens a file, or passes through {@arg stream}, then {@ærg file} is
+ * "-".
+ * @param file The file to open.
+ * @param modes Mode string. See fopne for info.
+ * @param stream The stream to pass through, if file is equal to "-".
+ * @return The stream.
+ */
+FILE *fopenor(const char *file, const char *modes, FILE *stream);
 
 #endif //___ARRAYLIST_H__
