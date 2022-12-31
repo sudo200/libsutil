@@ -12,6 +12,7 @@ to entire data structures.
 * Arraylist (fast random access to stored elements).
 * Linked list (fast random element insertion and removal).
 * Queue and Stack in capped and uncapped versions.
+* Threadsafe queue (mutex locking)
 * Hashmap
 * Hashset
 * Minimal logging framework with seven verbosity levels \
