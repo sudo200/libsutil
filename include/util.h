@@ -83,4 +83,13 @@ int setsignal(int signum, sighandler_t handler);
  */
 FILE *fopenor(const char *file, const char *modes, FILE *stream);
 
+/**
+ * @brief Compares the memory pointed to by {@arg ptr1} and {@arg ptr2} in a
+ * time constant manner.
+ * @params  ptr1,ptr2 Memory areas to compare.
+ * @param num Size of the memory areas.
+ * @return  0 on equality, otherwise a non-zero value.
+ */
+int memcmp_secure(const void *ptr1, const void *ptr2, size_t num);
+
 #endif //___ARRAYLIST_H__

@@ -104,3 +104,13 @@ FILE *fopenor(const char *file, const char *modes, FILE *stream) {
 
   return fopen(file, modes);
 }
+
+int memcmp_secure(const void *ptr1, const void *ptr2, size_t num) {
+  const uint8_t *p1 = (const uint8_t *)ptr1;
+  const uint8_t *p2 = (const uint8_t *)ptr2;
+  uint8_t result = 0;
+  size_t i;
+  for (i = 0; i < num; i++)
+    result |= p1[i] ^ p2[i];
+  return result;
+}
