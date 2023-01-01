@@ -108,4 +108,16 @@ char *strupp(char *str);
  */
 char *strlow(char *str);
 
+/**
+ * Like strstr, but does not determine the length of haystack by a NULL-byte.
+ * Instead, it uses the length n.
+ *
+ * @param haystack  String to search in for needle.
+ * @param needle  String to search for in haystack.
+ * @param n Length of haystack.
+ * @return A pointer to the first occurance of needle in haystack or NULL when
+ * not found.
+ */
+char *strnstr(const char *haystack, const char *needle, size_t n);
+
 #endif //___MSTRING_H__
