@@ -12,6 +12,7 @@ include config.mk
 
 
 all: $(OUT)/lib$(LIBNAME).so
+	@echo $(DYN_LD)
 	$(CPY) -r $(INCLUDE) $(OUT)/$(LIBNAME)
 
 $(OUT)/lib$(LIBNAME).so: $(OUT) \
@@ -32,7 +33,7 @@ $(OUT)/lib$(LIBNAME).so: $(OUT) \
 	$(OBJ)/hashmap.o \
 	
 	$(CC) -shared -o$(OUT)/lib$(LIBNAME).so $(wildcard $(OBJ)/*.o) $(LDFLAGS)
-	chmod -x $(OUT)/lib$(LIBNAME).so	
+	#chmod -x $(OUT)/lib$(LIBNAME).so	
 	$(OBJCPY) --only-keep-debug $(OUT)/lib$(LIBNAME).so $(OUT)/lib$(LIBNAME).so.dbg
 	chmod -x $(OUT)/lib$(LIBNAME).so.dbg
 	$(OBJCPY) --strip-unneeded $(OUT)/lib$(LIBNAME).so

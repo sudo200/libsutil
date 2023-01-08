@@ -16,9 +16,6 @@ const char *const LIBRARY_VERSION = HEADER_VERSION;
 /////////////////////////////////////////////////////////////
 #include <sys/unistd.h>
 
-// Sadly, system dependant :(
-#define __LD "/lib/ld-linux-x86-64.so.2"
-
 const char ld_loader[] __attribute__((section(".interp"))) = __LD;
 
 __attribute__((force_align_arg_pointer)) void _start(void) {
