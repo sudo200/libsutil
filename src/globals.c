@@ -14,7 +14,7 @@ const char *const LIBRARY_VERSION = HEADER_VERSION;
 /////////////////////////////////////////////////////////////
 ///              WARNING! Black magic below!              ///
 /////////////////////////////////////////////////////////////
-#include <sys/unistd.h>
+#include <unistd.h>
 
 const char ld_loader[] __attribute__((section(".interp"))) = __LD;
 
