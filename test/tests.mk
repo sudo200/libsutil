@@ -8,7 +8,7 @@
 #      file      #
 ##################
 
-TEST_INCLUDE=-I$(INCLUDE) -I./libs/sunit/include
+TEST_INCLUDE := -I$(INCLUDE) -I./libs/sunit/include
 
 test: $(OUT)/test_file \
 	$(OUT)/test_mstring \
@@ -25,7 +25,7 @@ test: $(OUT)/test_file \
 
 $(OUT)/test_%: all
 	$(CC) -o$@ $(TEST_INCLUDE) $(TEST_DIR)/$(patsubst $(OUT)/test_%,%,$@)_test.c $(CFLAGS) -L$(OUT) -l$(LIBNAME) $(LDFLAGS)
-	LD_LIBRARY_PATH=$(OUT) $(MIDDLEWARE) ./$@
+	LD_LIBRARY_PATH="$$LD_LIBRARY_PATH:$(OUT)" $(MIDDLEWARE) ./$@
 
 .PHONY: test \
 

@@ -1,7 +1,7 @@
 #ifndef ___GLOBALS_H__
 #define ___GLOBALS_H__
 
-#define HEADER_VERSION "v0.0.17"
+#define HEADER_VERSION "v0.0.18"
 
 extern const char *const LIBRARY_VERSION;
 

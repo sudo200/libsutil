@@ -12,7 +12,6 @@ include config.mk
 
 
 all: $(OUT)/lib$(LIBNAME).so
-	@echo $(DYN_LD)
 	$(CPY) -r $(INCLUDE) $(OUT)/$(LIBNAME)
 
 $(OUT)/lib$(LIBNAME).so: $(OUT) \
